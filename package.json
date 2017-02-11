@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "webpack-dev-server --watch --colors",
     "build": "rimraf dist && NODE_ENV=production webpack --colors",
-    "start": "NODE_ENV=production PORT=8080 pm2 start ./server.js",
+    "start": "NODE_ENV=production PORT=8080 pm2 start server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint src test webpack"
@@ -59,7 +59,15 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
+    "body-parser": "^1.16.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.13.4",
+    "express-session": "^1.15.1",
+    "mongoose": "^4.8.1",
+    "mongoose-find-or-create": "^1.1.0",
+    "morgan": "^1.8.1",
+    "passport": "^0.3.2",
+    "passport-spotify": "^0.3.1",
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
     "react-redux": "^5.0.2",
