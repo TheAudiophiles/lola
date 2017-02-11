@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/lola');
 
-app.use(express.static('./'));
-app.use(express.static('dist'));
+app.use(express.static('./dist'));
 
 require('./server/middleware')(app);
 require('./server/auth')(app);
