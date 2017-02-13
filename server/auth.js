@@ -9,13 +9,11 @@ const userController = new UserController();
 
 module.exports = (app) => {
   passport.serializeUser(function(user, done) {
-    console.log('serializeUser user id: ' + user._id);
     done(null, user._id);
   });
 
   // deserializeUser is how to get the hashed data back when you need it.
   passport.deserializeUser(function(id, done) {
-    console.log('_id for logout----' + id);
     userController.findById(id, (err, user) => {
       done(err, user);
     });
@@ -26,7 +24,7 @@ module.exports = (app) => {
     clientSecret,
     callbackURL: 'http://localhost:8080/auth/spotify/callback'
   }, (accessToken, refreshToken, profile, done) => {
-    console.log('PROFILE:', profile.username);
+    console.log('Access Token:', accessToken);
     userController.addUser({
       username: profile.username,
       name: profile.displayName || '',
