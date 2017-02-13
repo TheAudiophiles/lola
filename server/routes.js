@@ -6,6 +6,7 @@ const userController = require('./controllers/UserController');
 const YOUTUBE_API_KEY = require('./config/youtube.conf');
 const MUSIXMATCH_API_KEY = require('./config/musixmatch.conf');
 
+
 module.exports = (app) => {
   app.get('/auth/spotify',
     passport.authenticate('spotify'),
