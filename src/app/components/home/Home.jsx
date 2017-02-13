@@ -1,11 +1,12 @@
 import React from 'react';
 
-function Home() {
-  return (
-    <div className="container home">
-      <h1>Home</h1>
-    </div>
-  )
-}
+import Search from '../../containers/search/Search';
+import Song from '../../containers/song/Song';
 
-export default Home;
+export default () => (
+  <div className="container home">
+    <h1>Home</h1>
+    <Search />
+    <Song />
+  </div>
+);

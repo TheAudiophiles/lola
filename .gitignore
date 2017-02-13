@@ -4,3 +4,6 @@
 bundle.js
 npm-debug.log
 dist
+server/config/spotify.conf.js
+server/config/youtube.conf.js
+server/config/musixmatch.conf.js
