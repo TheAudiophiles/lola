@@ -70,6 +70,16 @@ router.get('/callback', (req, res) => {
       spotifyApi.getMe().then(({ body }) => {
         console.log('Calling helper getMe');
         console.log('body:', body);
+        userController.addUser({
+          username: body.id,
+          name: body.display_name || '',
+          email: body.email || ''
+        }, (err, user) => {
+          if (err) {
+            return done(err);
+          }
+          return done(null, user);
+        });
       });
 
 

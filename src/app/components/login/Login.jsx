@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Login() {
-  const style = {'margin-top': '100px'};
+  const style = {marginTop: '100px'};
   return (
     <div style={style} className="container login">
       <a href='/auth/spotify'> 
