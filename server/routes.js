@@ -2,7 +2,7 @@
 console.log('Got to the top of the page')
 const Spotify = require('spotify-web-api-node');
 //const passport = require('passport');
-const https = require('https');
+//const https = require('https');
 const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
@@ -70,26 +70,61 @@ router.get('/callback', (req, res) => {
       spotifyApi.getMe().then(({ body }) => {
         console.log('Calling helper getMe');
         console.log('body:', body);
-
       });
+
+
       // we can also pass the token to the browser to make requests from there
       res.redirect(`/#/user/${access_token}/${refresh_token}`);
     }).catch(err => {
       res.redirect('/#/error/invalid token');
     });
-  };
-});  
- https.get(url, res1 => {
-      res1.setEncoding('utf8');
-      res1.on('data', data => {
-        if (JSON.parse(data)) {
-          const {
-            track_name,
-            artist_name
-          } = JSON.parse(data).message.body.track_list[0].track;
-          res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
-        }
-      })
-    })    
+  }
+});
+
+router.get('/api/youtube-search/:song', (req, res0) => {
+  const { song } = req.params;
+  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
+  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
+
+  https.get(url, res1 => {
+    res1.on('data', data => {
+      res0.send(data.toString());
+    });
+  }).on('error', e => {
+    console.log(e);
+  });
+});
+
+router.get('/api/lyrics-search/:lyrics', (req, res0) => {
+  const { lyrics } = req.params;
+  const ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
+  const STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
+  const opts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
+  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
+
+  https.get(url, res1 => {
+    res1.setEncoding('utf8');
+    res1.on('data', data => {
+      if (JSON.parse(data)) {
+        const {
+          track_name,
+          artist_name
+        } = JSON.parse(data).message.body.track_list[0].track;
+
+        res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
+      }
+    });
+  }).on('error', e => {
+    console.log(e);
+  });
+});
+
+
 
 module.exports = router;
+
+
+
+
