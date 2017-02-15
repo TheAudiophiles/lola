@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { InlineForm } from 'rebass';
 
 import { fetchSongVideo } from '../../actions';
 
@@ -30,14 +31,16 @@ class Search extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          onChange={this.setInputText}
-          value={this.state.inputText}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <InlineForm
+        label="search lyrics"
+        name="search_lyrics"
+        onSubmit={this.handleSubmit}
+        placeholder="input lyrics"
+        rounded
+        buttonLabel="Search"
+        onChange={this.setInputText}
+        value={this.state.inputText}
+      />
     );
   }
 }
