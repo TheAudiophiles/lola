@@ -15,7 +15,7 @@ mongoose.connection.on('error', function(err){
 app.use(express.static('./dist'));
 
 require('./server/middleware')(app);
-require('./server/auth')(app);
+//require('./server/auth')(app);
 //require('./server/routes')(app);
 
 app.get('*', (req, res) => {

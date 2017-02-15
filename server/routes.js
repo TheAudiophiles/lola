@@ -2,7 +2,7 @@
 console.log('Got to the top of the page')
 const Spotify = require('spotify-web-api-node');
 //const passport = require('passport');
-//const https = require('https');
+const https = require('https');
 const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
