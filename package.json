@@ -43,6 +43,8 @@
     "redux-promise": "^0.5.3",
     "reflexbox": "^2.2.3",
     "webpack": "^2.2.1",
+    "spotify-web-api-node": "^2.3.6",
+
     "youtube-search": "^1.0.8"
   },
   "devDependencies": {

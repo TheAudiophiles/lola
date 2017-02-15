@@ -16,7 +16,7 @@ app.use(express.static('./dist'));
 
 require('./server/middleware')(app);
 require('./server/auth')(app);
-require('./server/routes')(app);
+//require('./server/routes')(app);
 
 app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/dist/index.html`);
