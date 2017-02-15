@@ -1,28 +1,10 @@
-header {
-  width: 100%;
-  padding: 0;
-  border-bottom: 1px solid $light-gray;
-  margin-bottom: 40px;
+.Toolbar {
+  min-height: 64px !important;
+  color: #00d9f7 !important;
+  background-color: rgba(0, 0, 0, 0.875) !important;
+  opacity: .875 !important;
 
-  nav {
-
-    ul {
-      text-align: center;
-
-      li {
-        display: inline;
-        margin-right: 60px;
-
-        a {
-          color: #333;
-          text-decoration: none;
-
-          &:hover {
-            color: $light-blue;
-            text-decoration: underline;
-          }
-        }
-      }
-    }
+  a {
+    text-decoration: none !important;
   }
 }

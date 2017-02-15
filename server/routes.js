@@ -56,12 +56,14 @@ module.exports = (app) => {
     https.get(url, res1 => {
       res1.setEncoding('utf8');
       res1.on('data', data => {
-        const {
-          track_name,
-          artist_name
-        } = JSON.parse(data).message.body.track_list[0].track;
+        if (JSON.parse(data)) {
+          const {
+            track_name,
+            artist_name
+          } = JSON.parse(data).message.body.track_list[0].track;
 
-        res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
+          res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
+        }
       });
     }).on('error', e => {
       console.log(e);
