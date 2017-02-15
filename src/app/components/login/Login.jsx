@@ -1,9 +1,12 @@
 import React from 'react';
 
 function Login() {
+  const style = {'margin-top': '100px'};
   return (
-    <div className="container login">
-      <h1>Login</h1>
+    <div style={style} className="container login">
+      <a href='/auth/spotify'> 
+      	<h1>Login</h1>
+  	  </a>
     </div>
   )
 }
