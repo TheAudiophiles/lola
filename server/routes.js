@@ -21,7 +21,7 @@ const scopes = ['user-read-private', 'user-read-email'];
 const spotifyApi = new Spotify({
   clientId: SPOTIFY_API_KEY.clientID,
   clientSecret: SPOTIFY_API_KEY.clientSecret,
-  redirectUri: 'http://localhost:8080/callback'
+  redirectUri: 'http://localhost:3000/callback'
 });
 
 console.log('Got here too')
