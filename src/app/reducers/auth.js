@@ -1,5 +1,9 @@
 import {
-  SPOTIFY_TOKENS, SPOTIFY_ME_BEGIN, SPOTIFY_ME_SUCCESS, SPOTIFY_ME_FAILURE
+  SPOTIFY_TOKENS,
+  SPOTIFY_ME_BEGIN,
+  SPOTIFY_ME_SUCCESS,
+  SPOTIFY_ME_FAILURE,
+  SPOTIFY_LOGOUT
 } from '../actions';
 
 /** The initial state; no tokens and no user info */
@@ -19,7 +23,8 @@ const initialState = {
     product: null,
     type: null,
     uri: null,
-  }
+  },
+  loggedOut: false
 };
 
 /**
@@ -47,6 +52,9 @@ export default function reduce(state = initialState, action) {
   // currently no failure state :(
   case SPOTIFY_ME_FAILURE:
     return state;
+
+  case SPOTIFY_LOGOUT:
+    return Object.assign({}, state, initialState, { loggedOut: true });
 
   default:
     return state;

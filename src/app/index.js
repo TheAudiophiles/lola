@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import ReduxPromise from 'redux-promise';
-import { combineReducers } from 'redux';
-
+// import {persistStore, autoRehydrate} from 'redux-persist'
 
 import App from './components/App';
 import Home from './containers/home/Home';
@@ -27,9 +26,12 @@ import './components/bundle.scss';
 const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
 const store = createStoreWithMiddleware(
   combineReducers({...reducers, routing: routerReducer}),
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  // autoRehydrate()
 );
 const history = syncHistoryWithStore(hashHistory, store);
+
+// persistStore(store);
 
 ReactDOM.render(
   <Provider store={store}>

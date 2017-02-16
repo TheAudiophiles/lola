@@ -1,11 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito:400,300);
 
+html, body {
+  height: 100%;
+}
+
 body {
   font-family: 'Avenir Next', Helvetica, sans-serif;
   color: #eee;
   background-color: #111;
   border-radius: 5px;
   border-color: rgba(255, 255, 255, 0.0625);
+  min-height: 100%;
+  position: relative;
 }
 
 .container {

@@ -108,7 +108,7 @@ router.get('/callback', (req, res, done) => {
           }
         })
       });
-      // we can also pass the token to the browser to make requests from there
+      // we can also pass the token to the browser to make requests from there  
     }).catch(err => {
      res.redirect('/#/error/invalid token');
     });

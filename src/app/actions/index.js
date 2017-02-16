@@ -9,6 +9,7 @@ export const SPOTIFY_TOKENS = 'SPOTIFY_TOKENS';
 export const SPOTIFY_ME_BEGIN = 'SPOTIFY_ME_BEGIN';
 export const SPOTIFY_ME_SUCCESS = 'SPOTIFY_ME_SUCCESS';
 export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
+export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
 
 /**
  * Send request with lyrics and recieve an object from the youtube
@@ -41,6 +42,7 @@ export const nextSong = () => ({
   type: NEXT_SONG
 });
 
+
 export function setTokens({accessToken, refreshToken}) {
   if (accessToken) {
     spotifyApi.setAccessToken(accessToken);
@@ -62,3 +64,9 @@ export function getMyInfo() {
 //  };
 }
 
+
+export function spotifyLogout() {
+  return {
+    type: SPOTIFY_LOGOUT
+  };
+}

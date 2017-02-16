@@ -1,14 +1,15 @@
 import React from 'react';
+import logo from './login.svg';
 
 function Login() {
-  const style = {marginTop: '100px'};
   return (
-    <div style={style} className="container login">
-      <a href='/auth/spotify'> 
-      	<h1>Login</h1>
-  	  </a>
+    <div className="container login">
+      <a
+        href="/auth/spotify"
+        dangerouslySetInnerHTML={{__html: logo}}>
+      </a>
     </div>
-  )
+  );
 }
 
 export default Login;
