@@ -13,6 +13,7 @@ import Home from './containers/home/Home';
 import About from './components/about/About';
 import NotFound from './components/not_found/NotFound';
 import Login from './components/login/Login';
+import Err from './components/err/Err';
 
 // import reducers from './reducers';
 // console.log('This is reducers:', reducers);
@@ -37,6 +38,7 @@ ReactDOM.render(
         <IndexRoute component={Login} />
         <Route path="/home/:accessToken/:refreshToken" component={Home} />
         <Route path="/about" component={About} />
+        <Route path="/error/:errorMsg" component={Err} />
         <Route path="*" component={NotFound} />
       </Route>
     </Router>

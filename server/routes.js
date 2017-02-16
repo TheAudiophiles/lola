@@ -76,15 +76,17 @@ router.get('/callback', (req, res) => {
           email: body.email || ''
         }, (err, user) => {
           if (err) {
-            return done(err);
+            //res.redirect('/#/error/failed to create user');
+            console.log('There has been an error:', err);
+          // } else {
+          //   res.redirect(`/#/home/${access_token}/${refresh_token}`);
           }
-          return done(null, user);
         });
       });
 
 
       // we can also pass the token to the browser to make requests from there
-      res.redirect(`/#/home/${access_token}/${refresh_token}`);
+     res.redirect(`/#/home/${access_token}/${refresh_token}`);  
     }).catch(err => {
       res.redirect('/#/error/invalid token');
     });
@@ -131,6 +133,11 @@ router.get('/api/lyrics-search/:lyrics', (req, res0) => {
   });
 });
 
+
+
+router.get('/logout', () => {
+
+})
 
 
 module.exports = router;
