@@ -102,8 +102,8 @@ router.get('/callback', (req, res, done) => {
               console.log('The user has been saved');
             })
           } else {
-            res.redirect(`/#/home/${access_token}/${refresh_token}`); 
-            console.log('User has been logged in:', body.display_name); 
+            res.redirect(`/#/home/${access_token}/${refresh_token}`);
+            console.log('User has been logged in:', body.display_name);
             //return done(err, user);
           }
         })
