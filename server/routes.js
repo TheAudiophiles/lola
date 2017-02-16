@@ -7,6 +7,7 @@ const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
 
+const User = require ('./models/UserModel');
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
 
@@ -46,7 +47,7 @@ router.get('/auth/spotify', (_, res) => {
  * is not good, redirect the user to an error page
  */
 
-router.get('/callback', (req, res) => {
+router.get('/callback', (req, res, done) => {
   //console.log('This is req:', req);
   // console.log('This is res:', res);
   const { code, state } = req.query;
@@ -70,25 +71,46 @@ router.get('/callback', (req, res) => {
       spotifyApi.getMe().then(({ body }) => {
         console.log('Calling helper getMe');
         console.log('body:', body);
-        userController.addUser({
-          username: body.id,
-          name: body.display_name || '',
-          email: body.email || ''
-        }, (err, user) => {
-          if (err) {
-            //res.redirect('/#/error/failed to create user');
-            console.log('There has been an error:', err);
-          // } else {
-          //   res.redirect(`/#/home/${access_token}/${refresh_token}`);
+        // userController.addUser({
+        //   username: body.id,
+        //   name: body.display_name || '',
+        //   email: body.email || ''
+        // }, (err, user) => {
+        //   if (err) {
+        //     //res.redirect('/#/error/failed to create user');
+        //     console.log('There has been an error:', err);
+        //   // } else {
+        //   //   res.redirect(`/#/home/${access_token}/${refresh_token}`);
+        //   }
+        // });
+        User.findOne({
+          'username': body.id
+        }, function (err, user){
+          if(err){
+            console.log('There has been an error creating the user:', user);
+          } if(!user){
+            user = new User({
+              username: body.id || '',
+              name: body.display_name || '',
+              email: body.email || ''
+            })
+            user.save(function(err){
+              if(err){
+                console.log('There has been an error saving the user', err);
+                return done(null, user);
+              }
+              console.log('The user has been saved');
+            })
+          } else {
+            res.redirect(`/#/home/${access_token}/${refresh_token}`); 
+            console.log('User has been logged in:', body.display_name); 
+            //return done(err, user);
           }
-        });
+        })
       });
-
-
       // we can also pass the token to the browser to make requests from there
-     res.redirect(`/#/home/${access_token}/${refresh_token}`);  
     }).catch(err => {
-      res.redirect('/#/error/invalid token');
+     res.redirect('/#/error/invalid token');
     });
   }
 });
@@ -141,7 +163,3 @@ router.get('/logout', () => {
 
 
 module.exports = router;
-
-
-
-
