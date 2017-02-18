@@ -6,14 +6,10 @@ import { Fixed, Toolbar, NavItem } from 'rebass';
 
 import { spotifyLogout } from '../../actions';
 
-console.log('SPOTIFY LOGOUT:', spotifyLogout);
-
 const style = {marginLeft:'auto'};
 
 const Header = (props) => {
   const { spotifyLogout, loggedOut } = props;
-
-  console.log('SPOTIFY LOGOUT IN COMPONENT:', spotifyLogout);
 
   const logoutHandler = (e) => {
     spotifyLogout();

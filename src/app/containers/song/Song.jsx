@@ -39,6 +39,8 @@ class Song extends Component {
     this.props.nextSong();
   }
 
+  videoExists = (e) => Object.keys(this.state.currentSong).length;
+
   controlButtons() {
     const buttons = {
       previous: this.toPreviousSong,
@@ -47,20 +49,44 @@ class Song extends Component {
       next: this.toNextSong
     };
 
-    return Object.keys(buttons).map(btn => (
-      <Box key={btn} px={3}>
-        <ButtonCircle title={btn} size={48} onClick={buttons[btn]}>
-          <Icon name={btn} size={28} />
-        </ButtonCircle>
-      </Box>
-    ));
+    return Object.keys(buttons).map(btn => {
+      const nextDisabled = () =>
+        this.props.allSongs.length - 1 === this.props.currentSongIndex && btn === 'next';
+
+      const prevDisabled = () =>
+        this.props.currentSongIndex === 0 && btn === 'previous';
+
+      return (
+        <Box key={btn} px={3}>
+          <ButtonCircle
+            disabled={
+              !this.videoExists() || prevDisabled() || nextDisabled()
+            }
+            title={btn}
+            size={48}
+            onClick={this.videoExists ? buttons[btn] : ""}>
+            <Icon name={btn} size={28} />
+          </ButtonCircle>
+        </Box>
+      );
+    });
   }
 
-  render() {
-    if (!this.props.allSongs.length) {
-      return <div></div>;
-    }
+  flexWrap(children) {
+    return (
+      <Flex
+        align="center"
+        justify="space-between"
+        wrap
+        className="Song"
+      >
+        {children || ""}
+        {this.controlButtons()}
+      </Flex>
+    );
+  }
 
+  youtubeComponent() {
     const opts = {
       height: '0',
       width: '0',
@@ -72,20 +98,20 @@ class Song extends Component {
     const { allSongs, currentSongIndex } = this.props;
 
     return (
-      <Flex
-        align="center"
-        justify="space-between"
-        wrap
-        className="Song"
-      >
-        <YouTube
-          videoId={allSongs[currentSongIndex].id.videoId}
-          opts={opts}
-          onReady={this._onReady}
-        />
-        {this.controlButtons()}
-      </Flex>
+      <YouTube
+        videoId={allSongs[currentSongIndex].id.videoId}
+        opts={opts}
+        onReady={this._onReady}
+      />
     );
+  }
+
+  render() {
+    if (!this.props.allSongs.length) {
+      return this.flexWrap();
+    }
+
+    return this.flexWrap(this.youtubeComponent());
   }
 }
 

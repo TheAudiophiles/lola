@@ -4,33 +4,39 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
+import 'babel-polyfill';
+import createSagaMiddleware from 'redux-saga';
 import ReduxPromise from 'redux-promise';
-// import {persistStore, autoRehydrate} from 'redux-persist'
+// import {persistStore, autoRehydrate} from 'redux-persist';
+
+import * as reducers from './reducers';
+import rootSaga from './sagas';
 
 import App from './components/App';
-import Home from './containers/home/Home';
+import Home from './components/home/Home';
 import About from './components/about/About';
 import NotFound from './components/not_found/NotFound';
 import Login from './components/login/Login';
 import Err from './components/err/Err';
-
-// import reducers from './reducers';
-// console.log('This is reducers:', reducers);
-
-import * as reducers from './reducers';
-console.log('This is reducers:', reducers);
+import User from './containers/user/User';
+import CheckAuth from './containers/checkAuth/CheckAuth';
 
 import './components/bundle.scss';
 
+const sagaMiddleware = createSagaMiddleware();
 
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+const createStoreWithMiddleware = applyMiddleware(
+  ReduxPromise,
+  sagaMiddleware
+)(createStore);
 const store = createStoreWithMiddleware(
-  combineReducers({...reducers, routing: routerReducer}),
+  combineReducers({ ...reducers, routing: routerReducer }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   // autoRehydrate()
 );
 const history = syncHistoryWithStore(hashHistory, store);
 
+sagaMiddleware.run(rootSaga);
 // persistStore(store);
 
 ReactDOM.render(
@@ -38,9 +44,12 @@ ReactDOM.render(
     <Router onUpdate={() => window.scrollTo(0, 0)} history={history}>
       <Route path="/" component={App}>
         <IndexRoute component={Login} />
-        <Route path="/home/:accessToken/:refreshToken" component={Home} />
         <Route path="/about" component={About} />
         <Route path="/error/:errorMsg" component={Err} />
+        <Route path="/user/:accessToken/:refreshToken" component={User} />
+        <Route component={CheckAuth}>
+          <Route path="/home" component={Home} />
+        </Route>
         <Route path="*" component={NotFound} />
       </Route>
     </Router>

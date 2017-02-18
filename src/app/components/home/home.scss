@@ -1,0 +1,12 @@
+.Banner {
+  min-height: 75vh;
+  padding-top: 48px;
+  background-attachment: fixed;
+
+  .Block {
+    background-color: rgba(0, 0, 0, 0.875) !important;
+    opacity: .8 !important;
+    padding: 30px;
+    border-radius: 5px;
+  }
+}

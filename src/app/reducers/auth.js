@@ -1,6 +1,6 @@
 import {
-  SPOTIFY_TOKENS,
-  SPOTIFY_ME_BEGIN,
+  SPOTIFY_TOKENS_SUCCESS,
+  SPOTIFY_TOKENS_FAILURE,
   SPOTIFY_ME_SUCCESS,
   SPOTIFY_ME_FAILURE,
   SPOTIFY_LOGOUT
@@ -24,7 +24,9 @@ const initialState = {
     type: null,
     uri: null,
   },
-  loggedOut: false
+  loggedOut: false,
+  failed: false,
+  loggedIn: true
 };
 
 /**
@@ -32,31 +34,31 @@ const initialState = {
  */
 export default function reduce(state = initialState, action) {
   switch (action.type) {
-  // when we get the tokens... set the tokens!
-  case SPOTIFY_TOKENS:
-    const {accessToken, refreshToken} = action;
-    return Object.assign({}, state, {accessToken, refreshToken});
+    // when we get the tokens... set the tokens!
+    case SPOTIFY_TOKENS_SUCCESS:
+      const { accessToken, refreshToken } = action;
+      return Object.assign({}, state, { accessToken, refreshToken });
 
-  // set our loading property when the loading begins
-  // case SPOTIFY_ME_BEGIN:
-  //   return Object.assign({}, state, {
-  //     user: Object.assign({}, state.user, {loading: true})
-  //   });
+    case SPOTIFY_TOKENS_FAILURE:
+      return Object.assign({}, state, { failed: true, loggedIn: false });
 
-  // when we get the data merge it in
-  case SPOTIFY_ME_SUCCESS:
-    return Object.assign({}, state, {
-      user: Object.assign({}, state.user, action.payload, {loading: false})
-    });
+    // when we get the data merge it in
+    case SPOTIFY_ME_SUCCESS:
+      return Object.assign({}, state, {
+        user: Object.assign({}, state.user, action.payload, {
+          loading: false
+        }),
+        failed: false,
+        loggedIn: true
+      });
 
-  // currently no failure state :(
-  case SPOTIFY_ME_FAILURE:
-    return state;
+    case SPOTIFY_ME_FAILURE:
+      return Object.assign({}, state, { failed: true, loggedIn: false });
 
-  case SPOTIFY_LOGOUT:
-    return Object.assign({}, state, initialState, { loggedOut: true });
+    case SPOTIFY_LOGOUT:
+      return Object.assign({}, state, initialState, { loggedOut: true, loggedIn: false });
 
-  default:
-    return state;
+    default:
+      return state;
   }
 }
