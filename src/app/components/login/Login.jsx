@@ -1,14 +1,21 @@
 import React from 'react';
+import logo from './login.svg';
+import { Banner, Card } from 'rebass';
 
 function Login() {
-  const style = {marginTop: '100px'};
   return (
-    <div style={style} className="container login">
-      <a href='/auth/spotify'> 
-      	<h1>Login</h1>
-  	  </a>
-    </div>
-  )
+    <Banner
+      backgroundImage="https://d262ilb51hltx0.cloudfront.net/max/2000/1*DZwdGMaeu-rvTroJYui6Uw.jpeg"
+    >
+      <div className="container">
+        <a
+          href="/auth/spotify"
+          dangerouslySetInnerHTML={{__html: logo}}>
+        </a>
+      </div>
+
+    </Banner>
+  );
 }
 
 export default Login;

@@ -7,3 +7,4 @@ dist
 server/config/spotify.conf.js
 server/config/youtube.conf.js
 server/config/musixmatch.conf.js
+server/config/session.conf.js

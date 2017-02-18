@@ -1,31 +1,36 @@
 const User = require('../models/UserModel');
 
 class UserController {
-	addUser(user, done) {
-	  User.findOrCreate(user, (err, user) => done(err, user));
-	}
-
 	findById(id, done) {
 	  User.findById(id, (err, user) => {
 	    done(err, user);
 	  });
 	}
 
-	// addUser(user, done) {
-	// 	console.log('fired addUser');
-	// 	User.save(function(err){
-	// 		if(err){
-	// 			throw err;
-	// 		}
-	// 	})
-	// }
+	findUser(username, done) {
+		User.findOne({ username }, (err, user) => {
+			if (err) {
+				done(err);
+			} else {
+				done(null, user);
+			}
+		});
+	}
 
-	// findById(id, done) {
-	// 	User.findById(id, (err, user) => {
-	// 		if (err) throw err;
-	// 		console.log('This is user:', user);
-	// 	})
-	// }
+	createUser(data, done) {
+		const user = new User({
+			username: data.id,
+			name: data.display_name || '',
+			email: data.email || ''
+		});
+		user.save(err => {
+			if (err) {
+				done(err);
+			} else {
+				done();
+			}
+		});
+	}
 
 }
 

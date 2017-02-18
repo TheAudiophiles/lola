@@ -1,6 +1,7 @@
 @import './common/base/variables';
 @import './common/base/global';
-@import './common/header';
-@import '../containers/home/home';
-@import './about/about';
+@import '../containers/header/header';
 @import '../containers/song/song';
+@import './home/home';
+@import './about/about';
+@import './login/login';

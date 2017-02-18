@@ -1,13 +1,11 @@
-'use strict'
-console.log('Got to the top of the page')
+'use strict';
+
 const Spotify = require('spotify-web-api-node');
-//const passport = require('passport');
 const https = require('https');
 const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
 
-const User = require ('./models/UserModel');
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
 
@@ -16,7 +14,6 @@ const YOUTUBE_API_KEY = require('./config/youtube.conf');
 const MUSIXMATCH_API_KEY = require('./config/musixmatch.conf');
 
 const STATE_KEY = 'spotify_auth_state';
-
 const scopes = ['user-read-private', 'user-read-email'];
 
 const spotifyApi = new Spotify({
@@ -25,9 +22,37 @@ const spotifyApi = new Spotify({
   redirectUri: 'http://localhost:3000/callback'
 });
 
-console.log('Got here too')
+const generateRandomString = N =>
+  (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
 
-const generateRandomString = N => (Math.random().toString(36)+Array(N).join('0')).slice(2, N+2);
+/**
+ * Middleware to check if user is logged in before
+ * allowing access to route
+ *
+ * @return {Function} go to callback function for route
+ *                    or redirect to login component
+ */
+const isAuth = (req, res, next) => {
+  if (req.session.loggedIn && spotifyApi.getAccessToken()) {
+    return next();
+  }
+  res.redirect('/');
+};
+
+const youtubeSearch = (song, cb) => {
+  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
+  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
+
+  https.get(url, res1 => {
+    res1.on('data', data => {
+      cb(data);
+    });
+  }).on('error', e => {
+    console.log(e);
+  });
+};
 
 /**
  * The /login endpoint
@@ -46,12 +71,8 @@ router.get('/auth/spotify', (_, res) => {
  * parameter. Then, if all is good, redirect the user to the user page. If all
  * is not good, redirect the user to an error page
  */
-
-router.get('/callback', (req, res, done) => {
-  //console.log('This is req:', req);
-  // console.log('This is res:', res);
+router.get('/callback', (req, res) => {
   const { code, state } = req.query;
-  console.log('this is req.query:', req.query)
   const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
   // first do state validation
   if (state === null || state !== storedState) {
@@ -64,61 +85,37 @@ router.get('/callback', (req, res, done) => {
       const { expires_in, access_token, refresh_token } = data.body;
       // Set the access token on the API object to use it in later calls
       spotifyApi.setAccessToken(access_token);
-      console.log('called set access token');
       spotifyApi.setRefreshToken(refresh_token);
-      console.log('called set refresh token');
       // use the access token to access the Spotify Web API
       spotifyApi.getMe().then(({ body }) => {
-        console.log('Calling helper getMe');
-        console.log('body:', body);
-        // userController.addUser({
-        //   username: body.id,
-        //   name: body.display_name || '',
-        //   email: body.email || ''
-        // }, (err, user) => {
-        //   if (err) {
-        //     //res.redirect('/#/error/failed to create user');
-        //     console.log('There has been an error:', err);
-        //   // } else {
-        //   //   res.redirect(`/#/home/${access_token}/${refresh_token}`);
-        //   }
-        // });
-        User.findOne({
-          'username': body.id
-        }, function (err, user){
-          if(err){
-            console.log('There has been an error creating the user:', user);
-          } if(!user){
-            user = new User({
-              username: body.id || '',
-              name: body.display_name || '',
-              email: body.email || ''
-            })
-            user.save(function(err){
-              if(err){
-                console.log('There has been an error saving the user', err);
-                return done(null, user);
-              }
-              console.log('The user has been saved');
-            })
-          } else {
-            res.redirect(`/#/home/${access_token}/${refresh_token}`); 
-            console.log('User has been logged in:', body.display_name); 
-            //return done(err, user);
+
+        userController.findUser(body.id, (err, user) => {
+          if (err) {
+            return console.log(err);
           }
-        })
+          if (!user) {
+            userController.createUser(body, err => {
+              if (err) {
+                return console.log(err);
+              }
+              console.log('User saved');
+            });
+          }
+
+          req.session.loggedIn = true;
+          res.redirect(`/#/user/${access_token}/${refresh_token}`);
+        });
       });
-      // we can also pass the token to the browser to make requests from there
     }).catch(err => {
-     res.redirect('/#/error/invalid token');
+      res.redirect('/#/error/invalid token');
     });
   }
 });
 
-router.get('/api/youtube-search/:song', (req, res0) => {
+router.get('/api/youtube-search/:song', isAuth, (req, res0) => {
   const { song } = req.params;
   const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+  const STATIC_OPTS = 'part=snippet&maxResults=1&order=rating';
   const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
   const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
 
@@ -131,7 +128,7 @@ router.get('/api/youtube-search/:song', (req, res0) => {
   });
 });
 
-router.get('/api/lyrics-search/:lyrics', (req, res0) => {
+router.get('/api/lyrics-search/:lyrics', isAuth, (req, res0) => {
   const { lyrics } = req.params;
   const ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
   const STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
@@ -141,13 +138,16 @@ router.get('/api/lyrics-search/:lyrics', (req, res0) => {
   https.get(url, res1 => {
     res1.setEncoding('utf8');
     res1.on('data', data => {
-      if (JSON.parse(data)) {
+      if (data && JSON.parse(data)) {
         const {
           track_name,
           artist_name
         } = JSON.parse(data).message.body.track_list[0].track;
 
-        res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
+        youtubeSearch(`${artist_name} ${track_name}`, (data) => {
+          res0.send(data.toString());
+        });
+        // res0.redirect(`/api/youtube-search/${artist_name} ${track_name}`);
       }
     });
   }).on('error', e => {
@@ -155,11 +155,11 @@ router.get('/api/lyrics-search/:lyrics', (req, res0) => {
   });
 });
 
-
-
-router.get('/logout', () => {
-
-})
-
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  spotifyApi.resetAccessToken();
+  spotifyApi.resetRefreshToken();
+  res.redirect('https://spotify.com/logout');
+});
 
 module.exports = router;
