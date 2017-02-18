@@ -161,6 +161,7 @@ router.get('/api/youtube-search/:song', isAuth, (req, res0) => {
       data += chunk
     });
     res.on('end', () => {
+      data = JSON.parse(data).items[0];
       console.log('DATA BEING SENT BACK FROM YOUTUBE:', data);
       cb(data);
     });
@@ -169,11 +170,11 @@ router.get('/api/youtube-search/:song', isAuth, (req, res0) => {
   });
 });
 
-const spotifySearch = (songData, cb) => {
+const spotifySearch = (songData, cb) => { // limit search results to 3 to limit bandwith
   spotifyApi.searchTracks(`${songData}`)
     .then(function(data) {
-      console.log('DATA BEING SENT BACK FROM SPOTIFY:', data.body);
-      cb(data.body);
+      console.log('DATA BEING SENT BACK FROM SPOTIFY:', data.body.tracks.items[0]);
+      cb(data.body.tracks.items[0]);
     }, function(err) {
       console.error('something went wrong in song details', err);
     });
@@ -209,8 +210,9 @@ router.get('/api/lyrics-search/:lyrics', (req, res0) => {
               spotData
             };
             console.log('COUPLED DATA:', coupledData);
-            res0.send({ytData}.toString());
+            res0.send(coupledData);
           });
+          // res0.end(ytData.toString());
         });
       }
     });

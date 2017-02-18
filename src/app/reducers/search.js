@@ -13,12 +13,12 @@ const initialState = {
 export default function search(state = initialState, action) {
   switch (action.type) {
     case SEARCH_BY_LYRICS:
-      console.log('INSIDE SEARCH_BY_LYRICS REDUCER:', JSON.parse(action.payload.data));
+      console.log('INSIDE SEARCH_BY_LYRICS REDUCER:', action.payload.data);
       const newIndex = state.allSongs.length;
       return {
         allSongs: [
           ...state.allSongs,
-          action.payload.data.items[0]
+          action.payload.data
         ],
         currentSongIndex: newIndex
       };
