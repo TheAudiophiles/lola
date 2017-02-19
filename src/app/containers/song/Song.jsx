@@ -99,7 +99,7 @@ class Song extends Component {
 
     return (
       <YouTube
-        videoId={allSongs[currentSongIndex].id.videoId}
+        videoId={allSongs[currentSongIndex].ytData.items[0].id.videoId}
         opts={opts}
         onReady={this._onReady}
       />
