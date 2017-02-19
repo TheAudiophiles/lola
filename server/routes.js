@@ -1,7 +1,7 @@
 'use strict';
 
 const Spotify = require('spotify-web-api-node');
-const https = require('https');
+const axios = require('axios');
 const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
@@ -190,6 +190,39 @@ router.get('/logout', (req, res) => {
   spotifyApi.resetAccessToken();
   spotifyApi.resetRefreshToken();
   res.redirect('https://spotify.com/logout');
+
+// router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
+//   const { lyrics } = req.params;
+//   const LYRICS_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
+//   const LYRICS_STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
+//   const lyricsOpts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
+//   const lyricsUrl = `${LYRICS_ROOT_URL}?${LYRICS_STATIC_OPTS}${lyricsOpts}`;
+//
+//   const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+//   const YOUTUBE_STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+//
+//   axios.get(lyricsUrl)
+//     .then(({ data }) => {
+//       const { track_name, artist_name } = data.message.body.track_list[0].track;
+//       return `${artist_name} ${track_name}`;
+//     })
+//     .then(track => {
+//       const youtubeOpts = `&q=${track}&key=${YOUTUBE_API_KEY}`;
+//       const youtubeUrl = `${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
+//       return axios.get(youtubeUrl);
+//     })
+//     .then(({ data }) => {
+//       // Timeout is only for testing. It is here so the loading gif will
+//       // show on search. Once song details is implemented it prob won't be
+//       // needed to show the loading gif.
+//       setTimeout(() => {
+//         res.json(data);
+//       }, 1000);
+//       // res.json(data);
+//     })
+//     .catch(err => {
+//       res.redirect('/#/error/There was a problem with the search');
+//     });
 });
 
 router.get('/logout', (req, res) => {

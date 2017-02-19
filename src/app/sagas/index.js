@@ -9,6 +9,7 @@ import {
   SPOTIFY_TOKENS,
   spotifyMeSuccess,
   spotifyMeFailure,
+  fetchSongLoading,
   fetchSongVideoSuccess,
   fetchSongVideoFailure,
   setTokensSuccess,
@@ -34,6 +35,7 @@ function* fetchUser() {
 
 function* fetchSongByLyrics({ lyrics }) {
   try {
+    yield put(fetchSongLoading());
     const request = yield call(axios.get, `/api/lyrics-search/${lyrics}`);
     yield put(fetchSongVideoSuccess(request));
   } catch(error) {

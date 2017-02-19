@@ -5,6 +5,7 @@ import { Flex, Box } from 'reflexbox';
 import { ButtonCircle } from 'rebass';
 import YouTube from 'react-youtube';
 import Icon from 'react-geomicons';
+import Loading from 'react-loading';
 
 import { previousSong, nextSong } from '../../actions';
 

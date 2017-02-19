@@ -1,13 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { compose, createStore, applyMiddleware, combineReducers } from 'redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import 'babel-polyfill';
 import createSagaMiddleware from 'redux-saga';
-import ReduxPromise from 'redux-promise';
-// import {persistStore, autoRehydrate} from 'redux-persist';
+import persistState from 'redux-localstorage';
 
 import * as reducers from './reducers';
 import rootSaga from './sagas';
@@ -26,18 +25,19 @@ import './components/bundle.scss';
 const sagaMiddleware = createSagaMiddleware();
 
 const createStoreWithMiddleware = applyMiddleware(
-  ReduxPromise,
   sagaMiddleware
 )(createStore);
+
+const ehancer = compose(persistState());
+
 const store = createStoreWithMiddleware(
   combineReducers({ ...reducers, routing: routerReducer }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  // autoRehydrate()
+  ehancer
 );
 const history = syncHistoryWithStore(hashHistory, store);
 
 sagaMiddleware.run(rootSaga);
-// persistStore(store);
 
 ReactDOM.render(
   <Provider store={store}>

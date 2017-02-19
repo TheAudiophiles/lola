@@ -1,4 +1,5 @@
 export const SEARCH_LYRICS_BEGIN = 'SEARCH_LYRICS_BEGIN';
+export const SEARCH_LYRICS_LOADING = 'SEARCH_LYRICS_LOADING';
 export const SEARCH_LYRICS_SUCCESS = 'SEARCH_LYRICS_SUCCESS';
 export const SEARCH_LYRICS_FAILURE = 'SEARCH_LYRICS_FAILURE';
 export const PREVIOUS_SONG = 'PREVIOUS_SONG';
@@ -10,6 +11,18 @@ export const SPOTIFY_ME_BEGIN = 'SPOTIFY_ME_BEGIN';
 export const SPOTIFY_ME_SUCCESS = 'SPOTIFY_ME_SUCCESS';
 export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
 export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
+export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
+
+
+/**
+ * fetchSongLoading - Action to show loading gif while song
+ * is being requested
+ *
+ * @return {object} redux action
+ */
+export const fetchSongLoading = () => ({
+  type: SEARCH_LYRICS_LOADING
+});
 
 /**
  * fetchSongVideo - Start request with lyrics to recieve
@@ -82,11 +95,12 @@ export const getMyInfo = () => ({
 
 
 /**
- * spotifyMeSuccess - Description
+ * spotifyMeSuccess - Successfully received account info
+ * from spotify
  *
- * @param {object} payload Description
+ * @param {object} payload account info
  *
- * @return {object} Description
+ * @return {object} redux action
  */
 export const spotifyMeSuccess = payload => ({
   type: SPOTIFY_ME_SUCCESS,
@@ -95,11 +109,12 @@ export const spotifyMeSuccess = payload => ({
 
 
 /**
- * spotifyMeFailure - Description
+ * spotifyMeFailure - Failed to get account info
+ * from stotify
  *
- * @param {type} error Description
+ * @param {object} error
  *
- * @return {type} Description
+ * @return {object} redux action
  */
 export const spotifyMeFailure = error => ({
   type: SPOTIFY_ME_FAILURE,
@@ -108,13 +123,11 @@ export const spotifyMeFailure = error => ({
 
 
 /**
- * setTokens - Description
+ * setTokens - Start to set tokens for spotify OAuth
  *
- * @param {object} Unknown              Description
- * @param {type}   Unknown.accessToken  Description
- * @param {type}   Unknown.refreshToken Description
+ * @param {object} Access and refresh tokens
  *
- * @return {type} Description
+ * @return {object} redux action
  */
 export const setTokens = ({ accessToken, refreshToken }) => ({
   type: SPOTIFY_TOKENS,
@@ -124,13 +137,11 @@ export const setTokens = ({ accessToken, refreshToken }) => ({
 
 
 /**
- * setTokensSuccess - Description
+ * setTokensSuccess - Successfully set tokens for spotify OAuth
  *
- * @param {object} Unknown              Description
- * @param {type}   Unknown.accessToken  Description
- * @param {type}   Unknown.refreshToken Description
+ * @param {object} Access and refresh tokens
  *
- * @return {type} Description
+ * @return {object} redux action
  */
 export const setTokensSuccess = ({ accessToken, refreshToken }) => ({
   type: SPOTIFY_TOKENS_SUCCESS,
@@ -140,9 +151,9 @@ export const setTokensSuccess = ({ accessToken, refreshToken }) => ({
 
 
 /**
- * setTokensFailure - Description
+ * setTokensFailure - Failed to set tokens for spotify OAuth
  *
- * @return {type} Description
+ * @return {object} redux action
  */
 export const setTokensFailure = () => ({
   type: SPOTIFY_TOKENS_FAILURE
@@ -150,10 +161,19 @@ export const setTokensFailure = () => ({
 
 
 /**
- * spotifyLogout - Description
+ * spotifyLogout - Logout from our app and spotify
  *
- * @return {type} Description
+ * @return {object} redux action
  */
 export const spotifyLogout = () => ({
   type: SPOTIFY_LOGOUT
+});
+
+/**
+ * resetLogout - Reset loggedOut property in auth after logged out
+ *
+ * @return {object} redux action
+ */
+export const resetLogout = () => ({
+  type: RESET_LOGGEDOUT
 });
