@@ -6,7 +6,6 @@ const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
 
-const User = require('./models/UserModel');
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
 
@@ -40,24 +39,6 @@ const isAuth = (req, res, next) => {
   res.redirect('/');
 };
 
-const youtubeSearch = (song, cb) => {
-  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
-  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
-  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
-
-  https.get(url, res1 => {
-    res1.on('data', data => {
-      cb(data);
-    });
-  }).on('error', e => {
-    console.log(e);
-  });
-};
-=======
-const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
->>>>>>> cleaned up routes
-
 /**
  * The /login endpoint
  * Redirect the client to the spotify authorize url, but first set that user's
@@ -76,14 +57,11 @@ router.get('/auth/spotify', (_, res) => {
  * is not good, redirect the user to an error page
  */
 
-router.get('/callback', (req, res, done) => {
-  //console.log('This is req:', req);
-  // console.log('This is res:', res);
+router.get('/callback', (req, res) => {
   const {
     code,
     state
   } = req.query;
-  console.log('this is req.query:', req.query)
   const storedState = req.cookies ? req.cookies[STATE_KEY] : null;
   // first do state validation
   if (state === null || state !== storedState) {
@@ -112,27 +90,6 @@ router.get('/callback', (req, res, done) => {
             userController.createUser(body, err => {
               if (err) {
                 return console.log(err);
-      spotifyApi.getMe().then(({
-        body
-      }) => {
-        console.log('body:', body);
-
-        User.findOne({
-          'username': body.id
-        }, function(err, user) {
-          if (err) {
-            console.log('There has been an error creating the user:', user);
-          }
-          if (!user) {
-            user = new User({
-              username: body.id || '',
-              name: body.display_name || '',
-              email: body.email || ''
-            })
-            user.save(function(err) {
-              if (err) {
-                console.log('There has been an error saving the user', err);
-                return done(null, user);
               }
               console.log('User saved');
             });
@@ -148,28 +105,6 @@ router.get('/callback', (req, res, done) => {
   }
 });
 
-router.get('/api/youtube-search/:song', isAuth, (req, res0) => {
-  const { song } = req.params;
-  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const STATIC_OPTS = 'part=snippet&maxResults=1&order=rating';
-  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
-  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
-
-  https.get(url, res => {
-    let data = '';
-    res.on('data', chunk => {
-      data += chunk
-    });
-    res.on('end', () => {
-      data = JSON.parse(data).items[0];
-      console.log('DATA BEING SENT BACK FROM YOUTUBE:', data);
-      cb(data);
-    });
-  }).on('error', e => {
-    console.log(e);
-  });
-});
-
 const spotifySearch = (songData, cb) => { // limit search results to 3 to limit bandwith
   spotifyApi.searchTracks(`${songData}`)
     .then(function(data) {
@@ -180,7 +115,22 @@ const spotifySearch = (songData, cb) => { // limit search results to 3 to limit 
     });
 };
 
-router.get('/api/lyrics-search/:lyrics', (req, res0) => {
+const youtubeSearch = (song, cb) => {
+  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
+  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
+
+  https.get(url, res1 => {
+    let data = '';
+    res1.on('data', chunk => { data += chunk; });
+    res1.on('end', () => { cb(JSON.parse(data)) });
+  }).on('error', e => {
+    console.log(e);
+  });
+};
+
+router.get('/api/lyrics-search/:lyrics', isAuth, (req, res0) => {
   const {
     lyrics
   } = req.params;
@@ -191,11 +141,8 @@ router.get('/api/lyrics-search/:lyrics', (req, res0) => {
 
   https.get(url, res1 => {
     res1.setEncoding('utf8');
-    res1.on('data', data => {
     let data = '';
-    res1.on('data', chunk => {
-      data += chunk
-    });
+    res1.on('data', chunk => { data += chunk });
     res1.on('end', () => {
       if (data && JSON.parse(data)) {
         const {

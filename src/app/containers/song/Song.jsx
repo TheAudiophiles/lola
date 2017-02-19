@@ -99,18 +99,10 @@ class Song extends Component {
 
     return (
       <YouTube
-        videoId={allSongs[currentSongIndex].ytData.id.videoId}
+        videoId={allSongs[currentSongIndex].ytData.items[0].id.videoId}
         opts={opts}
         onReady={this._onReady}
       />
-      <Flex
-        align="center"
-        justify="space-between"
-        wrap
-        className="Song"
-      >
-        {this.controlButtons()}
-      </Flex>
     );
   }
 
