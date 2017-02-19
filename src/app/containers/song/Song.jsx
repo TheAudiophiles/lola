@@ -14,14 +14,19 @@ class Song extends Component {
     super(props);
 
     this.state = {
-      currentSong: {}
+      currentSong: {},
+      playing: false,
+      paused: false
     };
   }
 
   _onReady = (e) => {
     this.setState({
-      currentSong: e.target
+      currentSong: e.target,
+      playing: true
     });
+    console.log(this.state.currentSong);
+    window.ytplayer = this.state.currentSong;
   }
 
   toPreviousSong = (e) => {
@@ -30,10 +35,18 @@ class Song extends Component {
 
   pauseSong = (e) => {
     this.state.currentSong.pauseVideo();
+    this.setState({
+      playing: false,
+      paused: true
+    });
   }
 
   playSong = (e) => {
     this.state.currentSong.playVideo();
+    this.setState({
+      playing: true,
+      paused: false
+    });
   }
 
   toNextSong = (e) => {
@@ -57,11 +70,18 @@ class Song extends Component {
       const prevDisabled = () =>
         this.props.currentSongIndex === 0 && btn === 'previous';
 
+      const playDisabled = () =>
+        this.state.playing && btn === 'play';
+
+      const pauseDisabled = () =>
+        this.state.paused && btn === 'pause';
+
       return (
         <Box key={btn} px={3}>
           <ButtonCircle
             disabled={
-              !this.videoExists() || prevDisabled() || nextDisabled()
+              !this.videoExists() || prevDisabled() ||
+              nextDisabled() || playDisabled() || pauseDisabled()
             }
             title={btn}
             size={48}
