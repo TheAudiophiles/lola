@@ -80,8 +80,11 @@ class Song extends Component {
         <Box key={btn} px={3}>
           <ButtonCircle
             disabled={
-              !this.videoExists() || prevDisabled() ||
-              nextDisabled() || playDisabled() || pauseDisabled()
+              !this.videoExists()
+                || prevDisabled()
+                || nextDisabled()
+                || playDisabled()
+                || pauseDisabled()
             }
             title={btn}
             size={48}
