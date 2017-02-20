@@ -23,7 +23,10 @@ const spotifyApi = new Spotify({
 });
 
 const generateRandomString = N =>
-  (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
+  (Math.random()
+    .toString(36) + Array(N)
+    .join('0'))
+  .slice(2, N + 2);
 
 /**
  * Middleware to check if user is logged in before
@@ -70,38 +73,43 @@ router.get('/callback', (req, res) => {
   } else {
     res.clearCookie(STATE_KEY);
     // Retrieve an access token and a refresh token
-    spotifyApi.authorizationCodeGrant(code).then(data => {
-      const {
-        expires_in,
-        access_token,
-        refresh_token
-      } = data.body;
-      // Set the access token on the API object to use it in later calls
-      spotifyApi.setAccessToken(access_token);
-      spotifyApi.setRefreshToken(refresh_token);
-      // use the access token to access the Spotify Web API
-      spotifyApi.getMe().then(({ body }) => {
+    spotifyApi.authorizationCodeGrant(code)
+      .then(data => {
+        const {
+          expires_in,
+          access_token,
+          refresh_token
+        } = data.body;
+        // Set the access token on the API object to use it in later calls
+        spotifyApi.setAccessToken(access_token);
+        spotifyApi.setRefreshToken(refresh_token);
+        // use the access token to access the Spotify Web API
+        spotifyApi.getMe()
+          .then(({
+            body
+          }) => {
 
-        userController.findUser(body.id, (err, user) => {
-          if (err) {
-            return console.log(err);
-          }
-          if (!user) {
-            userController.createUser(body, err => {
+            userController.findUser(body.id, (err, user) => {
               if (err) {
                 return console.log(err);
               }
-              console.log('User saved');
-            });
-          }
+              if (!user) {
+                userController.createUser(body, err => {
+                  if (err) {
+                    return console.log(err);
+                  }
+                  console.log('User saved');
+                });
+              }
 
-          req.session.loggedIn = true;
-          res.redirect(`/#/user/${access_token}/${refresh_token}`);
-        });
+              req.session.loggedIn = true;
+              res.redirect(`/#/user/${access_token}/${refresh_token}`);
+            });
+          });
+      })
+      .catch(err => {
+        res.redirect('/#/error/invalid token');
       });
-    }).catch(err => {
-      res.redirect('/#/error/invalid token');
-    });
   }
 });
 
@@ -122,12 +130,17 @@ const youtubeSearch = (song, cb) => {
   const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
 
   https.get(url, res1 => {
-    let data = '';
-    res1.on('data', chunk => { data += chunk; });
-    res1.on('end', () => { cb(JSON.parse(data)) });
-  }).on('error', e => {
-    console.log(e);
-  });
+      let data = '';
+      res1.on('data', chunk => {
+        data += chunk;
+      });
+      res1.on('end', () => {
+        cb(JSON.parse(data))
+      });
+    })
+    .on('error', e => {
+      console.log(e);
+    });
 };
 
 router.get('/api/lyrics-search/:lyrics', isAuth, (req, res0) => {
@@ -140,32 +153,36 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res0) => {
   const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
 
   https.get(url, res1 => {
-    res1.setEncoding('utf8');
-    let data = '';
-    res1.on('data', chunk => { data += chunk });
-    res1.on('end', () => {
-      if (data && JSON.parse(data)) {
-        const {
-          track_name,
-          artist_name
-        } = JSON.parse(data).message.body.track_list[0].track;
+      res1.setEncoding('utf8');
+      let data = '';
+      res1.on('data', chunk => {
+        data += chunk;
+      });
+      res1.on('end', () => {
+        if (data && JSON.parse(data)) {
+          const {
+            track_name,
+            artist_name
+          } = JSON.parse(data)
+            .message.body.track_list[0].track;
 
-        youtubeSearch(`${artist_name} ${track_name}`, (ytData) => {
-          spotifySearch(`track:${track_name} artist:${artist_name}`, (spotData) => {
-            const coupledData = {
-              ytData,
-              spotData
-            };
-            console.log('COUPLED DATA:', coupledData);
-            res0.send(coupledData);
+          youtubeSearch(`${artist_name} ${track_name}`, (ytData) => {
+            spotifySearch(`track:${track_name} artist:${artist_name}`, (spotData) => {
+              const coupledData = {
+                ytData,
+                spotData
+              };
+              console.log('COUPLED DATA:', coupledData);
+              res0.send(coupledData);
+            });
+            // res0.end(ytData.toString());
           });
-          // res0.end(ytData.toString());
-        });
-      }
+        }
+      });
+    })
+    .on('error', e => {
+      console.log(e);
     });
-  }).on('error', e => {
-    console.log(e);
-  });
 });
 
 router.get('/logout', (req, res) => {
@@ -175,8 +192,11 @@ router.get('/logout', (req, res) => {
   res.redirect('https://spotify.com/logout');
 });
 
-router.get('/logout', () => {
-
-})
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+  spotifyApi.resetAccessToken();
+  spotifyApi.resetRefreshToken();
+  res.redirect('https://spotify.com/logout');
+});
 
 module.exports = router;
