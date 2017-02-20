@@ -25,8 +25,6 @@ class Song extends Component {
       currentSong: e.target,
       playing: true
     });
-    console.log(this.state.currentSong);
-    window.ytplayer = this.state.currentSong;
   }
 
   toPreviousSong = (e) => {

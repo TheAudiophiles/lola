@@ -24,6 +24,23 @@ export default function search(state = initialState, action) {
         allSongs: [
           ...state.allSongs,
           action.payload.data
+      // const { allSongs } = state;
+      // console.log(action);
+      // const newSong = action.payload.data.items[0];
+      // for (let i in allSongs) {
+      //   if (allSongs[i].id.videoId === newSong.id.videoId) {
+      //     return {
+      //       allSongs,
+      //       currentSongIndex: i,
+      //       loading: false
+      //     };
+      //   }
+      // }
+      // const newIndex = allSongs.length;
+      // return {
+      //   allSongs: [
+      //     ...allSongs,
+      //     newSong
         ],
         currentSongIndex: newIndex,
         loading: false
