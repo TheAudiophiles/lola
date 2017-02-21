@@ -10,7 +10,8 @@ class User extends Component {
     super(props);
 
     this.state = {
-      authFailed: false
+      authFailed: false,
+      loggedIn: false
     };
   }
 

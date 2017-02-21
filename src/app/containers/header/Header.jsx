@@ -4,39 +4,43 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import { Fixed, Toolbar, NavItem } from 'rebass';
 
-import { spotifyLogout } from '../../actions';
-
-const style = {marginLeft:'auto'};
+import { spotifyLogout, resetLogout } from '../../actions';
 
 const Header = (props) => {
-  const { spotifyLogout, loggedOut } = props;
+  const { spotifyLogout, loggedOut, loggedIn, resetLogout } = props;
 
   const logoutHandler = (e) => {
     spotifyLogout();
   };
 
-  if (loggedOut) {
+  if (loggedOut && !loggedIn) {
+    resetLogout();
     window.location = '/logout';
   }
+
+  const logoutStyle = { marginLeft: 'auto' };
 
   return (
     <Fixed top left right zIndex={1}>
       <Toolbar>
-        <NavItem to="/" is={Link} children="Home" />
+
+        <NavItem to="/home" is={Link} children="Lola" />
         <NavItem to="/about" is={Link} children="About" />
         <NavItem
-          style={style}
+          style={logoutStyle}
           onClick={logoutHandler}
           is="a"
-          children="Logout" />
+          children="Logout"
+        />
       </Toolbar>
     </Fixed>
   );
 };
 
-const mapStateToProps = ({ auth }) => ({ loggedOut: auth.loggedOut });
+const mapStateToProps = ({ auth }) =>
+  ({ loggedOut: auth.loggedOut, loggedIn: auth.loggedIn });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ spotifyLogout }, dispatch);
+  bindActionCreators({ spotifyLogout, resetLogout }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

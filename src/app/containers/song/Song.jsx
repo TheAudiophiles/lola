@@ -5,6 +5,7 @@ import { Flex, Box } from 'reflexbox';
 import { ButtonCircle } from 'rebass';
 import YouTube from 'react-youtube';
 import Icon from 'react-geomicons';
+import Loading from 'react-loading';
 
 import { previousSong, nextSong } from '../../actions';
 
@@ -13,13 +14,16 @@ class Song extends Component {
     super(props);
 
     this.state = {
-      currentSong: {}
+      currentSong: {},
+      playing: false,
+      paused: false
     };
   }
 
   _onReady = (e) => {
     this.setState({
-      currentSong: e.target
+      currentSong: e.target,
+      playing: true
     });
   }
 
@@ -29,10 +33,18 @@ class Song extends Component {
 
   pauseSong = (e) => {
     this.state.currentSong.pauseVideo();
+    this.setState({
+      playing: false,
+      paused: true
+    });
   }
 
   playSong = (e) => {
     this.state.currentSong.playVideo();
+    this.setState({
+      playing: true,
+      paused: false
+    });
   }
 
   toNextSong = (e) => {
@@ -56,11 +68,21 @@ class Song extends Component {
       const prevDisabled = () =>
         this.props.currentSongIndex === 0 && btn === 'previous';
 
+      const playDisabled = () =>
+        this.state.playing && btn === 'play';
+
+      const pauseDisabled = () =>
+        this.state.paused && btn === 'pause';
+
       return (
         <Box key={btn} px={3}>
           <ButtonCircle
             disabled={
-              !this.videoExists() || prevDisabled() || nextDisabled()
+              !this.videoExists()
+                || prevDisabled()
+                || nextDisabled()
+                || playDisabled()
+                || pauseDisabled()
             }
             title={btn}
             size={48}
@@ -107,7 +129,10 @@ class Song extends Component {
   }
 
   render() {
-    if (!this.props.allSongs.length) {
+    if (
+      !this.props.allSongs.length ||
+      !this.props.allSongs[this.props.currentSongIndex].ytData
+    ) {
       return this.flexWrap();
     }
 

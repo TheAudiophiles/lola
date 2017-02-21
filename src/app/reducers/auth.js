@@ -3,7 +3,8 @@ import {
   SPOTIFY_TOKENS_FAILURE,
   SPOTIFY_ME_SUCCESS,
   SPOTIFY_ME_FAILURE,
-  SPOTIFY_LOGOUT
+  SPOTIFY_LOGOUT,
+  RESET_LOGGEDOUT
 } from '../actions';
 
 /** The initial state; no tokens and no user info */
@@ -26,7 +27,7 @@ const initialState = {
   },
   loggedOut: false,
   failed: false,
-  loggedIn: true
+  loggedIn: false
 };
 
 /**
@@ -37,26 +38,51 @@ export default function reduce(state = initialState, action) {
     // when we get the tokens... set the tokens!
     case SPOTIFY_TOKENS_SUCCESS:
       const { accessToken, refreshToken } = action;
-      return Object.assign({}, state, { accessToken, refreshToken });
+      return {
+        ...state,
+        accessToken,
+        refreshToken
+      };
 
     case SPOTIFY_TOKENS_FAILURE:
-      return Object.assign({}, state, { failed: true, loggedIn: false });
+      return {
+        ...state,
+        failed: true,
+        loggedIn: false
+      };
 
     // when we get the data merge it in
     case SPOTIFY_ME_SUCCESS:
-      return Object.assign({}, state, {
-        user: Object.assign({}, state.user, action.payload, {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
           loading: false
-        }),
+        },
         failed: false,
         loggedIn: true
-      });
+      };
 
     case SPOTIFY_ME_FAILURE:
-      return Object.assign({}, state, { failed: true, loggedIn: false });
+      return {
+        ...state,
+        failed: true,
+        loggedIn: false
+      };
 
     case SPOTIFY_LOGOUT:
-      return Object.assign({}, state, initialState, { loggedOut: true, loggedIn: false });
+      return {
+        ...initialState,
+        loggedOut: true,
+        loggedIn: false
+      };
+
+    case RESET_LOGGEDOUT:
+      return {
+        ...state,
+        loggedOut: false
+      };
 
     default:
       return state;
