@@ -7,7 +7,10 @@ import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
 class SongDetails extends Component {
 
   render () {
-    if (!this.props.allSongs.length) {
+    if (
+      !this.props.allSongs.length ||
+      !this.props.allSongs[this.props.currentSongIndex].spotData
+    ) {
       return <div></div>;
     }
 
@@ -36,10 +39,6 @@ class SongDetails extends Component {
           Album: {allSongs[currentSongIndex].spotData.album.name}
         </Text>
       </Card>
-
-
-
-
 
         // for putting the song details component outside of the search and playerController components
         // <Block classname='song-details'>
@@ -73,9 +72,9 @@ class SongDetails extends Component {
         // Album: {allSongs[currentSongIndex].spotData.album.name}
         // <br/>
         // </div>
-      );
-    }
+    );
   }
+}
 
 const mapDispatchToProps = dispatch => bindActionCreators({ addToPlayList }, dispatch);
 

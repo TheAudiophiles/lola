@@ -113,116 +113,42 @@ router.get('/callback', (req, res) => {
   }
 });
 
-const spotifySearch = (songData, cb) => { // limit search results to 3 to limit bandwith
-  spotifyApi.searchTracks(`${songData}`)
-    .then(function(data) {
-      console.log('DATA BEING SENT BACK FROM SPOTIFY:', data.body.tracks.items[0]);
-      cb(data.body.tracks.items[0]);
-    }, function(err) {
-      console.error('something went wrong in song details', err);
-    });
-};
+router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
+  const { lyrics } = req.params;
+  const LYRICS_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
+  const LYRICS_STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
+  const lyricsOpts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
+  const lyricsUrl = `${LYRICS_ROOT_URL}?${LYRICS_STATIC_OPTS}${lyricsOpts}`;
 
-const youtubeSearch = (song, cb) => {
-  const ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
-  const opts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
-  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
+  const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+  const YOUTUBE_STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
 
-  https.get(url, res1 => {
-      let data = '';
-      res1.on('data', chunk => {
-        data += chunk;
-      });
-      res1.on('end', () => {
-        cb(JSON.parse(data))
-      });
+  let results = {};
+  let trackName = '', artistName = '';
+
+  axios.get(lyricsUrl)
+    .then(({ data }) => {
+      const { track_name, artist_name } = data.message.body.track_list[0].track;
+      trackName = track_name;
+      artistName = artist_name;
+      return `${artist_name} ${track_name}`;
     })
-    .on('error', e => {
-      console.log(e);
-    });
-};
-
-router.get('/api/lyrics-search/:lyrics', isAuth, (req, res0) => {
-  const {
-    lyrics
-  } = req.params;
-  const ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-  const STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
-  const opts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
-  const url = `${ROOT_URL}?${STATIC_OPTS}${opts}`;
-
-  https.get(url, res1 => {
-      res1.setEncoding('utf8');
-      let data = '';
-      res1.on('data', chunk => {
-        data += chunk;
-      });
-      res1.on('end', () => {
-        if (data && JSON.parse(data)) {
-          const {
-            track_name,
-            artist_name
-          } = JSON.parse(data)
-            .message.body.track_list[0].track;
-
-          youtubeSearch(`${artist_name} ${track_name}`, (ytData) => {
-            spotifySearch(`track:${track_name} artist:${artist_name}`, (spotData) => {
-              const coupledData = {
-                ytData,
-                spotData
-              };
-              console.log('COUPLED DATA:', coupledData);
-              res0.send(coupledData);
-            });
-            // res0.end(ytData.toString());
-          });
-        }
-      });
+    .then(track => {
+      const youtubeOpts = `&q=${track}&key=${YOUTUBE_API_KEY}`;
+      const youtubeUrl = `${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
+      return axios.get(youtubeUrl);
     })
-    .on('error', e => {
-      console.log(e);
+    .then(({ data }) => {
+      results.ytData = data;
+      return spotifyApi.searchTracks(`track:${trackName} artist:${artistName}`);
+    })
+    .then(data => {
+      results.spotData = data.body.tracks.items[0];
+      res.json(results);
+    })
+    .catch(err => {
+      res.redirect('/#/error/There was a problem with the search');
     });
-});
-
-router.get('/logout', (req, res) => {
-  req.session.destroy();
-  spotifyApi.resetAccessToken();
-  spotifyApi.resetRefreshToken();
-  res.redirect('https://spotify.com/logout');
-
-// router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
-//   const { lyrics } = req.params;
-//   const LYRICS_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-//   const LYRICS_STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
-//   const lyricsOpts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
-//   const lyricsUrl = `${LYRICS_ROOT_URL}?${LYRICS_STATIC_OPTS}${lyricsOpts}`;
-//
-//   const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-//   const YOUTUBE_STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
-//
-//   axios.get(lyricsUrl)
-//     .then(({ data }) => {
-//       const { track_name, artist_name } = data.message.body.track_list[0].track;
-//       return `${artist_name} ${track_name}`;
-//     })
-//     .then(track => {
-//       const youtubeOpts = `&q=${track}&key=${YOUTUBE_API_KEY}`;
-//       const youtubeUrl = `${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
-//       return axios.get(youtubeUrl);
-//     })
-//     .then(({ data }) => {
-//       // Timeout is only for testing. It is here so the loading gif will
-//       // show on search. Once song details is implemented it prob won't be
-//       // needed to show the loading gif.
-//       setTimeout(() => {
-//         res.json(data);
-//       }, 1000);
-//       // res.json(data);
-//     })
-//     .catch(err => {
-//       res.redirect('/#/error/There was a problem with the search');
-//     });
 });
 
 router.get('/logout', (req, res) => {

@@ -129,7 +129,10 @@ class Song extends Component {
   }
 
   render() {
-    if (!this.props.allSongs.length) {
+    if (
+      !this.props.allSongs.length ||
+      !this.props.allSongs[this.props.currentSongIndex].ytData
+    ) {
       return this.flexWrap();
     }
 
