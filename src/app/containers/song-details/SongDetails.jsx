@@ -13,8 +13,26 @@ class SongDetails extends Component {
     }
 
     const { allSongs, currentSongIndex } = this.props;
-    const songArt = allSongs[currentSongIndex].spotData.album.images[0].url;
 
+    let cover = 'http://previews.123rf.com/images/varka/varka1312/varka131200487/24584085-DJ-girl-Profile-of-pretty-girl-with-long-hair-in-headphones-Stock-Vector.jpg'; // lola ;)
+    if (allSongs[currentSongIndex].spotData.album.images[0].url) {
+      cover = allSongs[currentSongIndex].spotData.album.images[0].url;
+    }
+
+    let title = 'undefined';
+    if (allSongs[currentSongIndex].spotData.name) {
+      title = allSongs[currentSongIndex].spotData.name;
+    }
+
+    let artist = 'undefined';
+    if (allSongs[currentSongIndex].spotData.artists[0].name) {
+      artist = allSongs[currentSongIndex].spotData.artists[0].name;
+    }
+
+    let album = 'undefined';
+    if (allSongs[currentSongIndex].spotData.album.name) {
+      album = allSongs[currentSongIndex].spotData.album.name;
+    }
     // not sure why scss is not being appied when I give Card className="song-details"
     const style = {
       maxWidth: '200px',
@@ -24,22 +42,21 @@ class SongDetails extends Component {
 
     return (
       <Card style={style}>
-        <CardImage src={allSongs[currentSongIndex].spotData.album.images[0].url} />
+        <CardImage src={cover} />
         <Heading
           level={2}
           size={3}
         >
-          {allSongs[currentSongIndex].spotData.name}
+          {title}
         </Heading>
         <Text>
-          Artist: {allSongs[currentSongIndex].spotData.artists[0].name}
+          Artist: {artist}
           <br/>
-          Album: {allSongs[currentSongIndex].spotData.album.name}
+          Album: {album}
         </Text>
       </Card>
     );
   }
-}
 
 const mapDispatchToProps = dispatch => bindActionCreators({ addToPlayList }, dispatch);
 
