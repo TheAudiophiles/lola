@@ -4,6 +4,7 @@ import { Banner, Block, Heading } from 'rebass';
 import { bindActionCreators } from 'redux';
 import { setTokens, getMyInfo } from '../../actions';
 
+import SearchResults from '../../containers/searchResults/SearchResults';
 import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
 import SongDetails from '../../containers/song-details/SongDetails';
@@ -16,6 +17,7 @@ export default () => (
       <Load />
       <Search />
       <Song />
+      <SearchResults />
     </Block>
   </Banner>
 );
