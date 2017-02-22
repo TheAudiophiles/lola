@@ -1,10 +1,13 @@
 import React from 'react';
+import { Banner } from 'rebass';
 
 function About() {
   return (
-    <div className="container about">
-      <h1>About</h1>
-    </div>
+    <Banner>
+      <div className="container about">
+        <h1>About</h1>
+      </div>
+    </Banner>
   )
 }
 

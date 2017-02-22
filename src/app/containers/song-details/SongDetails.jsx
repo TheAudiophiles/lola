@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
-// import { bindActionCrea//tors } from 'redux';
-// import { addToPlaylist } from '../../actions'
 
 class SongDetails extends Component {
 
@@ -39,39 +37,6 @@ class SongDetails extends Component {
           Album: {allSongs[currentSongIndex].spotData.album.name}
         </Text>
       </Card>
-
-        // for putting the song details component outside of the search and playerController components
-        // <Block classname='song-details'>
-        //   <div className='album-cover' style={albumCoverStyle}>
-        //     <Media
-        //       img={songArt}
-        //     />
-        //   </div>
-        //   <div className='sd-text'>
-        //     <br/>
-        //     Title: {allSongs[currentSongIndex].spotData.name}
-        //     <br/>
-        //     Artist: {allSongs[currentSongIndex].spotData.artists[0].name}
-        //     <br/>
-        //     Album: {allSongs[currentSongIndex].spotData.album.name}
-        //     <br/>
-        //   </div>
-        // </Block>
-
-        // <div className='album-cover' style={albumCoverStyle}>
-        //   <Media
-        //     img={songArt}
-        //   />
-        // </div>
-        // <div className='song-details'>
-        // <br/>
-        // Title: {allSongs[currentSongIndex].spotData.name}
-        // <br/>
-        // Artist: {allSongs[currentSongIndex].spotData.artists[0].name}
-        // <br/>
-        // Album: {allSongs[currentSongIndex].spotData.album.name}
-        // <br/>
-        // </div>
     );
   }
 }

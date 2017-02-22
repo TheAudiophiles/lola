@@ -15,7 +15,7 @@ export default () => (
     <Block>
       <Load />
       <Search />
-      <Song />
     </Block>
+    <Song />
   </Banner>
 );
