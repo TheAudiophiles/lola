@@ -131,6 +131,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       const { track_name, artist_name } = data.message.body.track_list[0].track;
       trackName = track_name;
       artistName = artist_name;
+      console.log('This is data:', data.message.body.track_list[0].track)
       return `${artist_name} ${track_name}`;
     })
     .then(track => {
