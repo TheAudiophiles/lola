@@ -5,6 +5,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 const express = require('express');
 const router = new express.Router();
+const stringSimilarity = require('string-similarity');
 
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
@@ -22,11 +23,7 @@ const spotifyApi = new Spotify({
   redirectUri: 'http://localhost:3000/callback'
 });
 
-const generateRandomString = N =>
-  (Math.random()
-    .toString(36) + Array(N)
-    .join('0'))
-  .slice(2, N + 2);
+const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
 
 /**
  * Middleware to check if user is logged in before
@@ -113,37 +110,176 @@ router.get('/callback', (req, res) => {
   }
 });
 
+// function isSameSong(a, b) {
+//   if (a === b)) {
+//     return true;
+//   }
+//   return false;
+// }
+
 router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
   const { lyrics } = req.params;
   const LYRICS_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-  const LYRICS_STATIC_OPTS = 'page_size=3&page=1&s_track_rating=desc';
+  const LYRICS_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc';
   const lyricsOpts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
   const lyricsUrl = `${LYRICS_ROOT_URL}?${LYRICS_STATIC_OPTS}${lyricsOpts}`;
 
   const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const YOUTUBE_STATIC_OPTS = 'part=snippet&maxResults=1&order=relevance';
+  const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
 
-  let results = {};
-  let trackName = '', artistName = '';
+  let results = [];
+  // let results = { ytData: {}, spotData: {} };
+  let srYT = [];
+  let srSP
+  let youtubeOpts = '';
 
   axios.get(lyricsUrl)
     .then(({ data }) => {
-      const { track_name, artist_name } = data.message.body.track_list[0].track;
-      trackName = track_name;
-      artistName = artist_name;
-      return `${artist_name} ${track_name}`;
+      // let searchResults = data.message.body.track_list.map((result) => {
+      //   return `${result.track.artist_name} ${result.track.track_name}`;
+      // });
+      let searchResultsYT = [];
+      let searchResultsSP = [];
+
+      data.message.body.track_list.forEach((result) => {
+        searchResultsYT.push(`${result.track.artist_name} ${result.track.track_name}`);
+        searchResultsSP.push(`track:${result.track.track_name} artist:${result.track.artist_name}`);
+      });
+
+      console.log('searchResultsYT:', searchResultsYT);
+      console.log('searchResultsSP:', searchResultsSP);
+
+      // console.log('SEARCH RESULTS:', searchResults);
+
+      let uniqueResultsYT = [];
+      uniqueResultsYT.push(searchResultsYT[0]);
+      let uniqueResultsSP = [];
+      uniqueResultsSP.push(searchResultsSP[0]);
+      // console.log('UNIQUE RESULTS:', uniqueResults);
+
+      // let otherResults = data.message.body.track_list.slice(1).map((result) => result.track);
+      let otherResultsYT = searchResultsYT.slice(1);
+      // console.log('OTHER RESULTS:', otherResults);
+      console.log('Starting from point A');
+
+      for (let i = 0; i < otherResultsYT.length; i++) {
+        let minSimilarity = 0;
+        for (let j = 0; j < uniqueResultsYT.length; j++) {
+          // console.log('term2:', term2);
+          let similarity = stringSimilarity.compareTwoStrings(otherResultsYT[i], uniqueResultsYT[j]);
+          // console.log(`similarity between ${term1} and ${term2} is ${similarity}`);
+          if (similarity > minSimilarity ) {
+            minSimilarity = similarity;
+          }
+        }
+        // console.log('MIN SIMILARITY:', minSimilarity);
+        if (minSimilarity <= 0.3) { // its all good
+          uniqueResultsYT.push(otherResultsYT[i]);
+          uniqueResultsSP.push(searchResultsSP[i]);
+        }
+      }
+
+      console.log('Got to point B');
+
+
+      // otherResultsYT.forEach((term1) => {
+      //   // console.log('term1:', term1);
+      //   let minSimilarity = 0;
+      //   uniqueResultsYT.forEach((term2) => {
+      //     // console.log('term2:', term2);
+      //     let similarity = stringSimilarity.compareTwoStrings(term1, term2);
+      //     // console.log(`similarity between ${term1} and ${term2} is ${similarity}`);
+      //     if (similarity > minSimilarity ) {
+      //       minSimilarity = similarity;
+      //     }
+      //   });
+      //   // console.log('MIN SIMILARITY:', minSimilarity);
+      //   if (minSimilarity <= 0.3) { // its all good
+      //     uniqueResultsYT.push(term1);
+      //     uniqueResultsSP.push(term1);
+      //   }
+      // });
+
+      // console.log('UNIQUE RESULTS:', uniqueResults);
+      srYT = uniqueResultsYT.slice(0,4);
+      console.log('srYT', srYT);
+      srSP = uniqueResultsSP.slice(0,4);
+      console.log('srSP', srYT);
+
+
+
+      // console.log('UNIQUE RESULTS sliced:', sr);
     })
-    .then(track => {
-      const youtubeOpts = `&q=${track}&key=${YOUTUBE_API_KEY}`;
-      const youtubeUrl = `${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
-      return axios.get(youtubeUrl);
+    // .then(sr => {
+    //   console.log('starting searches for associated youtube videos :D');
+    //   const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+    //   const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
+    //   // console.log('YT STUFF:', youtubeOpts);
+    //   vids = sr.map((song) => {
+    //     const youtubeOpts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
+    //     return () => axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`); // have to be wrapped, else requests are invoked
+    //   });
+    //   console.log('VIDS:', vids);
+    //   // return axios.get(youtubeUrl);
+    //   return axios.all([vids[0](), vids[1](), vids[2](), vids[3]()]);
+    // })
+    .then(() => {
+      console.log('REQUESTING ASSOCIATED YOUTUBE VIDEOS :)');
+      youtubeOpts = `&q=${srYT[0]}&key=${YOUTUBE_API_KEY}`;
+      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
     })
-    .then(({ data }) => {
-      results.ytData = data;
-      return spotifyApi.searchTracks(`track:${trackName} artist:${artistName}`);
+    .then((vid0) => {
+      console.log('VID0:', vid0.data);
+      // results.ytData.vid0 = vid0.data;
+      results.push({ vid: vid0.data });
+      youtubeOpts = `&q=${srYT[1]}&key=${YOUTUBE_API_KEY}`;
+      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+    })
+    .then((vid1) => {
+      console.log('VID1:', vid1.data);
+      // results.ytData.vid1 = vid1.data;
+      results.push({ vid: vid1.data });
+      youtubeOpts = `&q=${srYT[2]}&key=${YOUTUBE_API_KEY}`;
+      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+    })
+    .then((vid2) => {
+      console.log('VID2:', vid2.data);
+      // results.ytData.vid2 = vid2.data;
+      results.push({ vid: vid2.data });
+      youtubeOpts = `&q=${srYT[3]}&key=${YOUTUBE_API_KEY}`;
+      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+    })
+    .then((vid3) => {
+      console.log('VID3:', vid3.data);
+      // results.ytData.vid3 = vid3.data;
+      results.push({ vid: vid3.data });
+      console.log('DONE GETTING YT DATA!!!:', results.ytData);
+      console.log('NOW GETTING SPOTIFY DATA :P');
+      return spotifyApi.searchTracks(srSP[0]);
     })
     .then(data => {
-      results.spotData = data.body.tracks.items[0];
+      console.log('DETAILS0:', data.body.tracks.items[0]);
+      // results.spotData.song1 = data.body.tracks.items[0];
+      results[0].details = data.body.tracks.items[0];
+      return spotifyApi.searchTracks(srSP[1]);
+    })
+    .then(data => {
+      console.log('DETAILS1:', data.body.tracks.items[0]);
+      // results.spotData.song2 = data.body.tracks.items[0];
+      results[1].details = data.body.tracks.items[0];
+      return spotifyApi.searchTracks(srSP[2]);
+    })
+    .then(data => {
+      console.log('DETAILS3:', data.body.tracks.items[0]);
+      // results.spotData.song3 = data.body.tracks.items[0];
+      results[2].details = data.body.tracks.items[0];
+      return spotifyApi.searchTracks(srSP[3]);
+    })
+    .then(data => {
+      console.log('DETAILS4:', data.body.tracks.items[0]);
+      // results.spotData.song4 = data.body.tracks.items[0];
+      results[3].details = data.body.tracks.items[0];
+      console.log('RESULTS:', results);
       res.json(results);
     })
     .catch(err => {

@@ -18,7 +18,7 @@ class Song extends Component {
   render() {
     if (
       !this.props.allSongs.length ||
-      !this.props.allSongs[this.props.currentSongIndex].ytData
+      !this.props.allSongs[this.props.currentSongIndex].vid
     ) {
       return <AudioPlayer />;
     }
@@ -31,7 +31,7 @@ class Song extends Component {
         onNextTrack={this.toNextSong}
         src={
         'https://www.youtube.com/embed/' +
-        allSongs[currentSongIndex].ytData.items[0].id.videoId
+        allSongs[currentSongIndex].vid.items[0].id.videoId
       }/>
     );
   }

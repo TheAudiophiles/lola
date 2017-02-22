@@ -48,7 +48,13 @@
     "request": "^2.79.0",
     "spotify-web-api-js": "^0.21.2",
     "spotify-web-api-node": "^2.3.6",
+<<<<<<< 726672fb399a5b7a6f04c60cd923dc8ed1a3b1f1
     "webpack": "^2.2.1"
+=======
+    "string-similarity": "^1.1.0",
+    "webpack": "^2.2.1",
+    "youtube-search": "^1.0.8"
+>>>>>>> returning primary search result, as well as three close matches
   },
   "devDependencies": {
     "babel-preset-stage-1": "^6.22.0",
