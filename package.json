@@ -33,6 +33,7 @@
     "passport": "^0.3.2",
     "passport-spotify": "^0.3.1",
     "react": "^15.4.2",
+    "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "react-loading": "0.0.9",
     "react-media-player": "^0.6.1",
@@ -46,6 +47,7 @@
     "redux-saga": "^0.14.3",
     "reflexbox": "^2.2.3",
     "request": "^2.79.0",
+    "slick-carousel": "^1.6.0",
     "spotify-web-api-js": "^0.21.2",
     "spotify-web-api-node": "^2.3.6",
 <<<<<<< 726672fb399a5b7a6f04c60cd923dc8ed1a3b1f1

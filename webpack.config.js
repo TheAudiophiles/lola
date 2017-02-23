@@ -12,7 +12,7 @@ var config = {
     path: BUILD_DIR,
     filename: 'bundle.js'
   },
-  devtool: 'inline-source-map',
+  devtool: '#inline-source-map',
   resolve: {
     extensions: ['.js', '.jsx'],
   },

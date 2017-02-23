@@ -228,51 +228,57 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       youtubeOpts = `&q=${srYT[0]}&key=${YOUTUBE_API_KEY}`;
       return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
     })
-    .then((vid0) => {
+    .then((vid0) => { // guaranteed to get vid0, the primary search result
       console.log('VID0:', vid0.data);
-      // results.ytData.vid0 = vid0.data;
       results.push({ vid: vid0.data });
-      youtubeOpts = `&q=${srYT[1]}&key=${YOUTUBE_API_KEY}`;
-      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      if (srYT[1]) { // if there is another vid we can search for...DO IT. Otherwise, return undefined
+        youtubeOpts = `&q=${srYT[1]}&key=${YOUTUBE_API_KEY}`;
+        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      }
     })
     .then((vid1) => {
-      console.log('VID1:', vid1.data);
-      // results.ytData.vid1 = vid1.data;
-      results.push({ vid: vid1.data });
-      youtubeOpts = `&q=${srYT[2]}&key=${YOUTUBE_API_KEY}`;
-      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      if (vid1) { // only do this stuff if undefined wasn't returned
+        console.log('VID1:', vid1.data);
+        results.push({ vid: vid1.data });
+        youtubeOpts = `&q=${srYT[2]}&key=${YOUTUBE_API_KEY}`;
+        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      }
     })
     .then((vid2) => {
-      console.log('VID2:', vid2.data);
-      // results.ytData.vid2 = vid2.data;
-      results.push({ vid: vid2.data });
-      youtubeOpts = `&q=${srYT[3]}&key=${YOUTUBE_API_KEY}`;
-      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      if (vid2) {
+        console.log('VID2:', vid2.data);
+        results.push({ vid: vid2.data });
+        youtubeOpts = `&q=${srYT[3]}&key=${YOUTUBE_API_KEY}`;
+        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      }
     })
     .then((vid3) => {
-      console.log('VID3:', vid3.data);
-      // results.ytData.vid3 = vid3.data;
-      results.push({ vid: vid3.data });
+      if (vid3) {
+        console.log('VID3:', vid3.data);
+        results.push({ vid: vid3.data });
+      }
       console.log('DONE GETTING YT DATA!!!:', results.ytData);
       console.log('NOW GETTING SPOTIFY DATA :P');
-      return spotifyApi.searchTracks(srSP[0]);
+      return spotifyApi.searchTracks(srSP[0]); // there will always be one song
     })
     .then(data => {
       console.log('DETAILS0:', data.body.tracks.items[0]);
-      // results.spotData.song1 = data.body.tracks.items[0];
       results[0].details = data.body.tracks.items[0];
+      if (!srSP[1]) res.json(results); // we've got the vid and details data we need, let's scadattle
       return spotifyApi.searchTracks(srSP[1]);
     })
     .then(data => {
       console.log('DETAILS1:', data.body.tracks.items[0]);
       // results.spotData.song2 = data.body.tracks.items[0];
       results[1].details = data.body.tracks.items[0];
+      if (!srSP[2]) res.json(results);
       return spotifyApi.searchTracks(srSP[2]);
     })
     .then(data => {
       console.log('DETAILS3:', data.body.tracks.items[0]);
       // results.spotData.song3 = data.body.tracks.items[0];
       results[2].details = data.body.tracks.items[0];
+      if (!srSP[3]) res.json(results);
       return spotifyApi.searchTracks(srSP[3]);
     })
     .then(data => {
