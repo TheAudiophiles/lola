@@ -8,6 +8,7 @@ import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
 import SongDetails from '../../containers/song-details/SongDetails';
 import Load from '../../containers/load/Load';
+import SearchResults from '../../containers/searchResults/SearchResults';
 
 export default () => (
   <Banner backgroundImage="https://d262ilb51hltx0.cloudfront.net/max/2000/1*DZwdGMaeu-rvTroJYui6Uw.jpeg">
@@ -17,5 +18,6 @@ export default () => (
       <Search />
     </Block>
     <Song />
+    <SearchResults />
   </Banner>
 );
