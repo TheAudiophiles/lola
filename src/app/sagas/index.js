@@ -37,7 +37,7 @@ function* fetchUser() {
 function* fetchSongByLyrics({ lyrics }) {
   try {
     yield put(fetchSongLoading());
-    const request = yield call(axios.get, `/api/lyrics-search/${lyrics}`);
+    const request = yield call(axios.get, `/api/lyrics-search/${lyrics}/null`);
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get song');
     }
