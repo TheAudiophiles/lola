@@ -12,6 +12,7 @@ export const SPOTIFY_ME_SUCCESS = 'SPOTIFY_ME_SUCCESS';
 export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
 export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
 export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
+export const SELECT_SR = 'SELECT_SR';
 
 /**
  * fetchSongLoading - Action to show loading gif while song
@@ -175,4 +176,15 @@ export const spotifyLogout = () => ({
  */
 export const resetLogout = () => ({
   type: RESET_LOGGEDOUT
+});
+
+/**
+ * selectSR - Change the current song to the song that was selected
+ * from the search results
+ *
+ * @return {object} redux action
+ */
+export const selectSR = payload => ({
+  type: SELECT_SR,
+  payload
 });

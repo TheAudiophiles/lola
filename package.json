@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/TheAudiophiles/lola#readme",
   "dependencies": {
+    "artyom.js": "^1.0.4",
     "axios": "^0.15.3",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.3.0",
@@ -33,6 +34,7 @@
     "passport": "^0.3.2",
     "passport-spotify": "^0.3.1",
     "react": "^15.4.2",
+    "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.2",
     "react-loading": "0.0.9",
     "react-media-player": "^0.6.1",
