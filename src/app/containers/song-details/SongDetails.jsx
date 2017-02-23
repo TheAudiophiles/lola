@@ -58,6 +58,7 @@ class SongDetails extends Component {
       </Card>
     );
   }
+}
 
 const mapDispatchToProps = dispatch => bindActionCreators({ addToPlayList }, dispatch);
 

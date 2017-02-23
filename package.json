@@ -1,71 +1,63 @@
 {
-  "name": "lola",
-  "version": "1.0.0",
-  "description": "Interactive voice-controlled music dashboard for making listening to your favorite music easy, fun, and social",
-  "main": "server.js",
-  "scripts": {
-    "start": "nodemon server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TheAudiophiles/lola.git"
-  },
-  "author": "Daniel Olita, Nick Barnett, Rachel DePreist",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/TheAudiophiles/lola/issues"
-  },
-  "homepage": "https://github.com/TheAudiophiles/lola#readme",
-  "dependencies": {
-    "axios": "^0.15.3",
-    "babel-core": "^6.23.1",
-    "babel-loader": "^6.3.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.23.0",
-    "body-parser": "^1.16.1",
-    "cookie-parser": "^1.4.3",
-    "express": "^4.13.4",
-    "express-session": "^1.15.1",
-    "mongoose": "^4.8.1",
-    "morgan": "^1.8.1",
-    "passport": "^0.3.2",
-    "passport-spotify": "^0.3.1",
-    "react": "^15.4.2",
-    "react-bootstrap": "^0.30.7",
-    "react-dom": "^15.4.2",
-    "react-loading": "0.0.9",
-    "react-media-player": "^0.6.1",
-    "react-motion-ui-pack": "^0.10.2",
-    "react-redux": "^5.0.2",
-    "react-router": "^3.0.2",
-    "react-router-redux": "^4.0.8",
-    "rebass": "^0.3.4",
-    "redux": "^3.5.2",
-    "redux-localstorage": "^0.4.1",
-    "redux-saga": "^0.14.3",
-    "reflexbox": "^2.2.3",
-    "request": "^2.79.0",
-    "slick-carousel": "^1.6.0",
-    "spotify-web-api-js": "^0.21.2",
-    "spotify-web-api-node": "^2.3.6",
-<<<<<<< 726672fb399a5b7a6f04c60cd923dc8ed1a3b1f1
-    "webpack": "^2.2.1"
-=======
-    "string-similarity": "^1.1.0",
-    "webpack": "^2.2.1",
-    "youtube-search": "^1.0.8"
->>>>>>> returning primary search result, as well as three close matches
-  },
-  "devDependencies": {
-    "babel-preset-stage-1": "^6.22.0",
-    "css-loader": "^0.26.1",
-    "extract-text-webpack-plugin": "^2.0.0-rc.3",
-    "html-webpack-plugin": "^2.28.0",
-    "node-sass": "^4.5.0",
-    "raw-loader": "^0.5.1",
-    "sass-loader": "^6.0.0",
-    "style-loader": "^0.13.1"
-  }
+    "name": "lola",
+    "version": "1.0.0",
+    "description": "Interactive voice-controlled music dashboard for making listening to your favorite music easy, fun, and social",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TheAudiophiles/lola.git"
+    },
+    "author": "Daniel Olita, Nick Barnett, Rachel DePreist",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/TheAudiophiles/lola/issues"
+    },
+    "homepage": "https://github.com/TheAudiophiles/lola#readme",
+    "dependencies": {
+        "axios": "^0.15.3",
+        "babel-core": "^6.23.1",
+        "babel-loader": "^6.3.0",
+        "babel-polyfill": "^6.23.0",
+        "babel-preset-es2015": "^6.22.0",
+        "babel-preset-react": "^6.23.0",
+        "body-parser": "^1.16.1",
+        "cookie-parser": "^1.4.3",
+        "express": "^4.13.4",
+        "express-session": "^1.15.1",
+        "mongoose": "^4.8.1",
+        "morgan": "^1.8.1",
+        "passport": "^0.3.2",
+        "passport-spotify": "^0.3.1",
+        "react": "^15.4.2",
+        "react-dom": "^15.4.2",
+        "react-loading": "0.0.9",
+        "react-media-player": "^0.6.1",
+        "react-motion-ui-pack": "^0.10.2",
+        "react-redux": "^5.0.2",
+        "react-router": "^3.0.2",
+        "react-router-redux": "^4.0.8",
+        "rebass": "^0.3.4",
+        "redux": "^3.5.2",
+        "redux-localstorage": "^0.4.1",
+        "redux-saga": "^0.14.3",
+        "reflexbox": "^2.2.3",
+        "request": "^2.79.0",
+        "spotify-web-api-js": "^0.21.2",
+        "spotify-web-api-node": "^2.3.6",
+        "webpack": "^2.2.1"
+    },
+    "devDependencies": {
+        "babel-preset-stage-1": "^6.22.0",
+        "css-loader": "^0.26.1",
+        "extract-text-webpack-plugin": "^2.0.0-rc.3",
+        "html-webpack-plugin": "^2.28.0",
+        "node-sass": "^4.5.0",
+        "raw-loader": "^0.5.1",
+        "sass-loader": "^6.0.0",
+        "style-loader": "^0.13.1"
+    }
 }
