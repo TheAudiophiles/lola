@@ -1,27 +1,55 @@
 import React, { Component } from 'react';
-import Slider from 'react-slick';
+import { connect } from 'react-redux';
 
-export default class SearchResults extends Component {
- render() {
-    const settings = {
-      className: 'center',
-      centerMode: true,
-      accessibility: true,
-      arrows: true,
-      infinite: true,
-      centerPadding: '60px',
-      slidesToShow: 3,
-      speed: 500
+class SearchResults extends Component {
+  getInitialState() {
+    return {
+      index: 0,
+      direction: null
     };
+  }
+
+  handleSelect(selectedIndex, e) {
+    alert('selected=' + selectedIndex + ', direction=' + e.direction);
+    this.setState({
+      index: selectedIndex,
+      direction: e.direction
+    });
+  }
+
+  render() {
     return (
-      <div>
-        <h3>Songs We Found</h3>
-        <Slider {...settings}>
-          <div><h3>First Slide</h3></div>
-          <div><h3>Second Slide</h3></div>
-          <div><h3>Third Slide</h3></div>
-        </Slider>
-      </div>
+      <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect}>
+        <Carousel.Item>
+          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <Carousel.Caption>
+            <h3>First slide label</h3>
+            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <Carousel.Caption>
+            <h3>Second slide label</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <Carousel.Caption>
+            <h3>Third slide label</h3>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
     );
   }
 };
+
+const mapStateToProps = ({ state }) => ({
+  index: state.index,
+  direction: state.direction
+});
+
+export default connect(mapStateToProps)(SearchResults);
+// ReactDOM.render(<ControlledCarousel />, mountNode);

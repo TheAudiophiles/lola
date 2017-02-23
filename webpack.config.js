@@ -30,7 +30,19 @@ var config = {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
       }
-    ]
+    //   {
+    //     test: /\.(jpe?g|png|gif|svg)$/i,
+    //     loaders: [
+    //       'file?hash=sha512&digest=hex&name=[hash].[ext]',
+    //       'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+    //   ]
+    // }, 
+    //   {
+    //     test: /\.scss$/,
+    //     loader: 'style!css!sass?outputStyle=expanded&' + 'includePaths[]=' +
+    //           (path.resolve(__dirname, './node_modules'))
+    //   }        
+   ]
   },
   plugins: [
     new ExtractTextPlugin('style.css'),
