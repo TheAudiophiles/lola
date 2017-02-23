@@ -3,7 +3,8 @@ import {
   SEARCH_LYRICS_SUCCESS,
   SEARCH_LYRICS_FAILURE,
   PREVIOUS_SONG,
-  NEXT_SONG
+  NEXT_SONG,
+  SELECT_SR
 } from '../actions';
 
 const initialState = {
@@ -70,6 +71,21 @@ export default function search(state = initialState, action) {
           ? state.currentSongIndex - 1
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
+
+    case SELECT_SR:
+    console.log('SELECT SR REDUCER - action', action);
+      const newSongX = action.payload;
+      const allSongsX = state.allSongs;
+      const newIndexX = allSongsX.length;
+      console.log('SELECT SR REDUCER - newSong:', newSong);
+      return { allSongs: [
+          ...allSongsX,
+          newSongX
+        ],
+        currentSongIndex: newIndexX,
+        loading: false,
+        searchResults: [] // clear search results
+      };
 
     default:
       return state;
