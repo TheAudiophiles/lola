@@ -14,26 +14,14 @@ class SongDetails extends Component {
 
     const { allSongs, currentSongIndex } = this.props;
 
-    let cover = 'http://previews.123rf.com/images/varka/varka1312/varka131200487/24584085-DJ-girl-Profile-of-pretty-girl-with-long-hair-in-headphones-Stock-Vector.jpg'; // turquoise lola ;)
-    // let cover = 'http://st2.depositphotos.com/3004689/8038/v/950/depositphotos_80389828-stock-illustration-dj-girl-silhouette.jpg'; // purple lola
-    if (allSongs[currentSongIndex].details.album.images[0].url) {
-      cover = allSongs[currentSongIndex].details.album.images[0].url;
-    }
+    const cover = allSongs[currentSongIndex].details.album.images[0].url;
 
-    let title = 'undefined';
-    if (allSongs[currentSongIndex].details.name) {
-      title = allSongs[currentSongIndex].details.name;
-    }
+    const title = allSongs[currentSongIndex].details.name;
 
-    let artist = 'undefined';
-    if (allSongs[currentSongIndex].details.artists[0].name) {
-      artist = allSongs[currentSongIndex].details.artists[0].name;
-    }
+    const artist = allSongs[currentSongIndex].details.artists[0].name;
 
-    let album = 'undefined';
-    if (allSongs[currentSongIndex].details.album.name) {
-      album = allSongs[currentSongIndex].details.album.name;
-    }
+    const album = allSongs[currentSongIndex].details.album.name;
+    
     // not sure why scss is not being appied when I give Card className="song-details"
     const style = {
       maxWidth: '200px',
@@ -43,17 +31,17 @@ class SongDetails extends Component {
 
     return (
       <Card style={style}>
-        <CardImage src={cover} />
+        <CardImage src={cover ? cover : 'http://previews.123rf.com/images/varka/varka1312/varka131200487/24584085-DJ-girl-Profile-of-pretty-girl-with-long-hair-in-headphones-Stock-Vector.jpg'} />
         <Heading
           level={2}
           size={3}
         >
-          {title}
+          {title ? title : 'undefined'}
         </Heading>
         <Text>
-          Artist: {artist}
+          Artist: {artist ? artist : 'undefined'}
           <br/>
-          Album: {album}
+          Album: {album ? album : 'undefined'}
         </Text>
       </Card>
     );

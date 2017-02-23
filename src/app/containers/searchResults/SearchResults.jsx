@@ -15,7 +15,6 @@ class SearchResults extends Component {
   }
 
   handleSelect(selectedIndex, e) {
-   // alert('selected=' + selectedIndex + ', direction=' + e.direction);
     this.setState({
       index: selectedIndex,
       direction: e.direction
@@ -23,16 +22,12 @@ class SearchResults extends Component {
   }
 
   selectSearchResult(result) {
-    console.log('I wanna play this song you motherFUCKER');
-    console.log('props:', this.props);
-    console.log('selectSearchResult - result:', result);
     this.props.selectSR(result);
   }
 
   render() {
     const { searchResults } = this.props;
-
-    // console.log('SEARCH RESULTS IN COMPONENT:', searchResults);
+    console.log('SEARCH RESULTS COMPONENT - searchResults:', searchResults);
 
     if (!searchResults.length) return <div>No Search Results</div>;
 
@@ -41,9 +36,13 @@ class SearchResults extends Component {
         {searchResults.map(result => {
           return (
             <Carousel.Item onClick={() => { this.selectSearchResult.call(this, result) }}>
-              <img width={250} height={250} alt="500x500" src={result.details.album.images[0].url}/>
+              <img
+                width={250}
+                height={250}
+                alt="500x500"
+                src={result.details ? result.details.album.images[0].url : 'https://cdn.browshot.com/static/images/not-found.png'}/>
               <Carousel.Caption>
-                <h3>{result.details.name}</h3>
+                <h3>{result.details ? result.details.name : ''}</h3>
               </Carousel.Caption>
             </Carousel.Item>
           );

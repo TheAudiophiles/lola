@@ -149,7 +149,6 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       uniqueResultsYT.push(searchResultsYT[0]);
       let uniqueResultsSP = [];
       uniqueResultsSP.push(searchResultsSP[0]);
-      console.log('PRIMARY RESULT:', uniqueResultsYT[0]);
 
       let otherResultsYT = searchResultsYT.slice(1);
       let otherResultsSP = searchResultsSP.slice(1);
@@ -157,9 +156,8 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       for (let i = 0; i < otherResultsYT.length; i++) {
         let minSimilarity = 0;
         for (let j = 0; j < uniqueResultsYT.length; j++) {
-          // console.log('term2:', term2);
           let similarity = stringSimilarity.compareTwoStrings(otherResultsYT[i], uniqueResultsYT[j]);
-          console.log(`similarity between ${otherResultsYT[i]} and ${uniqueResultsYT[j]} is ${similarity}`);
+          // console.log(`similarity between ${otherResultsYT[i]} and ${uniqueResultsYT[j]} is ${similarity}`);
           if (similarity > minSimilarity ) {
             minSimilarity = similarity;
           }
@@ -190,7 +188,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
     //   return axios.all([vids[0](), vids[1](), vids[2](), vids[3]()]);
     // })
     .then(() => {
-      console.log('REQUESTING ASSOCIATED YOUTUBE VIDEOS :)');
+      console.log('GETTING YOUTUBE DATA :@');
       youtubeOpts = `&q=${srYT[0]}&key=${YOUTUBE_API_KEY}`;
       return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
     })
@@ -223,17 +221,14 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
         // console.log('VID3:', vid3.data);
         results.push({ vid: vid3.data });
       }
-      console.log('DONE GETTING YT DATA!!!:', results.ytData);
-      console.log('NOW GETTING SPOTIFY DATA :P');
-      console.log('SP SR:', srSP);
-      console.log('ABOUT TO GET SPOT DATA FOR 1ST RESULT:', srSP[0]);
+      console.log('FINISHED GETTNG YOUTUBE DATA :D');
+      console.log('GETTING SPOTIFY DATA :@');
       return spotifyApi.searchTracks(srSP[0]); // there will always be one song
     })
     .then(data => {
       // console.log('DETAILS0:', data.body.tracks.items[0]);
       results[0].details = data.body.tracks.items[0];
       if (!srSP[1]) res.json(results); // we've got the vid and details data we need, let's scadattle
-      console.log('ABOUT TO GET SPOT DATA FOR 2ND RESULT:', srSP[1]);
       return spotifyApi.searchTracks(srSP[1]);
     })
     .then(data => {

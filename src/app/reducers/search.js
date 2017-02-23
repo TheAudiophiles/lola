@@ -73,7 +73,6 @@ export default function search(state = initialState, action) {
       return { ...state, currentSongIndex: nextSongIndex };
 
     case SELECT_SR:
-    console.log('SELECT SR REDUCER - action', action);
       const newSongX = action.payload;
       const allSongsX = state.allSongs;
       const newIndexX = allSongsX.length;
