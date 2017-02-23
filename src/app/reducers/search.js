@@ -9,6 +9,7 @@ import {
 const initialState = {
   allSongs: [],
   currentSongIndex: 0,
+  searchResults: [],
   loading: false
 };
 
@@ -18,8 +19,11 @@ export default function search(state = initialState, action) {
       return { ...state, loading: true };
 
     case SEARCH_LYRICS_SUCCESS:
-      const newSong = action.payload.data;
+      const newSong = action.payload.data[0];
       const { allSongs } = state;
+      const searchResults = action.payload.data.slice(1);
+      console.log('SEARCH_LYRICS_SUCCESS REDUCER - newSong:', newSong);
+      console.log('SEARCH_LYRICS_SUCCESS REDUCER - searchResults:', searchResults);
 
       // Code to check if video already exists. If so, don't add it
       // and change currentSongIndex to index where it exists.
@@ -46,7 +50,8 @@ export default function search(state = initialState, action) {
           newSong
         ],
         currentSongIndex: newIndex,
-        loading: false
+        loading: false,
+        searchResults: searchResults
       };
 
     case SEARCH_LYRICS_FAILURE:

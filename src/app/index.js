@@ -24,6 +24,21 @@ import './components/bundle.scss';
 
 const sagaMiddleware = createSagaMiddleware();
 
+// const createStoreWithMiddleware = applyMiddleware(
+//   sagaMiddleware
+// )(createStore);
+//
+// const enhancer = compose(persistState());
+//
+// const middleware = [];
+//
+//
+// const store = createStoreWithMiddleware(
+//   combineReducers({ ...reducers, routing: routerReducer }),
+//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+//   enhancer
+// );
+
 const createStoreWithMiddleware = applyMiddleware(
   sagaMiddleware
 )(createStore);
@@ -35,6 +50,7 @@ const store = createStoreWithMiddleware(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ehancer
 );
+
 const history = syncHistoryWithStore(hashHistory, store);
 
 sagaMiddleware.run(rootSaga);
