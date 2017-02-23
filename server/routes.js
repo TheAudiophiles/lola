@@ -135,6 +135,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
 
   axios.get(lyricsUrl)
     .then(({ data }) => {
+<<<<<<< HEAD
       // let searchResults = data.message.body.track_list.map((result) => {
       //   return `${result.track.artist_name} ${result.track.track_name}`;
       // });
