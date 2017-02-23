@@ -17,7 +17,7 @@ export default () => (
       <Load />
       <Search />
       <Song />
-      <SearchResults />
     </Block>
+      <SearchResults />
   </Banner>
 );

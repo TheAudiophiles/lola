@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+//import { connect } from 'react-redux';
+import { Carousel } from 'react-bootstrap';
 
-class SearchResults extends Component {
+export default class SearchResults extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      index: 0,
+      direction: null
+    };
+  }
+
   getInitialState() {
     return {
       index: 0,
@@ -10,7 +19,7 @@ class SearchResults extends Component {
   }
 
   handleSelect(selectedIndex, e) {
-    alert('selected=' + selectedIndex + ', direction=' + e.direction);
+    //alert('selected=' + selectedIndex + ', direction=' + e.direction);
     this.setState({
       index: selectedIndex,
       direction: e.direction
@@ -21,24 +30,21 @@ class SearchResults extends Component {
     return (
       <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect}>
         <Carousel.Item>
-          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <img width={500} height={500} alt="500x500" src="https://static.pexels.com/photos/6548/cold-snow-winter-mountain.jpeg"/>
           <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h3>Mountains</h3>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <img width={500} height={500} alt="500x500" src="https://c.tadst.com/gfx/750w/sunrise-sunset-sun-calculator.jpg?1"/>
           <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <h3>Sunset</h3>   
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
-          <img width={900} height={500} alt="900x500" src="/assets/carousel.png"/>
+          <img width={500} height={500} alt="500x500" src="https://www.nasa.gov/sites/default/files/cygx1_ill.jpg"/>
           <Carousel.Caption>
-            <h3>Third slide label</h3>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            <h3>Black Hole</h3>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
@@ -46,10 +52,10 @@ class SearchResults extends Component {
   }
 };
 
-const mapStateToProps = ({ state }) => ({
-  index: state.index,
-  direction: state.direction
-});
+// const mapStateToProps = ({ state }) => ({
+//   index: state.index,
+//   direction: state.direction
+// });
 
-export default connect(mapStateToProps)(SearchResults);
+//export default connect(mapStateToProps)(SearchResults);
 // ReactDOM.render(<ControlledCarousel />, mountNode);
