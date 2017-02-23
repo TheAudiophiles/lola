@@ -37,6 +37,9 @@ function* fetchSongByLyrics({ lyrics }) {
   try {
     yield put(fetchSongLoading());
     const request = yield call(axios.get, `/api/lyrics-search/${lyrics}`);
+    if (request.data.failed || typeof request.data !== 'object') {
+      throw new Error('Failed to get song');
+    }
     yield put(fetchSongVideoSuccess(request));
   } catch(error) {
     yield put(fetchSongVideoFailure(error));

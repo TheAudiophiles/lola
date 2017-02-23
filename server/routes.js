@@ -147,7 +147,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       res.json(results);
     })
     .catch(err => {
-      res.redirect('/#/error/There was a problem with the search');
+      res.json({ failed: true });
     });
 });
 

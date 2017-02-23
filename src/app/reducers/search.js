@@ -20,28 +20,25 @@ export default function search(state = initialState, action) {
     case SEARCH_LYRICS_SUCCESS:
       const newSong = action.payload.data;
       const { allSongs } = state;
-      console.log('INSIDE SEARCH_LYRICS_SUCCESS REDUCER:', newSong);
 
       // Code to check if video already exists. If so, don't add it
-      // and change currentSongIndex to existing index. Commented
-      // out atm due to issues with the control buttons not getting
-      // disabled.
+      // and change currentSongIndex to index where it exists.
 
-      // if (newSong.ytData) {
-      //   for (let i in allSongs) {
-      //     if (
-      //       allSongs[i].ytData.items[0].id.videoId ===
-      //       newSong.ytData.items[0].id.videoId
-      //     ) {
-      //       return {
-      //         allSongs,
-      //         currentSongIndex: i,
-      //         loading: false
-      //       };
-      //     }
-      //   }
-      // }
-      
+      if (newSong.ytData) {
+        for (let i = 0; i < allSongs.length; i++) {
+          if (
+            allSongs[i].ytData.items[0].id.videoId ===
+            newSong.ytData.items[0].id.videoId
+          ) {
+            return {
+              allSongs,
+              currentSongIndex: i,
+              loading: false
+            };
+          }
+        }
+      }
+
       const newIndex = allSongs.length;
       return {
         allSongs: [

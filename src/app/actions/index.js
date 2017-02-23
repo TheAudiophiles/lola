@@ -13,7 +13,6 @@ export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
 export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
 export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
 
-
 /**
  * fetchSongLoading - Action to show loading gif while song
  * is being requested
