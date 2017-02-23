@@ -19,7 +19,7 @@ export default class SearchResults extends Component {
   }
 
   handleSelect(selectedIndex, e) {
-    //alert('selected=' + selectedIndex + ', direction=' + e.direction);
+   // alert('selected=' + selectedIndex + ', direction=' + e.direction);
     this.setState({
       index: selectedIndex,
       direction: e.direction
@@ -28,7 +28,7 @@ export default class SearchResults extends Component {
 
   render() {
     return (
-      <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect}>
+      <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect.bind(this)}>
         <Carousel.Item>
           <img width={500} height={500} alt="500x500" src="https://static.pexels.com/photos/6548/cold-snow-winter-mountain.jpeg"/>
           <Carousel.Caption>
