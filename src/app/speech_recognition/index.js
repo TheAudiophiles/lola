@@ -4,7 +4,7 @@ import { fetchSongByName, fetchSongVideo } from '../actions';
 
 import { store } from '../index.js';
 
-const redux = bindActionCreators({ fetchSongByName, fetchSongVideo }, store.dispatch);
+const redux = bindActionCreators({ fetchSongByName, fetchSongVideo, previousSong }, store.dispatch);
 
 export const artyom = artyomjs.ArtyomBuilder.getInstance();
 
@@ -34,8 +34,9 @@ export const commands = [
   {
     indexes: ['play next song'], 
     smart: true,
-    
-
+    action:(i) => {
+      redux.previousSong
+    }
   }
 ];
 
