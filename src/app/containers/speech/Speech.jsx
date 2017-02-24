@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Button } from 'rebass';
 import artyomjs from 'artyom.js';
 
-import { fetchSongVideo, fetchSongByName, previousSong, nextSong } from '../../actions';
+import { fetchSongVideo, fetchSongByName, previousSong, nextSong, resumeSong, stopSong, pauseSong } from '../../actions';
 
 const artyom = artyomjs.ArtyomBuilder.getInstance();
 

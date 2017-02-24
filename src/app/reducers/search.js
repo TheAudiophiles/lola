@@ -4,6 +4,9 @@ import {
   SEARCH_LYRICS_FAILURE,
   PREVIOUS_SONG,
   NEXT_SONG,
+  RESUME_SONG, 
+  STOP_SONG, 
+  PAUSE_SONG,
   SELECT_SR
 } from '../actions';
 
