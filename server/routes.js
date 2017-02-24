@@ -227,8 +227,6 @@ router.get('/api/lyrics-search/:lyrics/:artist', isAuth, (req, res) => {
   trackSearch(lyricsOpts, res);
 });
 
-// =======================================================================
-
 router.get('/api/song-search/:song/:artist', (req, res) => {
   const { song, artist } = req.params;
   let songOpts = `&q_track=${song}`;

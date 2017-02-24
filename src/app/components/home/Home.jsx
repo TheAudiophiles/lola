@@ -9,11 +9,13 @@ import Song from '../../containers/song/Song';
 import SongDetails from '../../containers/song-details/SongDetails';
 import Load from '../../containers/load/Load';
 import SearchResults from '../../containers/searchResults/SearchResults';
+import Speech from '../../containers/speech/Speech';
 
 export default () => (
   <Banner backgroundImage="https://d262ilb51hltx0.cloudfront.net/max/2000/1*DZwdGMaeu-rvTroJYui6Uw.jpeg">
     <SongDetails />
     <Block>
+      <Speech />
       <Load />
       <Search />
     </Block>

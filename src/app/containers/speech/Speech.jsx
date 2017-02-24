@@ -1,48 +1,43 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Button } from 'rebass';
 import artyomjs from 'artyom.js';
+
+import { fetchSongVideo, fetchSongByName } from '../../actions';
+
 const artyom = artyomjs.ArtyomBuilder.getInstance();
 
-export default class Speech extends Component {
+class Speech extends Component {
   constructor(props) {
     super(props);
 
-      artyom.addCommands([
-      {
-        indexes: ['Hello','Hi','is someone there'],
-        action: (i) => {
-          artyom.say('Yes that is correct');
-        }
-      },
-      {
-        indexes: ['Repeat after me *'],
-        smart:true,
-        action: (i,wildcard) => {
-          artyom.say("You've said : "+ wildcard);
-        }
-      }
-    ]);
+    this.speech = require('../../speech_recognition');
 
-    artyom.initialize({
-      lang: "en-GB",
-      continuous: true,
-      soundex: true,
-      debug: true,
-      executionKeyword: "and do it now",
-      listen: true
-    }).then(() => {
-      console.log("Artyom has been succesfully initialized");
-    }).catch((err) => {
-      console.error("Artyom couldn't be initialized: ", err);
-    });
+    artyom.addCommands(this.speech.commands);
   }
 
-  clickHandler = (e) => artyom.say('Something');
+  clickHandler = (e) => {
+    this.speech.init();
+  }
 
   render() {
     return (
       <div>
-        <button onClick={this.clickHandler}>Click</button>
+        <Button
+          backgroundColor="primary"
+          color="white"
+          inverted
+          rounded
+          onClick={this.clickHandler}>
+          Speak
+        </Button>
       </div>
     );
   }
 }
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ fetchSongVideo, fetchSongByName }, dispatch);
+
+export default connect(null, mapDispatchToProps)(Speech);
