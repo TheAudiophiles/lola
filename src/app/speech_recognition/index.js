@@ -35,6 +35,7 @@ export const commands = [
     indexes: ['next song'], 
     //smart: true,
     action:(i) => {
+      consoel.log('in next song');
       redux.nextSong();
     }
   }, 
