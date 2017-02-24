@@ -30,6 +30,12 @@ export const commands = [
     action: (i, wildcard) => {
       redux.fetchSongVideo(wildcard);
     }
+  }, 
+  {
+    indexes: ['play next song'], 
+    smart: true,
+    
+
   }
 ];
 
