@@ -6,6 +6,7 @@ import Spotify from 'spotify-web-api-js';
 import {
   SPOTIFY_ME_BEGIN,
   SEARCH_LYRICS_BEGIN,
+  SEARCH_SONG_NAME_BEGIN,
   SPOTIFY_TOKENS,
   spotifyMeSuccess,
   spotifyMeFailure,
@@ -37,7 +38,21 @@ function* fetchUser() {
 function* fetchSongByLyrics({ lyrics }) {
   try {
     yield put(fetchSongLoading());
-    const request = yield call(axios.get, `/api/lyrics-search/${lyrics}`);
+    const request = yield call(axios.get, `/api/lyrics-search/${lyrics}/null`);
+    if (request.data.failed || typeof request.data !== 'object') {
+      throw new Error('Failed to get song');
+    }
+    yield put(fetchSongVideoSuccess(request));
+  } catch(error) {
+    yield put(fetchSongVideoFailure(error));
+  }
+}
+
+function* fetchSongByName({ name, artist }) {
+  try {
+    yield put(fetchSongLoading());
+    if (!artist) artist = 'null';
+    const request = yield call(axios.get, `/api/song-search/${name}/${artist}`);
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get song');
     }
@@ -66,6 +81,7 @@ export default function* root() {
   yield [
     takeLatest(SPOTIFY_ME_BEGIN, fetchUser),
     takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
+    takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
     takeEvery(SPOTIFY_TOKENS, setSpotifyTokens)
   ]
 }

@@ -45,7 +45,7 @@ const createStoreWithMiddleware = applyMiddleware(
 
 const ehancer = compose(persistState());
 
-const store = createStoreWithMiddleware(
+export const store = createStoreWithMiddleware(
   combineReducers({ ...reducers, routing: routerReducer }),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ehancer

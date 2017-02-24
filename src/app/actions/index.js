@@ -1,3 +1,4 @@
+export const SEARCH_SONG_NAME_BEGIN = 'SEARCH_SONG_NAME_BEGIN';
 export const SEARCH_LYRICS_BEGIN = 'SEARCH_LYRICS_BEGIN';
 export const SEARCH_LYRICS_LOADING = 'SEARCH_LYRICS_LOADING';
 export const SEARCH_LYRICS_SUCCESS = 'SEARCH_LYRICS_SUCCESS';
@@ -13,6 +14,12 @@ export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
 export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
 export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
 export const SELECT_SR = 'SELECT_SR';
+
+export const fetchSongByName = (name, artist) => ({
+  type: SEARCH_SONG_NAME_BEGIN,
+  name,
+  artist
+});
 
 /**
  * fetchSongLoading - Action to show loading gif while song

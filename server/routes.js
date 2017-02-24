@@ -117,22 +117,28 @@ router.get('/callback', (req, res) => {
 //   return false;
 // }
 
-router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
-  const { lyrics } = req.params;
-  const LYRICS_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-  const LYRICS_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc';
-  const lyricsOpts = `&apikey=${MUSIXMATCH_API_KEY}&q_lyrics=${lyrics}`;
-  const lyricsUrl = `${LYRICS_ROOT_URL}?${LYRICS_STATIC_OPTS}${lyricsOpts}`;
+function youtubeSearch(query) {
+  if (query) {
+    const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
+    const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
+    const youtubeOpts = `&q=${query}&key=${YOUTUBE_API_KEY}`;
 
-  const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
+    return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+  }
+}
+
+function trackSearch(options, res) {
+  const TRACK_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
+  const TRACK_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc';
+  let trackOpts = `&apikey=${MUSIXMATCH_API_KEY}${options}`;
+  const trackUrl = `${TRACK_ROOT_URL}?${TRACK_STATIC_OPTS}${trackOpts}`;
 
   let results = [];
   let srYT = [];
   let srSP
   let youtubeOpts = '';
 
-  axios.get(lyricsUrl)
+  axios.get(trackUrl)
     .then(({ data }) => {
       let searchResultsYT = [];
       let searchResultsSP = [];
@@ -170,91 +176,62 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       }
 
       srYT = uniqueResultsYT.slice(0,4);
-      console.log('srYT', srYT);
       srSP = uniqueResultsSP.slice(0,4);
       console.log('srSP', srSP);
     })
-    // .then(sr => {
-    //   console.log('starting searches for associated youtube videos :D');
-    //   const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-    //   const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
-    //   // console.log('YT STUFF:', youtubeOpts);
-    //   vids = sr.map((song) => {
-    //     const youtubeOpts = `&q=${song}&key=${YOUTUBE_API_KEY}`;
-    //     return () => axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`); // have to be wrapped, else requests are invoked
-    //   });
-    //   console.log('VIDS:', vids);
-    //   // return axios.get(youtubeUrl);
-    //   return axios.all([vids[0](), vids[1](), vids[2](), vids[3]()]);
-    // })
+
     .then(() => {
-      console.log('GETTING YOUTUBE DATA :@');
-      youtubeOpts = `&q=${srYT[0]}&key=${YOUTUBE_API_KEY}`;
-      return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
+      return youtubeSearch(srYT[0]);
     })
     .then((vid0) => { // guaranteed to get vid0, the primary search result
-      // console.log('VID0:', vid0.data);
       results.push({ vid: vid0.data });
-      if (srYT[1]) { // if there is another vid we can search for...DO IT. Otherwise, return undefined
-        youtubeOpts = `&q=${srYT[1]}&key=${YOUTUBE_API_KEY}`;
-        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
-      }
+      return youtubeSearch(srYT[1]);
     })
     .then((vid1) => {
-      if (vid1) { // only do this stuff if undefined wasn't returned
-        // console.log('VID1:', vid1.data);
-        results.push({ vid: vid1.data });
-        youtubeOpts = `&q=${srYT[2]}&key=${YOUTUBE_API_KEY}`;
-        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
-      }
+      if (vid1) results.push({ vid: vid1.data });
+      return youtubeSearch(srYT[2]);
     })
     .then((vid2) => {
-      if (vid2) {
-        // console.log('VID2:', vid2.data);
-        results.push({ vid: vid2.data });
-        youtubeOpts = `&q=${srYT[3]}&key=${YOUTUBE_API_KEY}`;
-        return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
-      }
+      if (vid2) results.push({ vid: vid2.data });
+      return youtubeSearch(srYT[3]);
     })
     .then((vid3) => {
-      if (vid3) {
-        // console.log('VID3:', vid3.data);
-        results.push({ vid: vid3.data });
-      }
-      console.log('FINISHED GETTNG YOUTUBE DATA :D');
-      console.log('GETTING SPOTIFY DATA :@');
+      if (vid3) results.push({ vid: vid3.data });
       return spotifyApi.searchTracks(srSP[0]); // there will always be one song
     })
     .then(data => {
-      // console.log('DETAILS0:', data.body.tracks.items[0]);
       results[0].details = data.body.tracks.items[0];
-      if (!srSP[1]) res.json(results); // we've got the vid and details data we need, let's scadattle
-      return spotifyApi.searchTracks(srSP[1]);
+      if (srSP[1]) return spotifyApi.searchTracks(srSP[1]);
     })
     .then(data => {
-      // console.log('DETAILS1:', data.body.tracks.items[0]);
-      // results.spotData.song2 = data.body.tracks.items[0];
-      results[1].details = data.body.tracks.items[0];
-      if (!srSP[2]) res.json(results);
-      return spotifyApi.searchTracks(srSP[2]);
+      if (data) results[1].details = data.body.tracks.items[0];
+      if (srSP[2]) return spotifyApi.searchTracks(srSP[2]);
     })
     .then(data => {
-      // console.log('DETAILS3:', data.body.tracks.items[0]);
-      // results.spotData.song3 = data.body.tracks.items[0];
-      results[2].details = data.body.tracks.items[0];
-      if (!srSP[3]) res.json(results);
-      return spotifyApi.searchTracks(srSP[3]);
+      if (data) results[2].details = data.body.tracks.items[0];
+      if (srSP[3]) return spotifyApi.searchTracks(srSP[3]);
     })
     .then(data => {
-      // console.log('DETAILS4:', data.body.tracks.items[0]);
-      // results.spotData.song4 = data.body.tracks.items[0];
-      results[3].details = data.body.tracks.items[0];
-      console.log('RESULTS:', results);
+      if (data) results[3].details = data.body.tracks.items[0];
       res.json(results);
     })
     .catch(err => {
       res.json({ failed: true });
     });
+}
+
+router.get('/api/lyrics-search/:lyrics/:artist', isAuth, (req, res) => {
+  const { lyrics, artist } = req.params;
+  let lyricsOpts = `&q_lyrics=${lyrics}`;
+  if (artist !== 'null') lyricsOpts += `&q_artist=${artist}`;
+  trackSearch(lyricsOpts, res);
+});
+
+router.get('/api/song-search/:song/:artist', (req, res) => {
+  const { song, artist } = req.params;
+  let songOpts = `&q_track=${song}`;
+  if (artist !== 'null') songOpts += `&q_artist=${artist}`;
+  trackSearch(songOpts, res);
 });
 
 router.get('/logout', (req, res) => {
