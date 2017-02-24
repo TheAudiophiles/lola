@@ -1,61 +1,64 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
 import { Carousel } from 'react-bootstrap';
+import { selectSR } from '../../actions';
 
-export default class SearchResults extends Component {
+class SearchResults extends Component {
   constructor(props){
     super(props);
+
     this.state = {
       index: 0,
       direction: null
     };
   }
 
-  getInitialState() {
-    return {
-      index: 0,
-      direction: null
-    };
-  }
-
   handleSelect(selectedIndex, e) {
-   // alert('selected=' + selectedIndex + ', direction=' + e.direction);
     this.setState({
       index: selectedIndex,
       direction: e.direction
     });
   }
 
+  selectSearchResult(result) {
+    this.props.selectSR(result);
+  }
+
   render() {
+    const { searchResults } = this.props;
+    console.log('SEARCH RESULTS COMPONENT - searchResults:', searchResults);
+
+    if (!searchResults.length) return <div>No Search Results</div>;
+
     return (
       <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect.bind(this)}>
-        <Carousel.Item>
-          <img width={500} height={500} alt="500x500" src="https://static.pexels.com/photos/6548/cold-snow-winter-mountain.jpeg"/>
-          <Carousel.Caption>
-            <h3>Mountains</h3>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img width={500} height={500} alt="500x500" src="https://c.tadst.com/gfx/750w/sunrise-sunset-sun-calculator.jpg?1"/>
-          <Carousel.Caption>
-            <h3>Sunset</h3>   
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img width={500} height={500} alt="500x500" src="https://www.nasa.gov/sites/default/files/cygx1_ill.jpg"/>
-          <Carousel.Caption>
-            <h3>Black Hole</h3>
-          </Carousel.Caption>
-        </Carousel.Item>
+        {searchResults.map(result => {
+          return (
+            <Carousel.Item onClick={() => { this.selectSearchResult.call(this, result) }}>
+              <img
+                width={250}
+                height={250}
+                alt="500x500"
+                src={result.details ? result.details.album.images[0].url : 'https://cdn.browshot.com/static/images/not-found.png'}/>
+              <Carousel.Caption>
+                <h3>{result.details ? result.details.name : ''}</h3>
+              </Carousel.Caption>
+            </Carousel.Item>
+          );
+        })
+        }
       </Carousel>
     );
   }
 };
 
-// const mapStateToProps = ({ state }) => ({
-//   index: state.index,
-//   direction: state.direction
-// });
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ selectSR }, dispatch);
 
-//export default connect(mapStateToProps)(SearchResults);
-// ReactDOM.render(<ControlledCarousel />, mountNode);
+const mapStateToProps = ({ search }) => ({
+  searchResults: search.searchResults,
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResults);

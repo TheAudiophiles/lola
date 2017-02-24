@@ -128,16 +128,12 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
   const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
 
   let results = [];
-  // let results = { ytData: {}, spotData: {} };
   let srYT = [];
   let srSP
   let youtubeOpts = '';
 
   axios.get(lyricsUrl)
     .then(({ data }) => {
-      // let searchResults = data.message.body.track_list.map((result) => {
-      //   return `${result.track.artist_name} ${result.track.track_name}`;
-      // });
       let searchResultsYT = [];
       let searchResultsSP = [];
 
@@ -149,66 +145,34 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
       console.log('searchResultsYT:', searchResultsYT);
       console.log('searchResultsSP:', searchResultsSP);
 
-      // console.log('SEARCH RESULTS:', searchResults);
-
       let uniqueResultsYT = [];
       uniqueResultsYT.push(searchResultsYT[0]);
       let uniqueResultsSP = [];
       uniqueResultsSP.push(searchResultsSP[0]);
-      // console.log('UNIQUE RESULTS:', uniqueResults);
 
-      // let otherResults = data.message.body.track_list.slice(1).map((result) => result.track);
       let otherResultsYT = searchResultsYT.slice(1);
-      // console.log('OTHER RESULTS:', otherResults);
-      console.log('Starting from point A');
+      let otherResultsSP = searchResultsSP.slice(1);
 
       for (let i = 0; i < otherResultsYT.length; i++) {
         let minSimilarity = 0;
         for (let j = 0; j < uniqueResultsYT.length; j++) {
-          // console.log('term2:', term2);
           let similarity = stringSimilarity.compareTwoStrings(otherResultsYT[i], uniqueResultsYT[j]);
-          // console.log(`similarity between ${term1} and ${term2} is ${similarity}`);
+          // console.log(`similarity between ${otherResultsYT[i]} and ${uniqueResultsYT[j]} is ${similarity}`);
           if (similarity > minSimilarity ) {
             minSimilarity = similarity;
           }
         }
-        // console.log('MIN SIMILARITY:', minSimilarity);
+        console.log('MIN SIMILARITY:', minSimilarity);
         if (minSimilarity <= 0.3) { // its all good
           uniqueResultsYT.push(otherResultsYT[i]);
-          uniqueResultsSP.push(searchResultsSP[i]);
+          uniqueResultsSP.push(otherResultsSP[i]);
         }
       }
 
-      console.log('Got to point B');
-
-
-      // otherResultsYT.forEach((term1) => {
-      //   // console.log('term1:', term1);
-      //   let minSimilarity = 0;
-      //   uniqueResultsYT.forEach((term2) => {
-      //     // console.log('term2:', term2);
-      //     let similarity = stringSimilarity.compareTwoStrings(term1, term2);
-      //     // console.log(`similarity between ${term1} and ${term2} is ${similarity}`);
-      //     if (similarity > minSimilarity ) {
-      //       minSimilarity = similarity;
-      //     }
-      //   });
-      //   // console.log('MIN SIMILARITY:', minSimilarity);
-      //   if (minSimilarity <= 0.3) { // its all good
-      //     uniqueResultsYT.push(term1);
-      //     uniqueResultsSP.push(term1);
-      //   }
-      // });
-
-      // console.log('UNIQUE RESULTS:', uniqueResults);
       srYT = uniqueResultsYT.slice(0,4);
       console.log('srYT', srYT);
       srSP = uniqueResultsSP.slice(0,4);
-      console.log('srSP', srYT);
-
-
-
-      // console.log('UNIQUE RESULTS sliced:', sr);
+      console.log('srSP', srSP);
     })
     // .then(sr => {
     //   console.log('starting searches for associated youtube videos :D');
@@ -224,12 +188,12 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
     //   return axios.all([vids[0](), vids[1](), vids[2](), vids[3]()]);
     // })
     .then(() => {
-      console.log('REQUESTING ASSOCIATED YOUTUBE VIDEOS :)');
+      console.log('GETTING YOUTUBE DATA :@');
       youtubeOpts = `&q=${srYT[0]}&key=${YOUTUBE_API_KEY}`;
       return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
     })
     .then((vid0) => { // guaranteed to get vid0, the primary search result
-      console.log('VID0:', vid0.data);
+      // console.log('VID0:', vid0.data);
       results.push({ vid: vid0.data });
       if (srYT[1]) { // if there is another vid we can search for...DO IT. Otherwise, return undefined
         youtubeOpts = `&q=${srYT[1]}&key=${YOUTUBE_API_KEY}`;
@@ -238,7 +202,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
     })
     .then((vid1) => {
       if (vid1) { // only do this stuff if undefined wasn't returned
-        console.log('VID1:', vid1.data);
+        // console.log('VID1:', vid1.data);
         results.push({ vid: vid1.data });
         youtubeOpts = `&q=${srYT[2]}&key=${YOUTUBE_API_KEY}`;
         return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
@@ -246,7 +210,7 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
     })
     .then((vid2) => {
       if (vid2) {
-        console.log('VID2:', vid2.data);
+        // console.log('VID2:', vid2.data);
         results.push({ vid: vid2.data });
         youtubeOpts = `&q=${srYT[3]}&key=${YOUTUBE_API_KEY}`;
         return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
@@ -254,35 +218,35 @@ router.get('/api/lyrics-search/:lyrics', isAuth, (req, res) => {
     })
     .then((vid3) => {
       if (vid3) {
-        console.log('VID3:', vid3.data);
+        // console.log('VID3:', vid3.data);
         results.push({ vid: vid3.data });
       }
-      console.log('DONE GETTING YT DATA!!!:', results.ytData);
-      console.log('NOW GETTING SPOTIFY DATA :P');
+      console.log('FINISHED GETTNG YOUTUBE DATA :D');
+      console.log('GETTING SPOTIFY DATA :@');
       return spotifyApi.searchTracks(srSP[0]); // there will always be one song
     })
     .then(data => {
-      console.log('DETAILS0:', data.body.tracks.items[0]);
+      // console.log('DETAILS0:', data.body.tracks.items[0]);
       results[0].details = data.body.tracks.items[0];
       if (!srSP[1]) res.json(results); // we've got the vid and details data we need, let's scadattle
       return spotifyApi.searchTracks(srSP[1]);
     })
     .then(data => {
-      console.log('DETAILS1:', data.body.tracks.items[0]);
+      // console.log('DETAILS1:', data.body.tracks.items[0]);
       // results.spotData.song2 = data.body.tracks.items[0];
       results[1].details = data.body.tracks.items[0];
       if (!srSP[2]) res.json(results);
       return spotifyApi.searchTracks(srSP[2]);
     })
     .then(data => {
-      console.log('DETAILS3:', data.body.tracks.items[0]);
+      // console.log('DETAILS3:', data.body.tracks.items[0]);
       // results.spotData.song3 = data.body.tracks.items[0];
       results[2].details = data.body.tracks.items[0];
       if (!srSP[3]) res.json(results);
       return spotifyApi.searchTracks(srSP[3]);
     })
     .then(data => {
-      console.log('DETAILS4:', data.body.tracks.items[0]);
+      // console.log('DETAILS4:', data.body.tracks.items[0]);
       // results.spotData.song4 = data.body.tracks.items[0];
       results[3].details = data.body.tracks.items[0];
       console.log('RESULTS:', results);
