@@ -46,6 +46,24 @@ export const commands = [
       console.log('in previousSong');
       redux.previousSong();
     }
+  }, 
+  {
+    indexes: ['resume song'], 
+    action: () => {
+      console.log('in resume song');
+    }
+  }, 
+  {
+    indexes: ['pause song'], 
+    action: (i) => {
+      console.log('in pause song');
+    }
+  }, 
+  {
+    indexes: ['stop song'],
+    action: (i) => {
+      console.log('in stop song');
+    }
   }
 ];
 
