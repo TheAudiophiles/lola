@@ -32,17 +32,18 @@ export const commands = [
     }
   }, 
   {
-    indexes: ['play next song'], 
-    smart: true,
+    indexes: ['next song'], 
+    //smart: true,
     action:(i) => {
-      redux.nextSong(i);
+      redux.nextSong();
     }
   }, 
   {
     indexes: ['previous song'],
-    smart: true, 
-    action:(i) => {
-      redux.previousSong(i);
+    //smart: true, 
+    action:(i, wildcard) => {
+      console.log('in previousSong');
+      redux.previousSong();
     }
   }
 ];

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { Button } from 'rebass';
 import artyomjs from 'artyom.js';
 
-import { fetchSongVideo, fetchSongByName } from '../../actions';
+import { fetchSongVideo, fetchSongByName, previousSong, nextSong } from '../../actions';
 
 const artyom = artyomjs.ArtyomBuilder.getInstance();
 
@@ -38,6 +38,6 @@ class Speech extends Component {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSongVideo, fetchSongByName }, dispatch);
+  bindActionCreators({ fetchSongVideo, fetchSongByName, previousSong, nextSong }, dispatch);
 
 export default connect(null, mapDispatchToProps)(Speech);
