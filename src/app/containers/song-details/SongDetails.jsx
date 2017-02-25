@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
+import { Flex, Box } from 'reflexbox';
 
 class SongDetails extends Component {
 
@@ -23,12 +24,9 @@ class SongDetails extends Component {
       artist = allSongs[currentSongIndex].track.artist;
     }
 
-    // not sure why scss is not being appied when I give Card className="song-details"
-    // const style = {
-    //   // maxWidth: '200px',
-    //   // margin: 'auto',
-    //   // background: '#000'
-    // };
+    const style2 = {
+      width: '50px'
+    }
 
     return (
       <Card>
@@ -48,8 +46,7 @@ class SongDetails extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addToPlayList }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addToPlayList }, dispatch);
 
 const mapStateToProps = ({ search }) => ({
   allSongs: search.allSongs,

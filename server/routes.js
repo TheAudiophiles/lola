@@ -110,13 +110,6 @@ router.get('/callback', (req, res) => {
   }
 });
 
-// function isSameSong(a, b) {
-//   if (a === b)) {
-//     return true;
-//   }
-//   return false;
-// }
-
 function youtubeSearch(query) {
   if (query) {
     const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
