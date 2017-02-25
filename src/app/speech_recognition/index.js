@@ -35,7 +35,7 @@ export const commands = [
     indexes: ['next song'], 
     //smart: true,
     action:(i) => {
-      consoel.log('in next song');
+      console.log('in next song');
       redux.nextSong();
     }
   }, 
@@ -51,18 +51,21 @@ export const commands = [
     indexes: ['resume song'], 
     action: () => {
       console.log('in resume song');
+      redux.resumeSong();
     }
   }, 
   {
     indexes: ['pause song'], 
     action: (i) => {
       console.log('in pause song');
+      redux.pauseSong();
     }
   }, 
   {
     indexes: ['stop song'],
     action: (i) => {
       console.log('in stop song');
+      redux.stopSong();
     }
   }
 ];
