@@ -68,6 +68,4 @@ const mapStateToProps = ({ media }) => ({
   className: media.className
 })
 
-
-
 export default withMediaProps(PlayPause, mapStateToProps);

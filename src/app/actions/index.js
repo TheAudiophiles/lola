@@ -126,7 +126,8 @@ export const stopSong = () => ({
  */
 
 export const pauseSong = () => ({
-  type: PAUSE_SONG
+  type: PAUSE_SONG, 
+  
 })
 
 /**
