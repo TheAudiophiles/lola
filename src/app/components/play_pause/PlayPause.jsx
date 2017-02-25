@@ -19,14 +19,17 @@ class ScaleX extends Component {
 class PlayPause extends Component {
   _handlePlayPause = () => {
     if (this.props.media.duration > 0.1) {
+      console.log('This is media:', this.props.media.pause);
       this.props.media.playPause();
     }
   }
 
+  componentWillReceiveProps(){
+    const { media: { isPlaying }, className } = this.props;
+  }
+
   render() {
     const { media: { isPlaying }, className } = this.props;
-    console.log('isPlaying:', isPlaying);
-    console.log('className:', className);
     return (
       <svg
         role="button"

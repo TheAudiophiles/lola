@@ -116,6 +116,13 @@ export const stopSong = () => ({
  * pauseSong - pauses current song on Song state
  *
  * @return {object} redux action
+
+ export const pauseSong = ({ isPlaying, className }) => ({
+  type: PAUSE_SONG, 
+  isPlaying, 
+  className
+})
+
  */
 
 export const pauseSong = () => ({
