@@ -1,10 +1,10 @@
 import { bindActionCreators } from 'redux'
 import artyomjs from 'artyom.js';
-import { fetchSongByName, fetchSongVideo, previousSong, nextSong } from '../actions';
+import { fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, stopSong, resumeSong } from '../actions';
 
 import { store } from '../index.js';
 
-const redux = bindActionCreators({ fetchSongByName, fetchSongVideo, previousSong, nextSong }, store.dispatch);
+const redux = bindActionCreators({ fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, stopSong, resumeSong }, store.dispatch);
 
 export const artyom = artyomjs.ArtyomBuilder.getInstance();
 

@@ -25,6 +25,8 @@ class PlayPause extends Component {
 
   render() {
     const { media: { isPlaying }, className } = this.props;
+    console.log('isPlaying:', isPlaying);
+    console.log('className:', className);
     return (
       <svg
         role="button"
@@ -57,5 +59,12 @@ class PlayPause extends Component {
     );
   }
 }
+
+const mapStateToProps = ({ media }) => ({
+  isPlaying: media.isPlaying, 
+  className: media.className
+})
+
+
 
 export default withMediaProps(PlayPause);

@@ -10,11 +10,14 @@ import {
   SELECT_SR
 } from '../actions';
 
+import PAUSE from '../components/play_pause' 
+
 const initialState = {
   allSongs: [],
   currentSongIndex: 0,
   searchResults: [],
-  loading: false
+  loading: false, 
+  isPlaying: false
 };
 
 export default function search(state = initialState, action) {
@@ -26,6 +29,7 @@ export default function search(state = initialState, action) {
       const newSong = action.payload.data[0];
       const { allSongs } = state;
       const searchResults = action.payload.data.slice(1);
+      console.log('This is searchResults action payload:', action.payload)
       console.log('SEARCH_LYRICS_SUCCESS REDUCER - newSong:', newSong);
       console.log('SEARCH_LYRICS_SUCCESS REDUCER - searchResults:', searchResults);
 
@@ -75,8 +79,19 @@ export default function search(state = initialState, action) {
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
 
+    // case RESUME_SONG: 
+    
+    // case STOP_SONG:
+
+    case PAUSE_SONG:
+      console.log('song has been paused');  
+      const desiredPlay = false; 
+      return{...state, desiredPlay}
+
+
     case SELECT_SR:
       const newSongX = action.payload;
+      console.log('action.payload:',  action.payload);
       const allSongsX = state.allSongs;
       const newIndexX = allSongsX.length;
       console.log('SELECT SR REDUCER - newSong:', newSong);
@@ -87,7 +102,7 @@ export default function search(state = initialState, action) {
         currentSongIndex: newIndexX,
         loading: false,
         searchResults: [] // clear search results
-      };
+      };  
 
     default:
       return state;

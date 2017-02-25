@@ -38,6 +38,6 @@ class Speech extends Component {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSongVideo, fetchSongByName, previousSong, nextSong }, dispatch);
+  bindActionCreators({ fetchSongVideo, fetchSongByName, previousSong, nextSong, resumeSong, stopSong, pauseSong }, dispatch);
 
 export default connect(null, mapDispatchToProps)(Speech);
