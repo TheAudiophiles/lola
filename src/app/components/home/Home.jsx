@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import { Grid, Box } from 'reflexbox';
 
 import { setTokens, getMyInfo } from '../../actions';
-import { Flex, Box, Grid } from 'reflexbox';
 
 import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
@@ -35,6 +34,13 @@ export default () => (
     <Grid col={4} px={2}>
       <SearchResults />
     </Grid>
+    <Queue />
+    <Block>
+      <Speech />
+      <Load />
+      <Search />
+    </Block>
     <Song />
-  </div>
+    <SearchResults />
+  </Banner>
 );
