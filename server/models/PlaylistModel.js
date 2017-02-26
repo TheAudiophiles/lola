@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 
 var PlaylistSchema = new mongooose.Schema({
-  title: String,
-  description: String,
-  user: Schema.ObjectId
+  title: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    required: false,
+    unique: false
+  }
+  songs: {
+    type: [SongsSchema],
+    required: false,
+    unique: false
+  },
+  user: {
+    type: Schema.ObjectId,
+    required: true,
+    unique: true
+  }
 });
 
 module.exports = mongoose.model('Playlist', PlaylistSchema);
