@@ -41,6 +41,12 @@ class Search extends Component {
     });
   }
 
+  handleChange(propertyName, event) {
+    const inputs = this.state;
+    inputs[propertyName] = event.target.value;
+    this.setState(inputs);
+  }
+
   render() {
     return (
       <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>

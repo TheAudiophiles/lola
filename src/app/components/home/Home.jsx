@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { Grid, Box } from 'reflexbox';
 
 import { setTokens, getMyInfo } from '../../actions';
-import { Flex, Box } from 'reflexbox';
+import { Flex, Box, Grid } from 'reflexbox';
 
 import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
