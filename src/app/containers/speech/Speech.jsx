@@ -23,16 +23,14 @@ class Speech extends Component {
 
   render() {
     return (
-      <div>
-        <Button
-          backgroundColor="primary"
-          color="white"
-          inverted
-          rounded
-          onClick={this.clickHandler}>
-          Speak
-        </Button>
-      </div>
+      <Button
+        backgroundColor="primary"
+        color="white"
+        inverted
+        rounded
+        onClick={this.clickHandler}>
+        Speak
+      </Button>
     );
   }
 }

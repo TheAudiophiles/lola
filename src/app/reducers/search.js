@@ -2,9 +2,12 @@ import {
   SEARCH_LYRICS_LOADING,
   SEARCH_LYRICS_SUCCESS,
   SEARCH_LYRICS_FAILURE,
+  NAVIGATE_TO,
   PREVIOUS_SONG,
   NEXT_SONG,
-  SELECT_SR
+  SELECT_SR,
+  CLEAR_STATE,
+  CLEAR_QUEUE
 } from '../actions';
 
 const initialState = {
@@ -72,6 +75,9 @@ export default function search(state = initialState, action) {
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
 
+    case NAVIGATE_TO:
+      return { ...state, currentSongIndex: action.index };
+
     case SELECT_SR:
       const newSongX = action.payload;
       const allSongsX = state.allSongs;
@@ -85,6 +91,10 @@ export default function search(state = initialState, action) {
         loading: false,
         searchResults: [] // clear search results
       };
+
+    case CLEAR_STATE:
+    case CLEAR_QUEUE:
+      return initialState;
 
     default:
       return state;

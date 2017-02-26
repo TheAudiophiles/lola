@@ -129,13 +129,14 @@ function youtubeSearch(query) {
 
 function trackSearch(options, res) {
   const TRACK_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-  const TRACK_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc';
+  const TRACK_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc&quorum_factor=0.9';
   let trackOpts = `&apikey=${MUSIXMATCH_API_KEY}${options}`;
   const trackUrl = `${TRACK_ROOT_URL}?${TRACK_STATIC_OPTS}${trackOpts}`;
 
   let results = [];
   let srYT = [];
-  let srSP
+  let srSP = [];
+  let tracks = [];
   let youtubeOpts = '';
 
   axios.get(trackUrl)
@@ -146,10 +147,12 @@ function trackSearch(options, res) {
       data.message.body.track_list.forEach((result) => {
         searchResultsYT.push(`${result.track.artist_name} ${result.track.track_name}`);
         searchResultsSP.push(`track:${result.track.track_name} artist:${result.track.artist_name}`);
+        tracks.push({ name: result.track.track_name, artist: result.track.artist_name });
       });
 
       console.log('searchResultsYT:', searchResultsYT);
       console.log('searchResultsSP:', searchResultsSP);
+      console.log('tracks:', tracks);
 
       let uniqueResultsYT = [];
       uniqueResultsYT.push(searchResultsYT[0]);
@@ -184,19 +187,19 @@ function trackSearch(options, res) {
       return youtubeSearch(srYT[0]);
     })
     .then((vid0) => { // guaranteed to get vid0, the primary search result
-      results.push({ vid: vid0.data });
+      results.push({ vid: vid0.data, track: tracks[0] });
       return youtubeSearch(srYT[1]);
     })
     .then((vid1) => {
-      if (vid1) results.push({ vid: vid1.data });
+      if (vid1) results.push({ vid: vid1.data, track: tracks[1] });
       return youtubeSearch(srYT[2]);
     })
     .then((vid2) => {
-      if (vid2) results.push({ vid: vid2.data });
+      if (vid2) results.push({ vid: vid2.data, track: tracks[2] });
       return youtubeSearch(srYT[3]);
     })
     .then((vid3) => {
-      if (vid3) results.push({ vid: vid3.data });
+      if (vid3) results.push({ vid: vid3.data, track: tracks[3] });
       return spotifyApi.searchTracks(srSP[0]); // there will always be one song
     })
     .then(data => {
@@ -220,7 +223,7 @@ function trackSearch(options, res) {
     });
 }
 
-router.get('/api/lyrics-search/:lyrics/:artist', isAuth, (req, res) => {
+router.get('/api/lyrics-search/:lyrics/:artist', (req, res) => {
   const { lyrics, artist } = req.params;
   let lyricsOpts = `&q_lyrics=${lyrics}`;
   if (artist !== 'null') lyricsOpts += `&q_artist=${artist}`;

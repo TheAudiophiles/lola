@@ -4,12 +4,14 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import { Fixed, Toolbar, NavItem } from 'rebass';
 
-import { spotifyLogout, resetLogout } from '../../actions';
+import { spotifyLogout, resetLogout, clearState } from '../../actions';
 
 const Header = (props) => {
-  const { spotifyLogout, loggedOut, loggedIn, resetLogout } = props;
+  const { spotifyLogout, loggedOut, loggedIn, resetLogout, clearState } = props;
 
   const logoutHandler = (e) => {
+    // clearState();
+    window.localStorage.removeItem('redux');
     spotifyLogout();
   };
 
@@ -41,6 +43,6 @@ const mapStateToProps = ({ auth }) =>
   ({ loggedOut: auth.loggedOut, loggedIn: auth.loggedIn });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ spotifyLogout, resetLogout }, dispatch);
+  bindActionCreators({ spotifyLogout, resetLogout, clearState }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
