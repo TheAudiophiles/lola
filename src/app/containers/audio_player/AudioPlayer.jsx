@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 import { Media, Player, controls, utils } from 'react-media-player';
-import PlayPause from '../play_pause/PlayPause';
-import MuteUnmute from '../mute_unmute/MuteUnmute';
+import PlayPause from '../../play_pause/PlayPause';
+import MuteUnmute from '../../mute_unmute/MuteUnmute';
 
 import './audio_player.scss';
 
