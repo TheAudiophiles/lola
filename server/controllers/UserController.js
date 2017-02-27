@@ -16,6 +16,7 @@ class UserController {
 			if (err) {
 				done(err);
 			} else {
+				this.user = user;
 				done(null, user);
 			}
 		});
@@ -37,7 +38,8 @@ class UserController {
 	}
 
 	getUserId() {
-		return this.user.username;
+		console.log('GETTING USERID - this.user._id:', this.user._id);
+		return this.user._id;
 	}
 
 }

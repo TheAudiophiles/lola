@@ -95,6 +95,6 @@ export default function* root() {
     takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
     takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
     takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
-    takeEvery(ADD_TO_LIBRARY_BEGIN, addSongToPlaylist)
+    takeEvery(ADD_TO_LIBRARY_BEGIN, addSongToLibrary)
   ]
 }

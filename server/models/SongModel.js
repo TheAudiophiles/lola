@@ -9,7 +9,7 @@ var SongSchema = new mongoose.Schema({
   artist: {
     type: String,
     required: true,
-    unique: true
+    unique: false
   },
   videoId: {
     type: String,

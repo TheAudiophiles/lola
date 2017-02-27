@@ -38,7 +38,6 @@ class SongController {
 				});
 			}
 		});
-		console.log('SONGCONTROLLER. OUTSIDE OF FINDONE QUERY');
 		return song;
 	}
 }

@@ -1,19 +1,19 @@
 const Library = require('../models/LibraryModel');
 
 class LibraryController {
-  // constructor() {
-  //   this.library = {};
-  // }
+  constructor() {
+    this.library = {};
+  }
 	// findSongByNameandArtist
   // findSongsByArtist
   // findSongsByAlbum
 
-	createLibrary(data, done) {
+	createLibrary(user, done) {
 		this.library = new Library({
-			user: this.user,
+			user: user,
 			songs: []
 		});
-		library.save(err => {
+		this.library.save(err => {
 			if (err) {
 				done(err);
 			} else {
@@ -22,21 +22,30 @@ class LibraryController {
 		});
 	}
 
-  findLibrary(uid, done) {
-    Library.findOne({ uid }, (err, user) => {
+  findLibrary(user, done) {
+    Library.findOne({ user }, (err, library) => {
 			if (err) {
 				done(err);
 			} else {
+				this.library = library;
 				done(null, library);
 			}
 		});
   }
 
-  addSong(song, done) {
-    Song.create({ song }, function(err, cb) {
-
-    })
-  }
+  addSong(newSong, done) {
+		console.log('LIBRARY CONTROLLER - this.library.songs before adding song:', this.library.songs);
+    let exists = false;
+		for (let song of this.library.songs) {
+			if (song.title === newSong.title) {
+				exists = true;
+				break;
+			}
+		}
+		if (!exists) this.library.songs.push(newSong);
+		else return null // should let the user know the song is already in the db
+		console.log('LIBRARY CONTROLLER - this.library.songs after adding song:', this.library.songs);
+	}
 }
 
 module.exports = LibraryController;

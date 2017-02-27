@@ -3,23 +3,24 @@ import { connect } from 'react-redux';
 import { Block, Card, CardImage, Text, Heading, Media, Button } from 'rebass';
 import { Flex, Box } from 'reflexbox';
 import { addToLibary } from '../../actions';
+import axios from 'axios';
 
 class SongDetails extends Component {
   constructor(props) {
     super(props);
-
-    const { allSongs, currentSongIndex } = this.props;
   }
 
 
   addToLibraryClickHandler() {
     // console.log('I see you\'re trying to add a song to your library - too fucking bad haha');
-    console.log('SONGDETAILS - allSongs:', allSongs);
-    console.log('SONGDETAILS - currentSongIndex:', currentSongIndex);
-    addToLibrary(allSongs[currentSongIndex]);
+    let { allSongs, currentSongIndex } = this.props;
+    console.log('SONGDETAILS - allSongs[currentSongIndex]:', allSongs[currentSongIndex]);
+    axios.post('/addToLibrary', allSongs[currentSongIndex]);
   }
 
   render () {
+    let { allSongs, currentSongIndex } = this.props;
+
     if (!this.props.allSongs.length) {
       return <div></div>;
     }
@@ -58,7 +59,7 @@ class SongDetails extends Component {
           color="white"
           inverted
           rounded
-          onClick={this.addToLibraryClickHandler}>
+          onClick={this.addToLibraryClickHandler.bind(this)}>
           Add to Library
         </Button>
       </Card>

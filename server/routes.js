@@ -147,9 +147,9 @@ function trackSearch(options, res) {
         tracks.push({ name: result.track.track_name, artist: result.track.artist_name });
       });
 
-      console.log('searchResultsYT:', searchResultsYT);
-      console.log('searchResultsSP:', searchResultsSP);
-      console.log('tracks:', tracks);
+      // console.log('searchResultsYT:', searchResultsYT);
+      // console.log('searchResultsSP:', searchResultsSP);
+      // console.log('tracks:', tracks);
 
       let uniqueResultsYT = [];
       uniqueResultsYT.push(searchResultsYT[0]);
@@ -168,7 +168,7 @@ function trackSearch(options, res) {
             minSimilarity = similarity;
           }
         }
-        console.log('MIN SIMILARITY:', minSimilarity);
+        // console.log('MIN SIMILARITY:', minSimilarity);
         if (minSimilarity <= 0.3) { // its all good
           uniqueResultsYT.push(otherResultsYT[i]);
           uniqueResultsSP.push(otherResultsSP[i]);
@@ -177,7 +177,7 @@ function trackSearch(options, res) {
 
       srYT = uniqueResultsYT.slice(0,4);
       srSP = uniqueResultsSP.slice(0,4);
-      console.log('srSP', srSP);
+      // console.log('srSP', srSP);
     })
 
     .then(() => {
@@ -244,11 +244,20 @@ router.get('/logout', (req, res) => {
 
 router.post('/addToLibrary', (req, res) => {
   // Create song
-  console.log('ADDING SONG TO LIBRARY - req:', req);
-  let songData = req.body.data;
+  // console.log('ADDING SONG TO LIBRARY - req.body:', req.body);
+  let songData = req.body;
   // Do some preprocessing of the song data in preperation for creating a song doc in the db
-  let song = songController.createSong(songData);
+  let song = songController.createSong(songData, err => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('song saved');
+  });
   let userId = userController.getUserId();
+
+  console.log('ADDING SONG TO LIBRARY - userId:', userId);
+  console.log('ADDING SONG TO LIBRARY - song:', song);
+
 
   libraryController.findLibrary(userId, (err, library) => {
     if (err) {
@@ -260,15 +269,21 @@ router.post('/addToLibrary', (req, res) => {
           return console.log(err);
         }
         console.log('library saved');
+        libraryController.addSong(song, err => { // ensure this is called only once the library has been created
+          if (err) {
+            return console.log(err);
+          }
+          console.log('song added to library');
+        });
+      });
+    } else { // library already exists, just add the song
+      libraryController.addSong(song, err => {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('song added to library');
       });
     }
-
-    libraryController.addSong(song, err => {
-      if (err) {
-        return console.log(err);
-      }
-      console.log('song added to library');
-    });
   });
 });
 
