@@ -9,6 +9,10 @@ const stringSimilarity = require('string-similarity');
 
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
+const LibraryController = require('./controllers/LibraryController');
+const libraryController = new LibraryController();
+const SongController = require('./controllers/SongController');
+const songController = new SongController();
 
 const SPOTIFY_API_KEY = require('./config/spotify.conf');
 const YOUTUBE_API_KEY = require('./config/youtube.conf');
@@ -234,7 +238,39 @@ router.get('/logout', (req, res) => {
   req.session.destroy();
   spotifyApi.resetAccessToken();
   spotifyApi.resetRefreshToken();
+  userController.user = {};
   res.redirect('https://spotify.com/logout');
 });
+
+router.post('/addToLibrary', (req, res) => {
+  // Create song
+  console.log('ADDING SONG TO LIBRARY - req:', req);
+  let songData = req.body.data;
+  // Do some preprocessing of the song data in preperation for creating a song doc in the db
+  let song = songController.createSong(songData);
+  let userId = userController.getUserId();
+
+  libraryController.findLibrary(userId, (err, library) => {
+    if (err) {
+      return console.log(err);
+    }
+    if (!library) {
+      libraryController.createLibrary(userId, err => {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('library saved');
+      });
+    }
+
+    libraryController.addSong(song, err => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log('song added to library');
+    });
+  });
+});
+
 
 module.exports = router;

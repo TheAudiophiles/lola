@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
+import { Block, Card, CardImage, Text, Heading, Media, Button } from 'rebass';
 import { Flex, Box } from 'reflexbox';
+import { addToLibary } from '../../actions';
 
 class SongDetails extends Component {
+  constructor(props) {
+    super(props);
+
+    const { allSongs, currentSongIndex } = this.props;
+  }
+
+
+  addToLibraryClickHandler() {
+    // console.log('I see you\'re trying to add a song to your library - too fucking bad haha');
+    console.log('SONGDETAILS - allSongs:', allSongs);
+    console.log('SONGDETAILS - currentSongIndex:', currentSongIndex);
+    addToLibrary(allSongs[currentSongIndex]);
+  }
 
   render () {
     if (!this.props.allSongs.length) {
       return <div></div>;
     }
-
-    const { allSongs, currentSongIndex } = this.props;
 
     let cover, artist, album, title;
 
@@ -41,12 +53,20 @@ class SongDetails extends Component {
           <br/>
           Album: {album ? album : 'album not found'}
         </Text>
+        <Button
+          backgroundColor="primary"
+          color="white"
+          inverted
+          rounded
+          onClick={this.addToLibraryClickHandler}>
+          Add to Library
+        </Button>
       </Card>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addToPlayList }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addToLibrary }, dispatch);
 
 const mapStateToProps = ({ search }) => ({
   allSongs: search.allSongs,

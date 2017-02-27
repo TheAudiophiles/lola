@@ -8,6 +8,7 @@ import {
   SEARCH_LYRICS_BEGIN,
   SEARCH_SONG_NAME_BEGIN,
   SPOTIFY_TOKENS,
+  ADD_TO_LIBRARY_BEGIN,
   spotifyMeSuccess,
   spotifyMeFailure,
   fetchSongLoading,
@@ -71,6 +72,17 @@ function* setSpotifyTokens({ accessToken, refreshToken }) {
   }
 }
 
+function* addSongToLibrary({ song }) {
+  try {
+    const post = yield call(axios.post, `/addToLibrary`, song);
+    if (post.status !== 201) { // I think I can craft a response
+      throw new Error('Failed to add song to library');
+    }
+    yield put(fetchSongVideoSuccess(post));
+  } catch(error) {
+    yield put(fetchSongVideoFailure(error));
+  }
+}
 /**
  * =======================================
  *  WATCHERS (in root saga)
@@ -82,6 +94,7 @@ export default function* root() {
     takeLatest(SPOTIFY_ME_BEGIN, fetchUser),
     takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
     takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
-    takeEvery(SPOTIFY_TOKENS, setSpotifyTokens)
+    takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
+    takeEvery(ADD_TO_LIBRARY_BEGIN, addSongToPlaylist)
   ]
 }

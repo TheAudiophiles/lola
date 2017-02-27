@@ -21,6 +21,7 @@ export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
 export const SELECT_SR = 'SELECT_SR';
 export const CLEAR_STATE = 'CLEAR_STATE';
 export const CLEAR_QUEUE = 'CLEAR_QUEUE';
+export const ADD_TO_LIBRARY_BEGIN = 'ADD_TO_LIBRARY_BEGIN';
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -230,4 +231,19 @@ export const clearState = () => ({
 
 export const clearQueue = () => ({
   type: CLEAR_QUEUE
+});
+
+export const addSongToLibrary = song => ({
+  type: ADD_TO_LIBRARY_BEGIN,
+  song
+});
+
+export const addSongToLibrarySuccess = response => ({
+  type: SEARCH_LYRICS_SUCCESS,
+  response
+});
+
+export const addSongToLibraryFailure = error => ({
+  type: SEARCH_LYRICS_SUCCESS,
+  error
 });

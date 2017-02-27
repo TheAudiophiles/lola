@@ -5,8 +5,8 @@ import {
   NAVIGATE_TO,
   PREVIOUS_SONG,
   NEXT_SONG,
-  RESUME_SONG, 
-  STOP_SONG, 
+  RESUME_SONG,
+  STOP_SONG,
   PAUSE_SONG,
   SELECT_SR,
   CLEAR_STATE,
@@ -80,7 +80,7 @@ export default function search(state = initialState, action) {
 
 
     case RESUME_SONG:
-      return{...state, isPlaying:true} 
+      return{...state, isPlaying:true}
 
     case PAUSE_SONG:
       return{...state, isPlaying:false}
@@ -98,7 +98,7 @@ export default function search(state = initialState, action) {
         currentSongIndex: newIndexX,
         loading: false,
         searchResults: [] // clear search results
-      };  
+      };
 
     case CLEAR_STATE:
     case CLEAR_QUEUE:

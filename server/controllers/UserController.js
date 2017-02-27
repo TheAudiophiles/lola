@@ -1,6 +1,10 @@
 const User = require('../models/UserModel');
 
 class UserController {
+	constructor() {
+		this.user = {};
+	}
+
 	findById(id, done) {
 	  User.findById(id, (err, user) => {
 	    done(err, user);
@@ -18,18 +22,22 @@ class UserController {
 	}
 
 	createUser(data, done) {
-		const user = new User({
+		this.user = new User({
 			username: data.id,
 			name: data.display_name || '',
 			email: data.email || ''
 		});
-		user.save(err => {
+		this.user.save(err => {
 			if (err) {
 				done(err);
 			} else {
 				done();
 			}
 		});
+	}
+
+	getUserId() {
+		return this.user.username;
 	}
 
 }
