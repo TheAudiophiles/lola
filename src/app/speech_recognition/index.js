@@ -58,7 +58,7 @@ export const commands = [
     indexes: ['pause song'], 
     action: (i) => {
       console.log('in pause song');
-      redux.pauseSong();
+      redux.playPause();
     }
   }, 
   {

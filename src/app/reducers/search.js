@@ -88,10 +88,10 @@ export default function search(state = initialState, action) {
     case PAUSE_SONG:
       console.log('song has been paused');  
       const desiredPlay = false; 
-      if(state.isPlaying !== desiredPlay){
-        playPause();
-      }
-      return{...state, desiredPlay}
+      // if(state.isPlaying !== desiredPlay){
+      //   playPause();
+      // }
+      // return{...state, desiredPlay}
 
     case SELECT_SR:
       const newSongX = action.payload;
