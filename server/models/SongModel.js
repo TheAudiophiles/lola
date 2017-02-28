@@ -19,12 +19,12 @@ var SongSchema = new mongoose.Schema({
   image: {
     type: String,
     required: false,
-    unique: true
+    unique: false
   },
   album: {
     type: String,
     required: true,
-    unique: true
+    unique: false
   }
 });
 

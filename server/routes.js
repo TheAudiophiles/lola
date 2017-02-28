@@ -243,6 +243,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/addToLibrary', (req, res) => {
+  console.log('POST TO /ADDTOLIBRARY');
   // Create song
   // console.log('ADDING SONG TO LIBRARY - req.body:', req.body);
   let songData = req.body;
@@ -251,41 +252,42 @@ router.post('/addToLibrary', (req, res) => {
     if (err) {
       return console.log(err);
     }
-    console.log('song saved');
-  });
-  let userId = userController.getUserId();
+    console.log('song created');
+    let userId = userController.getUserId();
 
-  console.log('ADDING SONG TO LIBRARY - userId:', userId);
-  console.log('ADDING SONG TO LIBRARY - song:', song);
+    // console.log('ADDING SONG TO LIBRARY - userId:', userId);
+    // console.log('ADDING SONG TO LIBRARY - song:', song);
 
-
-  libraryController.findLibrary(userId, (err, library) => {
-    if (err) {
-      return console.log(err);
-    }
-    if (!library) {
-      libraryController.createLibrary(userId, err => {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('library saved');
-        libraryController.addSong(song, err => { // ensure this is called only once the library has been created
+    libraryController.findLibrary(userId, (err, library) => {
+      if (err) {
+        return console.log(err);
+      }
+      if (!library) {
+        libraryController.createLibrary(userId, err => {
+          if (err) {
+            return console.log(err);
+          }
+          console.log('new library created');
+          libraryController.addSong(song, err => { // ensure this is called only once the library has been created
+            if (err) {
+              return console.log(err);
+            }
+            console.log('song added to library');
+            res.end();
+          });
+        });
+      } else { // library already exists, just add the song
+        console.log('library found');
+        libraryController.addSong(song, err => {
           if (err) {
             return console.log(err);
           }
           console.log('song added to library');
+          res.end();
         });
-      });
-    } else { // library already exists, just add the song
-      libraryController.addSong(song, err => {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('song added to library');
-      });
-    }
+      }
+    });
   });
 });
-
 
 module.exports = router;

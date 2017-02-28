@@ -38,7 +38,7 @@ class UserController {
 	}
 
 	getUserId() {
-		console.log('GETTING USERID - this.user._id:', this.user._id);
+		// console.log('GETTING USERID - this.user._id:', this.user._id);
 		return this.user._id;
 	}
 

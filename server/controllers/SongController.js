@@ -38,6 +38,7 @@ class SongController {
 				});
 			}
 		});
+
 		return song;
 	}
 }
