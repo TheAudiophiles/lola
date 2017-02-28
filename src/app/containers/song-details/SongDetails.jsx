@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Block, Card, CardImage, Text, Heading, Media, Button } from 'rebass';
 import { Flex, Box } from 'reflexbox';
-import { addToLibary } from '../../actions';
+import { addSongToLibrary } from '../../actions';
 import axios from 'axios';
 
 class SongDetails extends Component {
@@ -14,20 +15,22 @@ class SongDetails extends Component {
   addToLibraryClickHandler() {
     // console.log('I see you\'re trying to add a song to your library - too fucking bad haha');
     let { allSongs, currentSongIndex } = this.props;
-    console.log('SONGDETAILS - allSongs[currentSongIndex]:', allSongs[currentSongIndex]);
+    console.log('SONGDETAILS ADDTOLIBRARYCLICKHANDLER - allSongs[currentSongIndex]:', allSongs[currentSongIndex]);
     // create saga that makes the post request and then runs success afterwards
     // just needs to add the song to state library after success
     // upon loading the user, also set the library on state
 
+    this.props.addSongToLibrary(allSongs[currentSongIndex]);
 
-    axios.post('/addToLibrary', allSongs[currentSongIndex])
-      .then(function (response) {
-        console.log('SONG DETAILS COMPONENT - added song to library');
-        addSongToLibrarySuccess
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
+    // axios.post('/addToLibrary', allSongs[currentSongIndex])
+    //   .then(function (response) {
+    //     console.log('SONG DETAILS COMPONENT - added song to library');
+    //     addSongToLibrarySuccess
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   }
 
   render () {
@@ -79,11 +82,13 @@ class SongDetails extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ addToLibrary }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addSongToLibrary }, dispatch);
 
 const mapStateToProps = ({ search }) => ({
   allSongs: search.allSongs,
   currentSongIndex: search.currentSongIndex
 });
 
-export default connect(mapStateToProps)(SongDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SongDetails);
+
+// addtolibrary button pic - http://www.iconarchive.com/download/i7968/hopstarter/soft-scraps/Button-Add.ico

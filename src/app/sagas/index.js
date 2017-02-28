@@ -8,14 +8,16 @@ import {
   SEARCH_LYRICS_BEGIN,
   SEARCH_SONG_NAME_BEGIN,
   SPOTIFY_TOKENS,
-  ADD_TO_LIBRARY_BEGIN,
+  ADD_SONG_TO_LIBRARY_BEGIN,
   spotifyMeSuccess,
   spotifyMeFailure,
   fetchSongLoading,
   fetchSongVideoSuccess,
   fetchSongVideoFailure,
   setTokensSuccess,
-  setTokensFailure
+  setTokensFailure,
+  addSongToLibrarySuccess,
+  addSongToLibraryFailure
 } from '../actions';
 
 const spotifyApi = new Spotify();
@@ -72,15 +74,18 @@ function* setSpotifyTokens({ accessToken, refreshToken }) {
   }
 }
 
-function* addSongToLibrary({ song }) {
+function* addSongToLibrary({song}) {
   try {
-    const post = yield call(axios.post, `/addToLibrary`, song);
-    if (post.status !== 201) { // I think I can craft a response
+    // console.log('ADDSONGTOLIBRARY SAGA - song:', song);
+    const response = yield call(axios.post, `/addToLibrary`, song);
+    console.log('ADDSONGTOLIBRARY SAGA - response:', response.data);
+    console.log('ADDSONGTOLIBRARY SAGA - response.status:', response.status);
+    if (response.status !== 200) { // I think I can craft a response
       throw new Error('Failed to add song to library');
     }
-    yield put(fetchSongVideoSuccess(post));
+    yield put(addSongToLibrarySuccess(response.data));
   } catch(error) {
-    yield put(fetchSongVideoFailure(error));
+    yield put(addSongToLibraryFailure(error));
   }
 }
 /**
@@ -95,6 +100,6 @@ export default function* root() {
     takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
     takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
     takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
-    takeEvery(ADD_TO_LIBRARY_BEGIN, addSongToLibrary)
+    takeEvery(ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary)
   ]
 }

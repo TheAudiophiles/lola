@@ -272,8 +272,8 @@ router.post('/addToLibrary', (req, res) => {
             if (err) {
               return console.log(err);
             }
-            console.log('song added to library');
-            res.end();
+            console.log('song added to library - song:', song);
+            res.json(song);
           });
         });
       } else { // library already exists, just add the song
@@ -282,8 +282,8 @@ router.post('/addToLibrary', (req, res) => {
           if (err) {
             return console.log(err);
           }
-          console.log('song added to library');
-          res.end();
+          console.log('song added to library - song:', song);
+          res.json(song);
         });
       }
     });

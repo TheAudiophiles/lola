@@ -58,6 +58,13 @@ export const commands = [
       redux.pauseSong();
     }
   }
+  // {
+  //   indexes:['add song to library'],
+  //   smart: true,
+  //   action: (i) => {
+  //     redux.
+  //   }
+  // }
 ];
 
 export const init = () => {
