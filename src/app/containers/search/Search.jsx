@@ -1,51 +1,83 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { InlineForm } from 'rebass';
+import { Input, InlineForm } from 'rebass';
 
-import { fetchSongVideo } from '../../actions';
+import { fetchSongVideo, fetchSongByName } from '../../actions';
 
 class Search extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      inputText: ''
+      songNameText: '',
+      artistText: '',
+      lyricsText: ''
     };
   }
 
-  setInputText = (e) => {
-    this.setState({
-      inputText: e.target.value
-    });
-  }
+  setSongNameText = (e) => this.setState({ songNameText: e.target.value });
+
+  setArtistText = (e) => this.setState({ artistText: e.target.value });
+
+  setLyricsText = (e) => this.setState({ lyricsText: e.target.value });
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    this.props.fetchSongVideo(this.state.inputText);
+    const { songNameText, artistText, lyricsText } = this.state;
+
+    if (!songNameText && !lyricsText) return;
+
+    if (songNameText) {
+      this.props.fetchSongByName(songNameText, artistText || 'null');
+    } else {
+      this.props.fetchSongVideo(lyricsText);
+    }
     this.setState({
-      inputText: ''
+      songNameText: '',
+      artistText: '',
+      lyricsText: ''
     });
   }
 
   render() {
     return (
-      <InlineForm
-        label="search lyrics"
-        name="search_lyrics"
-        onSubmit={this.handleSubmit}
-        placeholder="input lyrics"
-        rounded
-        buttonLabel="Search"
-        onChange={this.setInputText}
-        value={this.state.inputText}
-      />
+      <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+        <Input
+          label=""
+          name="search_song_name"
+          rounded
+          type="text"
+          placeholder="Song name"
+          onChange={this.setSongNameText}
+          value={this.state.songNameText}
+        />
+        <Input
+          label=""
+          name="search_artist"
+          rounded
+          type="text"
+          placeholder="Artist"
+          onChange={this.setArtistText}
+          value={this.state.artistText}
+        />
+        <InlineForm
+          label="search lyrics"
+          name="search_lyrics"
+          onSubmit={this.handleSubmit}
+          placeholder="Lyrics"
+          rounded
+          buttonLabel="Search"
+          onChange={this.setLyricsText}
+          value={this.state.lyricsText}
+        />
+      </div>
     );
   }
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSongVideo }, dispatch);
+  bindActionCreators({ fetchSongVideo, fetchSongByName }, dispatch);
 
 export default connect(null, mapDispatchToProps)(Search);

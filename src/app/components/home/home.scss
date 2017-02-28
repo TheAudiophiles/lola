@@ -13,5 +13,39 @@
 }
 
 .Grid {
-  margin-top: 100px;
+  margin-top: 30px;
+}
+
+#page-wrap {
+  padding-top: 30px;
+  background-image: url(https://cdn.spacetelescope.org/archives/images/wallpaper2/heic1608a.jpg);
+  background-position: center center;
+  background-size: cover;
+  min-height: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0;
+  padding-bottom: 100px;
+
+  .Block {
+    // background-color: rgba(0, 0, 0, 0.875) !important;
+    // opacity: .8 !important;
+    // padding: 30px;
+    // border-radius: 5px;
+    // display: flex;
+
+    a img {
+      display: block;
+      margin: auto;
+    }
+  }
+}
+
+.menu-item {
+  color: #bdc3c7;
+
+  &:hover {
+    color: #9da6ac;
+    text-decoration: none;
+  }
 }

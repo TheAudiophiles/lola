@@ -35,7 +35,7 @@ class SongDetails extends Component {
         <CardImage className="image-responsive" src={cover ? cover : 'http://previews.123rf.com/images/varka/varka1312/varka131200487/24584085-DJ-girl-Profile-of-pretty-girl-with-long-hair-in-headphones-Stock-Vector.jpg'} />
         <Heading
           level={2}
-          size={3}>
+          size={5}>
           {title ? title : 'title not found'}
         </Heading>
         <Text>

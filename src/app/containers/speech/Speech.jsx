@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Button } from 'rebass';
 import artyomjs from 'artyom.js';
+import mic from './mic-icon.png';
 
 import { fetchSongVideo, fetchSongByName, previousSong, nextSong, resumeSong, stopSong, pauseSong } from '../../actions';
 
@@ -18,19 +19,16 @@ class Speech extends Component {
   }
 
   clickHandler = (e) => {
+    e.preventDefault();
+
     this.speech.init();
   }
 
   render() {
     return (
-      <Button
-        backgroundColor="primary"
-        color="white"
-        inverted
-        rounded
-        onClick={this.clickHandler}>
-        Speak
-      </Button>
+      <a href="#" onClick={this.clickHandler}>
+        <img src={mic} />
+      </a>
     );
   }
 }

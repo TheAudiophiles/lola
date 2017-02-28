@@ -19,3 +19,8 @@ body {
   width: 100%;
   text-align: center;
 }
+
+#react-root, #react-root > div, #outer-container {
+  height: 100%;
+  min-height: 100%;
+}

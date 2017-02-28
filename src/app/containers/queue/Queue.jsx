@@ -15,8 +15,13 @@ class Queue extends Component {
   render() {
     const { allSongs, currentSongIndex } = this.props.search;
 
+    const style = {
+      background: '#373a47',
+      color: '#bdc3c7'
+    };
+
     return (
-      <Menu rounded>
+      <Menu style={style} rounded>
         {allSongs.map((song, i) => {
           if (i !== currentSongIndex) {
             console.log('SONG TRACK ARTIST:', song.track.name, song.track.artist);
@@ -34,6 +39,7 @@ class Queue extends Component {
         })}
         <NavItem>
           <Button
+            style={{width: '100%', textAlign: 'center'}}
             backgroundColor="primary"
             color="white"
             inverted
