@@ -68,7 +68,7 @@ class AudioPlayer extends Component {
   changeVolume(volume) {
     if (this._player) {
       if (volume > 1) this._player.context.media.setVolume(1);
-      else if (volume < 0) this._.player.context.media.setVolume(0);
+      else if (volume < 0) this._player.context.media.setVolume(0);
       else this._player.context.media.setVolume(volume);
       this.props.resetVolumeChange();
 >>>>>>> cleaned up AudioPlayer
