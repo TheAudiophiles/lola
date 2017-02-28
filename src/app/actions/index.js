@@ -5,6 +5,10 @@ export const SEARCH_LYRICS_SUCCESS = 'SEARCH_LYRICS_SUCCESS';
 export const SEARCH_LYRICS_FAILURE = 'SEARCH_LYRICS_FAILURE';
 export const PREVIOUS_SONG = 'PREVIOUS_SONG';
 export const NEXT_SONG = 'NEXT_SONG';
+export const RESUME_SONG = 'RESUME_SONG';
+export const STOP_SONG = 'STOP_SONG';
+export const PAUSE_SONG = 'PAUSE_SONG';
+export const PLAY_PAUSE = 'PLAY_PAUSE';
 export const NAVIGATE_TO = 'NAVIGATE_TO';
 export const SPOTIFY_TOKENS = 'SPOTIFY_TOKENS';
 export const SPOTIFY_TOKENS_SUCCESS = 'SPOTIFY_TOKENS_SUCCESS';
@@ -91,7 +95,28 @@ export const nextSong = () => ({
   type: NEXT_SONG
 });
 
+/**
+ * resumeSong - resumes current song on Song state
+ *
+ * @return {object} redux action
+ */
+
+export const resumeSong = () => ({
+  type: RESUME_SONG
+})
+
+/**
+ * pauseSong - pauses current song on Song state
+ *
+ * @return {object} redux action
+ */
+
+export const pauseSong = () => ({
+  type: PAUSE_SONG
+  
+})
 export const navigateTo = index => ({ type: NAVIGATE_TO, index });
+
 
 /**
  * getMyInfo - Start trying to get spotify info for

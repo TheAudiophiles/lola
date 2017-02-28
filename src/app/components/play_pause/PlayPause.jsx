@@ -23,6 +23,10 @@ class PlayPause extends Component {
     }
   }
 
+  componentWillReceiveProps(){
+    const { media: { isPlaying }, className } = this.props;
+  }
+
   render() {
     const { media: { isPlaying }, className } = this.props;
     return (

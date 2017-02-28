@@ -5,16 +5,22 @@ import {
   NAVIGATE_TO,
   PREVIOUS_SONG,
   NEXT_SONG,
+  RESUME_SONG, 
+  STOP_SONG, 
+  PAUSE_SONG,
   SELECT_SR,
   CLEAR_STATE,
   CLEAR_QUEUE
 } from '../actions';
 
+import playPause from '../containers/audio_player/AudioPlayer';
+
 const initialState = {
   allSongs: [],
   currentSongIndex: 0,
   searchResults: [],
-  loading: false
+  loading: false, 
+  isPlaying: true
 };
 
 export default function search(state = initialState, action) {
@@ -26,9 +32,6 @@ export default function search(state = initialState, action) {
       const newSong = action.payload.data[0];
       const { allSongs } = state;
       const searchResults = action.payload.data.slice(1);
-      console.log('SEARCH_LYRICS_SUCCESS REDUCER - newSong:', newSong);
-      console.log('SEARCH_LYRICS_SUCCESS REDUCER - searchResults:', searchResults);
-
       // Code to check if video already exists. If so, don't add it
       // and change currentSongIndex to index where it exists.
 
@@ -75,6 +78,12 @@ export default function search(state = initialState, action) {
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
 
+
+    case RESUME_SONG:
+      return{...state, isPlaying:true} 
+
+    case PAUSE_SONG:
+      return{...state, isPlaying:false}
     case NAVIGATE_TO:
       return { ...state, currentSongIndex: action.index };
 
@@ -82,7 +91,6 @@ export default function search(state = initialState, action) {
       const newSongX = action.payload;
       const allSongsX = state.allSongs;
       const newIndexX = allSongsX.length;
-      console.log('SELECT SR REDUCER - newSong:', newSong);
       return { allSongs: [
           ...allSongsX,
           newSongX
@@ -90,7 +98,7 @@ export default function search(state = initialState, action) {
         currentSongIndex: newIndexX,
         loading: false,
         searchResults: [] // clear search results
-      };
+      };  
 
     case CLEAR_STATE:
     case CLEAR_QUEUE:
