@@ -24,6 +24,12 @@ export const CLEAR_QUEUE = 'CLEAR_QUEUE';
 export const ADD_SONG_TO_LIBRARY_BEGIN = 'ADD_SONG_TO_LIBRARY_BEGIN';
 export const ADD_SONG_TO_LIBRARY_SUCCESS = 'ADD_SONG_TO_LIBRARY_SUCCESS';
 export const ADD_SONG_TO_LIBRARY_FAILURE = 'ADD_SONG_TO_LIBRARY_FAILURE';
+export const INCREASE_VOLUME = 'INCREASE_VOLUME';
+export const DECREASE_VOLUME = 'DECREASE_VOLUME';
+export const MUTE = 'MUTE';
+export const UNMUTE = 'UNMUTE';
+export const RESET_VOLUME_CHANGE = 'RESET_VOLUME_CHANGE';
+
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -248,4 +254,24 @@ export const addSongToLibrarySuccess = song => ({
 export const addSongToLibraryFailure = error => ({
   type: ADD_SONG_TO_LIBRARY_FAILURE,
   error
+});
+
+export const increaseVolume = error => ({
+  type: INCREASE_VOLUME,
+});
+
+export const decreaseVolume = error => ({
+  type: DECREASE_VOLUME,
+});
+
+export const mute = error => ({
+  type: MUTE,
+});
+
+export const unmute = error => ({
+  type: UNMUTE,
+});
+
+export const resetVolumeChange = error => ({
+  type: RESET_VOLUME_CHANGE,
 });
