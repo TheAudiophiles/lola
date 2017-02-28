@@ -26,7 +26,6 @@ const NextTrack = (props) => (
 
 class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps){
-    console.log('is this being called?');
     if(!nextProps.isPlaying){
       this.pauseSong();
     }

@@ -76,9 +76,7 @@ export default function search(state = initialState, action) {
       return { ...state, currentSongIndex: nextSongIndex };
 
     case RESUME_SONG:
-      return{...state, isPlaying:true}  
-    
-    // case STOP_SONG:
+      return{...state, isPlaying:true} 
 
     case PAUSE_SONG:
       return{...state, isPlaying:false}
