@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Media, Player, controls, utils } from 'react-media-player';
 import PlayPause from '../../components/play_pause/PlayPause';
 import MuteUnmute from '../../components/mute_unmute/MuteUnmute';
-console.log('This is play_pause:', PlayPause);
 
 
 import './audio_player.scss';
@@ -27,9 +26,12 @@ const NextTrack = (props) => (
 
 class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps){
-    console.log('is this being called?')
+    console.log('is this being called?');
     if(!nextProps.isPlaying){
       this.pauseSong();
+    }
+    if(nextProps.isPlaying){
+      this.resumeSong();
     }
   } 
 
@@ -49,8 +51,13 @@ class AudioPlayer extends Component {
       this._player.context.media.pause();  
     }
   } 
-  
 
+  resumeSong = () => {
+    if(this._player){
+      this._player.context.media.play();
+    }
+  }
+  
   render() {
     console.log('THIS IS PROPS =====', this.props);
     return (

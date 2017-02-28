@@ -20,8 +20,6 @@ const initialState = {
   isPlaying: true
 };
 
-console.log('This is isPlaying:', initialState);
-
 export default function search(state = initialState, action) {
   switch (action.type) {
     case SEARCH_LYRICS_LOADING:
@@ -81,7 +79,8 @@ export default function search(state = initialState, action) {
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
 
-    // case RESUME_SONG: 
+    case RESUME_SONG:
+      return{...state, isPlaying:true}  
     
     // case STOP_SONG:
 
