@@ -9,6 +9,7 @@ export const RESUME_SONG = 'RESUME_SONG';
 export const STOP_SONG = 'STOP_SONG';
 export const PAUSE_SONG = 'PAUSE_SONG';
 export const PLAY_PAUSE = 'PLAY_PAUSE';
+export const NAVIGATE_TO = 'NAVIGATE_TO';
 export const SPOTIFY_TOKENS = 'SPOTIFY_TOKENS';
 export const SPOTIFY_TOKENS_SUCCESS = 'SPOTIFY_TOKENS_SUCCESS';
 export const SPOTIFY_TOKENS_FAILURE = 'SPOTIFY_TOKENS_FAILURE';
@@ -18,21 +19,13 @@ export const SPOTIFY_ME_FAILURE = 'SPOTIFY_ME_FAILURE';
 export const SPOTIFY_LOGOUT = 'SPOTIFY_LOGOUT';
 export const RESET_LOGGEDOUT = 'RESET_LOGGEDOUT';
 export const SELECT_SR = 'SELECT_SR';
+export const CLEAR_STATE = 'CLEAR_STATE';
+export const CLEAR_QUEUE = 'CLEAR_QUEUE';
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
   name,
   artist
-});
-
-/**
- * fetchSongLoading - Action to show loading gif while song
- * is being requested
- *
- * @return {object} redux action
- */
-export const fetchSongLoading = () => ({
-  type: SEARCH_LYRICS_LOADING
 });
 
 /**
@@ -48,6 +41,15 @@ export const fetchSongVideo = lyrics => ({
   lyrics
 });
 
+/**
+ * fetchSongLoading - Action to show loading gif while song
+ * is being requested
+ *
+ * @return {object} redux action
+ */
+export const fetchSongLoading = () => ({
+  type: SEARCH_LYRICS_LOADING
+});
 
 /**
  * fetchSongVideoSuccess - Successful request of song
@@ -113,6 +115,8 @@ export const pauseSong = () => ({
   type: PAUSE_SONG
   
 })
+export const navigateTo = index => ({ type: NAVIGATE_TO, index });
+
 
 /**
  * getMyInfo - Start trying to get spotify info for
@@ -218,4 +222,12 @@ export const resetLogout = () => ({
 export const selectSR = payload => ({
   type: SELECT_SR,
   payload
+});
+
+export const clearState = () => ({
+  type: CLEAR_STATE
+});
+
+export const clearQueue = () => ({
+  type: CLEAR_QUEUE
 });

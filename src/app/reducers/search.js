@@ -2,12 +2,15 @@ import {
   SEARCH_LYRICS_LOADING,
   SEARCH_LYRICS_SUCCESS,
   SEARCH_LYRICS_FAILURE,
+  NAVIGATE_TO,
   PREVIOUS_SONG,
   NEXT_SONG,
   RESUME_SONG, 
   STOP_SONG, 
   PAUSE_SONG,
-  SELECT_SR
+  SELECT_SR,
+  CLEAR_STATE,
+  CLEAR_QUEUE
 } from '../actions';
 
 import playPause from '../containers/audio_player/AudioPlayer';
@@ -75,11 +78,14 @@ export default function search(state = initialState, action) {
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
 
+
     case RESUME_SONG:
       return{...state, isPlaying:true} 
 
     case PAUSE_SONG:
       return{...state, isPlaying:false}
+    case NAVIGATE_TO:
+      return { ...state, currentSongIndex: action.index };
 
     case SELECT_SR:
       const newSongX = action.payload;
@@ -93,6 +99,10 @@ export default function search(state = initialState, action) {
         loading: false,
         searchResults: [] // clear search results
       };  
+
+    case CLEAR_STATE:
+    case CLEAR_QUEUE:
+      return initialState;
 
     default:
       return state;

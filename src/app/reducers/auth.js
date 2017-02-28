@@ -4,7 +4,8 @@ import {
   SPOTIFY_ME_SUCCESS,
   SPOTIFY_ME_FAILURE,
   SPOTIFY_LOGOUT,
-  RESET_LOGGEDOUT
+  RESET_LOGGEDOUT,
+  CLEAR_STATE
 } from '../actions';
 
 /** The initial state; no tokens and no user info */
@@ -83,6 +84,9 @@ export default function reduce(state = initialState, action) {
         ...state,
         loggedOut: false
       };
+
+    case CLEAR_STATE:
+      return initialState;
 
     default:
       return state;

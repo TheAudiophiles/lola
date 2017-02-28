@@ -30,9 +30,10 @@ class Song extends Component {
         onPrevTrack={this.toPreviousSong}
         onNextTrack={this.toNextSong}
         src={
-        'https://www.youtube.com/embed/' +
-        allSongs[currentSongIndex].vid.items[0].id.videoId
-      }/>
+          'https://www.youtube.com/embed/' +
+          allSongs[currentSongIndex].vid.items[0].id.videoId
+        }
+      />
     );
   }
 }

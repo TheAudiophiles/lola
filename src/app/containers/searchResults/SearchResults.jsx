@@ -32,22 +32,31 @@ class SearchResults extends Component {
     if (!searchResults.length) return <div>No Search Results</div>;
 
     return (
-      <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect.bind(this)}>
-        {searchResults.map((result, i) => {
-          return (
-            <Carousel.Item key={i} onClick={() => { this.selectSearchResult.call(this, result) }}>
-              <img
-                width={250}
-                height={250}
-                alt="500x500"
-                src={result.details ? result.details.album.images[0].url : 'https://cdn.browshot.com/static/images/not-found.png'}/>
-              <Carousel.Caption>
-                <h3>{result.details ? result.details.name : ''}</h3>
-              </Carousel.Caption>
-            </Carousel.Item>
-          );
-        })
-        }
+      <Carousel
+        activeIndex={this.state.index}
+        direction={this.state.direction}
+        onSelect={this.handleSelect.bind(this)}
+      >
+        {searchResults.map((result, i) => (
+          <Carousel.Item
+            key={result.vid.items.length ? result.vid.items[0].id.videoId : i}
+            onClick={() => { this.selectSearchResult.call(this, result) }}
+          >
+            <img
+              width={250}
+              height={250}
+              alt="500x500"
+              src={
+                result.details
+                  ? result.details.album.images[0].url
+                  : 'https://cdn.browshot.com/static/images/not-found.png'
+              }
+            />
+            <Carousel.Caption>
+              <h3>{result.details ? result.details.name : result.track.name}</h3>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
       </Carousel>
     );
   }
