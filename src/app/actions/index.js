@@ -8,6 +8,7 @@ export const NEXT_SONG = 'NEXT_SONG';
 export const RESUME_SONG = 'RESUME_SONG';
 export const STOP_SONG = 'STOP_SONG';
 export const PAUSE_SONG = 'PAUSE_SONG';
+export const PLAY_PAUSE = 'PLAY_PAUSE';
 export const SPOTIFY_TOKENS = 'SPOTIFY_TOKENS';
 export const SPOTIFY_TOKENS_SUCCESS = 'SPOTIFY_TOKENS_SUCCESS';
 export const SPOTIFY_TOKENS_FAILURE = 'SPOTIFY_TOKENS_FAILURE';
@@ -126,7 +127,7 @@ export const stopSong = () => ({
  */
 
 export const pauseSong = () => ({
-  type: PAUSE_SONG, 
+  type: PAUSE_SONG
   
 })
 

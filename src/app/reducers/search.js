@@ -10,17 +10,14 @@ import {
   SELECT_SR
 } from '../actions';
 
-import playPause from '../components/play_pause/PlayPause';
+import playPause from '../containers/audio_player/AudioPlayer';
 
 const initialState = {
   allSongs: [],
   currentSongIndex: 0,
   searchResults: [],
-  loading: false, 
-  isPlaying: true
+  loading: false
 };
-
-console.log('this is initialState:', initialState)
 
 export default function search(state = initialState, action) {
   switch (action.type) {
@@ -86,12 +83,9 @@ export default function search(state = initialState, action) {
     // case STOP_SONG:
 
     case PAUSE_SONG:
-      console.log('song has been paused');  
-      const desiredPlay = false; 
-      // if(state.isPlaying !== desiredPlay){
-      //   playPause();
-      // }
-      // return{...state, desiredPlay}
+      console.log('song has been paused'); 
+      console.log('this is action:', action)
+      return{...state}
 
     case SELECT_SR:
       const newSongX = action.payload;

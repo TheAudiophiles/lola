@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
 import { Media, Player, controls, utils } from 'react-media-player';
-import PlayPause from '../../play_pause/PlayPause';
-import MuteUnmute from '../../mute_unmute/MuteUnmute';
+import PlayPause from '../../components/play_pause/PlayPause';
+import MuteUnmute from '../../components/mute_unmute/MuteUnmute';
+console.log('This is play_pause:', PlayPause);
+
 
 import './audio_player.scss';
 
@@ -33,7 +35,7 @@ export default class AudioPlayer extends Component {
       this.props.onNextTrack();
     }
   }
-
+  
   render() {
     return (
       <Media>
@@ -58,3 +60,4 @@ export default class AudioPlayer extends Component {
     );
   }
 }
+

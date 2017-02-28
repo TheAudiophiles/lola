@@ -49,7 +49,7 @@ export const commands = [
   }, 
   {
     indexes: ['resume song'], 
-    action: () => {
+    action: (i) => {
       console.log('in resume song');
       redux.resumeSong();
     }
@@ -58,7 +58,7 @@ export const commands = [
     indexes: ['pause song'], 
     action: (i) => {
       console.log('in pause song');
-      redux.playPause();
+      redux.pauseSong();
     }
   }, 
   {

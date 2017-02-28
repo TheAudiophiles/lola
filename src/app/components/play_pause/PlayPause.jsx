@@ -63,9 +63,4 @@ class PlayPause extends Component {
   }
 }
 
-const mapStateToProps = ({ media }) => ({
-  isPlaying: media.isPlaying, 
-  className: media.className
-})
-
-export default withMediaProps(PlayPause, mapStateToProps);
+export default withMediaProps(PlayPause);
