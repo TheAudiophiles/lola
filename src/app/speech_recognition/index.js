@@ -55,14 +55,12 @@ export const commands = [
   {
     indexes: ['pause song'], 
     action: (i) => {
-      console.log('in pause song');
       redux.pauseSong();
     }
   }, 
   {
     indexes: ['stop song'],
     action: (i) => {
-      console.log('in stop song');
       redux.stopSong();
     }
   }

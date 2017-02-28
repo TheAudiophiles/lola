@@ -59,7 +59,6 @@ class AudioPlayer extends Component {
   }
   
   render() {
-    console.log('THIS IS PROPS =====', this.props);
     return (
       <Media>
         <div className="wide">

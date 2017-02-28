@@ -29,10 +29,6 @@ export default function search(state = initialState, action) {
       const newSong = action.payload.data[0];
       const { allSongs } = state;
       const searchResults = action.payload.data.slice(1);
-      console.log('This is searchResults action payload:', action.payload)
-      console.log('SEARCH_LYRICS_SUCCESS REDUCER - newSong:', newSong);
-      console.log('SEARCH_LYRICS_SUCCESS REDUCER - searchResults:', searchResults);
-
       // Code to check if video already exists. If so, don't add it
       // and change currentSongIndex to index where it exists.
 
@@ -89,10 +85,8 @@ export default function search(state = initialState, action) {
 
     case SELECT_SR:
       const newSongX = action.payload;
-      console.log('action.payload:',  action.payload);
       const allSongsX = state.allSongs;
       const newIndexX = allSongsX.length;
-      console.log('SELECT SR REDUCER - newSong:', newSong);
       return { allSongs: [
           ...allSongsX,
           newSongX
