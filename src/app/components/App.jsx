@@ -9,7 +9,7 @@ function App({ children }) {
   };
 
   return (
-    <div>
+    <div id="outer-container">
       {showHeader()}
       {children}
     </div>

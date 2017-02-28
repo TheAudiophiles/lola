@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import { Fixed, Toolbar, NavItem } from 'rebass';
+import { scaleRotate as Menu } from 'react-burger-menu';
+import Radium from 'radium';
+
+let RadiumLink = Radium(Link);
 
 import { spotifyLogout, resetLogout, clearState } from '../../actions';
 
@@ -10,6 +14,7 @@ const Header = (props) => {
   const { spotifyLogout, loggedOut, loggedIn, resetLogout, clearState } = props;
 
   const logoutHandler = (e) => {
+    e.preventDefault();
     // clearState();
     window.localStorage.removeItem('redux');
     spotifyLogout();
@@ -20,22 +25,51 @@ const Header = (props) => {
     window.location = '/logout';
   }
 
-  const logoutStyle = { marginLeft: 'auto' };
+  // Will be moved to scss file
+  var styles = {
+    bmBurgerButton: {
+      position: 'fixed',
+      width: '36px',
+      height: '30px',
+      right: '36px',
+      top: '36px'
+    },
+    bmBurgerBars: {
+      background: '#bdc3c7'
+    },
+    bmCrossButton: {
+      height: '24px',
+      width: '24px'
+    },
+    bmCross: {
+      background: '#bdc3c7'
+    },
+    bmMenu: {
+      background: '#373a47',
+      padding: '2.5em 1.5em 0',
+      fontSize: '1.15em'
+    },
+    bmMorphShape: {
+      fill: '#373a47'
+    },
+    bmItemList: {
+      color: '#b8b7ad',
+      padding: '0.8em'
+    },
+    bmOverlay: {
+      background: 'rgba(0, 0, 0, 0.3)'
+    }
+  }
 
   return (
-    <Fixed top left right zIndex={1}>
-      <Toolbar>
-
-        <NavItem to="/home" is={Link} children="Lola" />
-        <NavItem to="/about" is={Link} children="About" />
-        <NavItem
-          style={logoutStyle}
-          onClick={logoutHandler}
-          is="a"
-          children="Logout"
-        />
-      </Toolbar>
-    </Fixed>
+    <Menu
+      right
+      styles={styles}
+      pageWrapId={ "page-wrap" }
+      outerContainerId={ "outer-container" }>
+      <RadiumLink id="home" className="menu-item" to="/home">Home</RadiumLink>
+      <a id="logout" className="menu-item" onClick={logoutHandler} href="#">Logout</a>
+    </Menu>
   );
 };
 

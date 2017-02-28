@@ -1,5 +1,10 @@
 .Card {
   max-width: 200px;
   margin: auto;
-  background: #000;
+  background: #373a47;
+  color: #bdc3c7;
+
+  .Text {
+    font-size: 14px !important;
+  }
 }
