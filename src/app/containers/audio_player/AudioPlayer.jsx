@@ -25,6 +25,7 @@ const NextTrack = (props) => (
 );
 
 class AudioPlayer extends Component {
+<<<<<<< 1bf22cba004b517310acc3b8d12b542cfc69cb87
   componentWillReceiveProps(nextProps){
     if(!nextProps.isPlaying){
       this.pauseSong();
@@ -33,6 +34,19 @@ class AudioPlayer extends Component {
       this.resumeSong();
     }
   } 
+=======
+
+  componentWillReceiveProps(nextProps) {
+    const { volumeChange, muted } = nextProps;
+
+    if (volumeChange.status === true) {
+      let currentVolume = this._player.context.media.volume;
+      volumeChange.direction === 'up' ? this.changeVolume(currentVolume + 0.15) : this.changeVolume(currentVolume - 0.15);
+    }
+
+    if (muted !== this._player.context.media.isMuted) this.mute(muted);
+  }
+>>>>>>> cleaned up AudioPlayer
 
   _handlePrevTrack = () => {
     if (this._player.context.media.duration > 0.1) {
@@ -45,15 +59,31 @@ class AudioPlayer extends Component {
       this.props.onNextTrack();
     }
   }
+<<<<<<< 1bf22cba004b517310acc3b8d12b542cfc69cb87
   pauseSong = () => {
     if(this._player){
       this._player.context.media.pause();  
+=======
+
+  changeVolume(volume) {
+    if (this._player) {
+      if (volume > 1) this._player.context.media.setVolume(1);
+      else if (volume < 0) this._.player.context.media.setVolume(0);
+      else this._player.context.media.setVolume(volume);
+      this.props.resetVolumeChange();
+>>>>>>> cleaned up AudioPlayer
     }
   } 
 
+<<<<<<< 1bf22cba004b517310acc3b8d12b542cfc69cb87
   resumeSong = () => {
     if(this._player){
       this._player.context.media.play();
+=======
+  mute(muted) {
+    if (this._player) {
+      this._player.context.media.mute(muted);
+>>>>>>> cleaned up AudioPlayer
     }
   }
   
@@ -86,5 +116,14 @@ const mapStateToProps = ({ search }) => ({
   isPlaying: search.isPlaying
 });
 
+<<<<<<< 1bf22cba004b517310acc3b8d12b542cfc69cb87
 export default connect (mapStateToProps)(AudioPlayer);
+=======
+const mapDispatchToProps = dispatch => bindActionCreators({ resetVolumeChange }, dispatch);
+
+const mapStateToProps = ({ audioPlayer }) => ({
+    volumeChange: audioPlayer.volumeChange,
+    muted: audioPlayer.muted
+});
+>>>>>>> cleaned up AudioPlayer
 
