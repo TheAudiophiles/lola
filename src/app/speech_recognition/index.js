@@ -1,10 +1,23 @@
 import { bindActionCreators } from 'redux'
 import artyomjs from 'artyom.js';
+<<<<<<< 8df0f1ffd98716dbdca7163a54bb15b11a8cfd06
 import { fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, resumeSong } from '../actions';
 
 import { store } from '../index.js';
 
 const redux = bindActionCreators({ fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, resumeSong }, store.dispatch);
+=======
+import { fetchSongByName, fetchSongVideo, addSongToLibrary } from '../actions';
+
+import { store } from '../index.js';
+
+const redux = bindActionCreators(
+  {
+    fetchSongByName,
+    fetchSongVideo,
+    addSongToLibrary
+  }, store.dispatch);
+>>>>>>> implemented speech recognition and command for adding a song to library
 
 export const artyom = artyomjs.ArtyomBuilder.getInstance();
 
@@ -32,39 +45,39 @@ export const commands = [
     }
   }, 
   {
-    indexes: ['next song'], 
+    indexes: ['next song'],
     //smart: true,
     action:(i) => {
       redux.nextSong();
     }
-  }, 
+  },
   {
     indexes: ['previous song'],
-    //smart: true, 
+    //smart: true,
     action:(i, wildcard) => {
       redux.previousSong();
     }
-  }, 
+  },
   {
-    indexes: ['resume song'], 
+    indexes: ['resume song'],
     action: (i) => {
       console.log('in resume song');
       redux.resumeSong();
     }
-  }, 
+  },
   {
-    indexes: ['pause song'], 
+    indexes: ['pause song'],
     action: (i) => {
       redux.pauseSong();
+  },
+  {
+    indexes:['add song to library'],
+    action: (i) => {
+      let allSongs = store.getState().search.allSongs;
+      let currentSongIndex = store.getState().search.currentSongIndex;
+      redux.addSongToLibrary(allSongs[currentSongIndex]);
     }
   }
-  // {
-  //   indexes:['add song to library'],
-  //   smart: true,
-  //   action: (i) => {
-  //     redux.
-  //   }
-  // }
 ];
 
 export const init = () => {
