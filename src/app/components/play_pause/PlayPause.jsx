@@ -19,7 +19,6 @@ class ScaleX extends Component {
 class PlayPause extends Component {
   _handlePlayPause = () => {
     if (this.props.media.duration > 0.1) {
-      console.log('This is media:', this.props.media.pause);
       this.props.media.playPause();
     }
   }
