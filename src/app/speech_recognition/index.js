@@ -35,7 +35,6 @@ export const commands = [
     indexes: ['next song'], 
     //smart: true,
     action:(i) => {
-      console.log('in next song');
       redux.nextSong();
     }
   }, 
@@ -43,7 +42,6 @@ export const commands = [
     indexes: ['previous song'],
     //smart: true, 
     action:(i, wildcard) => {
-      console.log('in previousSong');
       redux.previousSong();
     }
   }, 
@@ -57,7 +55,6 @@ export const commands = [
   {
     indexes: ['pause song'], 
     action: (i) => {
-      console.log('in pause song');
       redux.pauseSong();
     }
   }, 

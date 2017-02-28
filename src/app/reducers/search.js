@@ -16,8 +16,11 @@ const initialState = {
   allSongs: [],
   currentSongIndex: 0,
   searchResults: [],
-  loading: false
+  loading: false, 
+  isPlaying: true
 };
+
+console.log('This is isPlaying:', initialState);
 
 export default function search(state = initialState, action) {
   switch (action.type) {
@@ -83,9 +86,7 @@ export default function search(state = initialState, action) {
     // case STOP_SONG:
 
     case PAUSE_SONG:
-      console.log('song has been paused'); 
-      console.log('this is action:', action)
-      return{...state}
+      return{...state, isPlaying:false}
 
     case SELECT_SR:
       const newSongX = action.payload;

@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM, { findDOMNode } from 'react-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Media, Player, controls, utils } from 'react-media-player';
 import PlayPause from '../../components/play_pause/PlayPause';
 import MuteUnmute from '../../components/mute_unmute/MuteUnmute';
@@ -23,7 +25,14 @@ const NextTrack = (props) => (
   </svg>
 );
 
-export default class AudioPlayer extends Component {
+class AudioPlayer extends Component {
+  componentWillReceiveProps(nextProps){
+    console.log('is this being called?')
+    if(!nextProps.isPlaying){
+      this.pauseSong();
+    }
+  } 
+
   _handlePrevTrack = () => {
     if (this._player.context.media.duration > 0.1) {
       this.props.onPrevTrack();
@@ -35,8 +44,15 @@ export default class AudioPlayer extends Component {
       this.props.onNextTrack();
     }
   }
+  pauseSong = () => {
+    if(this._player){
+      this._player.context.media.pause();  
+    }
+  } 
   
+
   render() {
+    console.log('THIS IS PROPS =====', this.props);
     return (
       <Media>
         <div className="wide">
@@ -60,4 +76,10 @@ export default class AudioPlayer extends Component {
     );
   }
 }
+  
+const mapStateToProps = ({ search }) => ({
+  isPlaying: search.isPlaying
+});
+
+export default connect (mapStateToProps)(AudioPlayer);
 

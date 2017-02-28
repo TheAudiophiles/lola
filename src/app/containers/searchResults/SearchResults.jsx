@@ -33,9 +33,9 @@ class SearchResults extends Component {
 
     return (
       <Carousel activeIndex={this.state.index} direction={this.state.direction} onSelect={this.handleSelect.bind(this)}>
-        {searchResults.map(result => {
+        {searchResults.map((result, i) => {
           return (
-            <Carousel.Item onClick={() => { this.selectSearchResult.call(this, result) }}>
+            <Carousel.Item key={i} onClick={() => { this.selectSearchResult.call(this, result) }}>
               <img
                 width={250}
                 height={250}
@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators({ selectSR }, dispatch);
 
 const mapStateToProps = ({ search }) => ({
-  searchResults: search.searchResults,
+  searchResults: search.searchResults
 });
 
 
