@@ -16,31 +16,24 @@ import Queue from '../../containers/queue/Queue';
 
 export default () => (
   <div id="page-wrap">
-    <Grid style={{ display: 'flex' }} col={12} px={2}>
-      <Search style={{ margin: 'auto' }} />
-    </Grid>
-    <Grid col={4} px={2}>
-      <Queue />
-    </Grid>
-    <Grid col={4} px={2}>
-      <SongDetails />
-      <Block>
-        <Box>
-          <Load />
-        </Box>
-        <Speech />
-      </Block>
-    </Grid>
-    <Grid col={4} px={2}>
-      <SearchResults />
-    </Grid>
-    <Queue />
-    <Block>
-      <Speech />
-      <Load />
-      <Search />
-    </Block>
-    <Song />
-    <SearchResults />
-  </Banner>
+   <Grid style={{ display: 'flex' }} col={12} px={2}>
+     <Search style={{ margin: 'auto' }} />
+   </Grid>
+   <Grid col={4} px={2}>
+     <Queue />
+   </Grid>
+   <Grid col={4} px={2}>
+     <SongDetails />
+     <Block>
+       <Box>
+         <Load />
+       </Box>
+       <Speech />
+     </Block>
+   </Grid>
+   <Grid col={4} px={2}>
+     <SearchResults />
+   </Grid>
+   <Song />
+ </div>
 );

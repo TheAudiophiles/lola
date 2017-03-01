@@ -272,7 +272,8 @@ router.post('/addToLibrary', (req, res) => {
             if (err) {
               return console.log(err);
             }
-            console.log('song added to library - song:', song);
+            console.log('song added to library:', song);
+            console.log('returning the song^');
             res.json(song);
           });
         });
@@ -282,7 +283,8 @@ router.post('/addToLibrary', (req, res) => {
           if (err) {
             return console.log(err);
           }
-          console.log('song added to library - song:', song);
+          console.log('song added to library:', song);
+          console.log('returning the song^');
           res.json(song);
         });
       }

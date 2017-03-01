@@ -16,8 +16,6 @@ import {
   fetchSongVideoFailure,
   setTokensSuccess,
   setTokensFailure,
-  addSongToLibrarySuccess,
-  addSongToLibraryFailure
 } from '../actions';
 
 const spotifyApi = new Spotify();
@@ -76,16 +74,14 @@ function* setSpotifyTokens({ accessToken, refreshToken }) {
 
 function* addSongToLibrary({song}) {
   try {
-    // console.log('ADDSONGTOLIBRARY SAGA - song:', song);
     const response = yield call(axios.post, `/addToLibrary`, song);
-    console.log('ADDSONGTOLIBRARY SAGA - response:', response.data);
-    console.log('ADDSONGTOLIBRARY SAGA - response.status:', response.status);
+    console.log('response:', response);
     if (response.status !== 200) { // I think I can craft a response
       throw new Error('Failed to add song to library');
     }
-    yield put(addSongToLibrarySuccess(response.data));
+    yield put(fetchSongVideoSuccess(response.data));
   } catch(error) {
-    yield put(addSongToLibraryFailure(error));
+    yield put(fetchSongVideoFailure(error));
   }
 }
 /**

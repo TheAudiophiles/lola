@@ -122,8 +122,8 @@ export const resumeSong = () => ({
 
 export const pauseSong = () => ({
   type: PAUSE_SONG
-  
 })
+
 export const navigateTo = index => ({ type: NAVIGATE_TO, index });
 
 

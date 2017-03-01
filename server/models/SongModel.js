@@ -20,7 +20,7 @@ var SongSchema = new mongoose.Schema({
     type: String,
     required: false,
     unique: false
-  },
+  },  
   album: {
     type: String,
     required: false,

@@ -2,6 +2,7 @@ const Song = require('../models/SongModel').model;
 
 class SongController {
 	createSong(data, done) {
+
 		let image, artist, album, title, videoId;
 		videoId = data.vid.items[0].id.videoId;
 		if (data.details) {
@@ -38,7 +39,7 @@ class SongController {
 				});
 			}
 		});
-		console.log('SONGCONTROLLER. OUTSIDE OF FINDONE QUERY');
+		console.log('SONGCONTROLLER. OUTSIDE OF FINDONE QUERY. RETURNING song:', song);
 		return song;
 	}
 }

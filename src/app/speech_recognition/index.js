@@ -82,6 +82,7 @@ export const commands = [
     indexes: ['pause song'],
     action: (i) => {
       redux.pauseSong();
+    }
   },
   {
     indexes:['add song to library'],
