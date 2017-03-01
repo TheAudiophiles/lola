@@ -258,11 +258,11 @@ export const addSongToLibraryFailure = error => ({
   error
 });
 
-export const increaseVolume = ()) => ({
+export const increaseVolume = () => ({
   type: INCREASE_VOLUME
 });
 
-export const decreaseVolume = ()) => ({
+export const decreaseVolume = () => ({
   type: DECREASE_VOLUME
 });
 

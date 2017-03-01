@@ -107,9 +107,11 @@ class AudioPlayer extends Component {
 }
 
 const mapDispatchToProps = dispatch => bindActionCreators({ resetVolumeChange }, dispatch);
+
 const mapStateToProps = ({ audioPlayer }) => ({
     volumeChange: audioPlayer.volumeChange,
     muted: audioPlayer.muted,
     isPlaying: audioPlayer.isPlaying
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(AudioPlayer);
