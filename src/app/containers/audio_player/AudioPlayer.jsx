@@ -113,5 +113,4 @@ const mapStateToProps = ({ audioPlayer }) => ({
     muted: audioPlayer.muted,
     isPlaying: audioPlayer.isPlaying
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(AudioPlayer);
