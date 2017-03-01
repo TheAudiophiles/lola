@@ -8,11 +8,8 @@ function About() {
         <h1>About Lola</h1>
         <h3>
         	Created by Nick Bennett, Rachel DePriest, and Daniel Olita, Lola is an interactive
-        	music playing web-application that responds to voice commands allowing for a more social
-          expierence. 
-        </h3>
-        <h3>
-          While typical music playing applications require the user to have the artist and song
+        	music playing web-application that allows for users to simply speak what they want to
+        	listen to.
         </h3>
       </div>
     </Banner>
