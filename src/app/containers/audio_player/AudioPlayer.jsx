@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { Media, Player, controls, utils } from 'react-media-player';
 import PlayPause from '../../components/play_pause/PlayPause';
 import MuteUnmute from '../../components/mute_unmute/MuteUnmute';
-
-
+import { resetVolumeChange } from '../../actions';
 import './audio_player.scss';
 
 const { CurrentTime, Progress, SeekBar, Duration, Volume, Fullscreen } = controls;
@@ -25,14 +24,24 @@ const NextTrack = (props) => (
 );
 
 class AudioPlayer extends Component {
-  componentWillReceiveProps(nextProps){
-    if(!nextProps.isPlaying){
+
+  componentWillReceiveProps(nextProps) {
+    const { volumeChange, muted, isPlaying } = nextProps;
+
+    if (volumeChange.status === true) {
+      let currentVolume = this._player.context.media.volume;
+      volumeChange.direction === 'up' ? this.changeVolume(currentVolume + 0.15) : this.changeVolume(currentVolume - 0.15);
+    }
+
+    if (muted !== this._player.context.media.isMuted) this.mute(muted);
+
+    if (!isPlaying) {
       this.pauseSong();
     }
-    if(nextProps.isPlaying){
+    if (isPlaying) {
       this.resumeSong();
     }
-  } 
+  }
 
   _handlePrevTrack = () => {
     if (this._player.context.media.duration > 0.1) {
@@ -45,18 +54,34 @@ class AudioPlayer extends Component {
       this.props.onNextTrack();
     }
   }
+
   pauseSong = () => {
-    if(this._player){
-      this._player.context.media.pause();  
+    if (this._player) {
+      this._player.context.media.pause();
     }
-  } 
+  }
+
+  changeVolume(volume) {
+    if (this._player) {
+      if (volume > 1) this._player.context.media.setVolume(1);
+      else if (volume < 0) this._player.context.media.setVolume(0);
+      else this._player.context.media.setVolume(volume);
+      this.props.resetVolumeChange();
+    }
+  }
 
   resumeSong = () => {
-    if(this._player){
+    if (this._player) {
       this._player.context.media.play();
     }
   }
-  
+
+  mute(muted) {
+    if (this._player) {
+      this._player.context.media.mute(muted);
+    }
+  }
+
   render() {
     return (
       <Media>
@@ -81,10 +106,13 @@ class AudioPlayer extends Component {
     );
   }
 }
-  
-const mapStateToProps = ({ search }) => ({
-  isPlaying: search.isPlaying
+
+const mapDispatchToProps = dispatch => bindActionCreators({ resetVolumeChange }, dispatch);
+
+const mapStateToProps = ({ audioPlayer }) => ({
+    volumeChange: audioPlayer.volumeChange,
+    muted: audioPlayer.muted,
+    isPlaying: audioPlayer.isPlaying
 });
 
-export default connect (mapStateToProps)(AudioPlayer);
-
+export default connect (mapStateToProps, mapDispatchToProps)(AudioPlayer);

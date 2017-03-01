@@ -9,6 +9,10 @@ const stringSimilarity = require('string-similarity');
 
 const UserController = require('./controllers/UserController');
 const userController = new UserController();
+const LibraryController = require('./controllers/LibraryController');
+const libraryController = new LibraryController();
+const SongController = require('./controllers/SongController');
+const songController = new SongController();
 
 const SPOTIFY_API_KEY = require('./config/spotify.conf');
 const YOUTUBE_API_KEY = require('./config/youtube.conf');
@@ -110,13 +114,6 @@ router.get('/callback', (req, res) => {
   }
 });
 
-// function isSameSong(a, b) {
-//   if (a === b)) {
-//     return true;
-//   }
-//   return false;
-// }
-
 function youtubeSearch(query) {
   if (query) {
     const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
@@ -150,9 +147,9 @@ function trackSearch(options, res) {
         tracks.push({ name: result.track.track_name, artist: result.track.artist_name });
       });
 
-      console.log('searchResultsYT:', searchResultsYT);
-      console.log('searchResultsSP:', searchResultsSP);
-      console.log('tracks:', tracks);
+      // console.log('searchResultsYT:', searchResultsYT);
+      // console.log('searchResultsSP:', searchResultsSP);
+      // console.log('tracks:', tracks);
 
       let uniqueResultsYT = [];
       uniqueResultsYT.push(searchResultsYT[0]);
@@ -171,7 +168,7 @@ function trackSearch(options, res) {
             minSimilarity = similarity;
           }
         }
-        console.log('MIN SIMILARITY:', minSimilarity);
+        // console.log('MIN SIMILARITY:', minSimilarity);
         if (minSimilarity <= 0.3) { // its all good
           uniqueResultsYT.push(otherResultsYT[i]);
           uniqueResultsSP.push(otherResultsSP[i]);
@@ -180,7 +177,7 @@ function trackSearch(options, res) {
 
       srYT = uniqueResultsYT.slice(0,4);
       srSP = uniqueResultsSP.slice(0,4);
-      console.log('srSP', srSP);
+      // console.log('srSP', srSP);
     })
 
     .then(() => {
@@ -241,7 +238,50 @@ router.get('/logout', (req, res) => {
   req.session.destroy();
   spotifyApi.resetAccessToken();
   spotifyApi.resetRefreshToken();
+  userController.user = {};
   res.redirect('https://spotify.com/logout');
+});
+
+router.post('/addToLibrary', (req, res) => {
+  console.log('ROUTE /ADDTOLIBRARY ()====={@)=========================================>');
+  let songData = req.body;
+  songController.createSong(songData, (err, song) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log('ROUTE /ADDTOLIBRARY - song returned from SONGCONTROLLER:', song);
+    let userId = userController.getUserId();
+
+    libraryController.findLibrary(userId, (err, library) => {
+      if (err) {
+        return console.log(err);
+      }
+      if (!library) {
+        libraryController.createLibrary(userId, err => {
+          if (err) {
+            return console.log(err);
+          }
+          console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
+          libraryController.addSong(song, err => { 
+            if (err) {
+              return console.log(err);
+            }
+            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+            res.json(song);
+          });
+        });
+      } else { // library already exists, just add the song
+        console.log('ROUTE /ADDTOLIBRARY. library for user', userId, 'found');
+        libraryController.addSong(song, err => {
+          if (err) {
+            return console.log(err);
+          }
+          console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+          res.json(song);
+        });
+      }
+    });
+  });
 });
 
 module.exports = router;

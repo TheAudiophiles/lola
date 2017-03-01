@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import AudioPlayer from '../../containers/audio_player/AudioPlayer';
+import AudioPlayer from '../audio_player/AudioPlayer';
 
 import { previousSong, nextSong } from '../../actions';
 

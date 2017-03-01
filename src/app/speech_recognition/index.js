@@ -1,10 +1,36 @@
 import { bindActionCreators } from 'redux'
 import artyomjs from 'artyom.js';
-import { fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, resumeSong } from '../actions';
+
+import {
+  fetchSongByName,
+  fetchSongVideo,
+  addSongToLibrary,
+  increaseVolume,
+  decreaseVolume,
+  mute,
+  unmute,
+  previousSong,
+  nextSong,
+  pauseSong,
+  resumeSong
+ } from '../actions';
 
 import { store } from '../index.js';
 
-const redux = bindActionCreators({ fetchSongByName, fetchSongVideo, previousSong, nextSong, pauseSong, resumeSong }, store.dispatch);
+const redux = bindActionCreators(
+  {
+    fetchSongByName,
+    fetchSongVideo,
+    addSongToLibrary,
+    increaseVolume,
+    decreaseVolume,
+    mute,
+    unmute,
+    previousSong,
+    nextSong,
+    pauseSong,
+    resumeSong
+  }, store.dispatch);
 
 export const artyom = artyomjs.ArtyomBuilder.getInstance();
 
@@ -30,32 +56,65 @@ export const commands = [
     action: (i, wildcard) => {
       redux.fetchSongVideo(wildcard);
     }
-  }, 
+  },
   {
-    indexes: ['next song'], 
+    indexes: ['next song'],
     //smart: true,
     action:(i) => {
       redux.nextSong();
     }
-  }, 
+  },
   {
     indexes: ['previous song'],
-    //smart: true, 
+    //smart: true,
     action:(i, wildcard) => {
       redux.previousSong();
     }
-  }, 
+  },
   {
-    indexes: ['resume song'], 
+    indexes: ['resume song'],
     action: (i) => {
       console.log('in resume song');
       redux.resumeSong();
     }
-  }, 
+  },
   {
-    indexes: ['pause song'], 
+    indexes: ['pause song'],
     action: (i) => {
       redux.pauseSong();
+    }
+  },
+  {
+    indexes:['add song to library'],
+    action: (i) => {
+      let allSongs = store.getState().search.allSongs;
+      let currentSongIndex = store.getState().search.currentSongIndex;
+      redux.addSongToLibrary(allSongs[currentSongIndex]);
+    }
+  },
+  {
+    indexes:['increase volume'],
+    action: (i) => {
+      redux.increaseVolume();
+    }
+  },
+  {
+    indexes:['decrease volume'],
+    action: (i) => {
+      redux.decreaseVolume();
+
+    }
+  },
+  {
+    indexes:['mute'],
+    action: (i) => {
+      redux.mute();
+    }
+  },
+  {
+    indexes:['unmute'],
+    action: (i) => {
+      redux.unmute();
     }
   }
 ];

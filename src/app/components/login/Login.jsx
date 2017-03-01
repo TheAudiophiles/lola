@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './login.svg';
-import { Banner, Card } from 'rebass';
+import { Banner } from 'rebass';
 
 function Login() {
   return (

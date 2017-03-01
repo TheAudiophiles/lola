@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
+import { bindActionCreators } from 'redux';
+import { Block, Card, CardImage, Text, Heading, Media, Button } from 'rebass';
+import { Flex, Box } from 'reflexbox';
+import { addSongToLibrary } from '../../actions';
+import axios from 'axios';
 
 class SongDetails extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  addToLibraryClickHandler() {
+    let { allSongs, currentSongIndex } = this.props;
+    this.props.addSongToLibrary(allSongs[currentSongIndex]);
+  }
 
   render () {
+    let { allSongs, currentSongIndex } = this.props;
+
     if (!this.props.allSongs.length) {
       return <div></div>;
     }
-
-    const { allSongs, currentSongIndex } = this.props;
 
     let cover, artist, album, title;
 
@@ -23,12 +35,9 @@ class SongDetails extends Component {
       artist = allSongs[currentSongIndex].track.artist;
     }
 
-    // not sure why scss is not being appied when I give Card className="song-details"
-    // const style = {
-    //   // maxWidth: '200px',
-    //   // margin: 'auto',
-    //   // background: '#000'
-    // };
+    const style2 = {
+      width: '50px'
+    }
 
     return (
       <Card>
@@ -43,17 +52,26 @@ class SongDetails extends Component {
           <br/>
           Album: {album ? album : 'album not found'}
         </Text>
+        <Button
+          backgroundColor="primary"
+          color="white"
+          inverted
+          rounded
+          onClick={this.addToLibraryClickHandler.bind(this)}>
+          Add to Library
+        </Button>
       </Card>
     );
   }
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ addToPlayList }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ addSongToLibrary }, dispatch);
 
 const mapStateToProps = ({ search }) => ({
   allSongs: search.allSongs,
   currentSongIndex: search.currentSongIndex
 });
 
-export default connect(mapStateToProps)(SongDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(SongDetails);
+
+// addtolibrary button pic - http://www.iconarchive.com/download/i7968/hopstarter/soft-scraps/Button-Add.ico
