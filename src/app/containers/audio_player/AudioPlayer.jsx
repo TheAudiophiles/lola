@@ -26,7 +26,6 @@ const NextTrack = (props) => (
 class AudioPlayer extends Component {
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps:', nextProps);
     const { volumeChange, muted, isPlaying } = nextProps;
 
     if (volumeChange.status === true) {
@@ -35,9 +34,6 @@ class AudioPlayer extends Component {
     }
 
     if (muted !== this._player.context.media.isMuted) this.mute(muted);
-
-    // if (isPlaying !== this._player.context.media.isPlaying)
-    console.log('AUDIOPLAYER - isPlaying:', isPlaying);
 
     if (!isPlaying) {
       this.pauseSong();

@@ -243,20 +243,14 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/addToLibrary', (req, res) => {
-  console.log('POST TO /ADDTOLIBRARY');
-  // Create song
-  // console.log('ADDING SONG TO LIBRARY - req.body:', req.body);
+  console.log('ROUTE /ADDTOLIBRARY ()====={@)=========================================>');
   let songData = req.body;
-  // Do some preprocessing of the song data in preperation for creating a song doc in the db
   songController.createSong(songData, (err, song) => {
     if (err) {
       return console.log(err);
     }
-    console.log('song created - song:', song);
+    console.log('ROUTE /ADDTOLIBRARY - song returned from SONGCONTROLLER:', song);
     let userId = userController.getUserId();
-
-    // console.log('ADDING SONG TO LIBRARY - userId:', userId);
-    // console.log('ADDING SONG TO LIBRARY - song:', song);
 
     libraryController.findLibrary(userId, (err, library) => {
       if (err) {
@@ -267,24 +261,22 @@ router.post('/addToLibrary', (req, res) => {
           if (err) {
             return console.log(err);
           }
-          console.log('new library created');
-          libraryController.addSong(song, err => { // ensure this is called only once the library has been created
+          console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
+          libraryController.addSong(song, err => { 
             if (err) {
               return console.log(err);
             }
-            console.log('song added to library:', song);
-            console.log('returning the song^');
+            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
             res.json(song);
           });
         });
       } else { // library already exists, just add the song
-        console.log('library found');
+        console.log('ROUTE /ADDTOLIBRARY. library for user', userId, 'found');
         libraryController.addSong(song, err => {
           if (err) {
             return console.log(err);
           }
-          console.log('song added to library:', song);
-          console.log('returning the song^');
+          console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
           res.json(song);
         });
       }

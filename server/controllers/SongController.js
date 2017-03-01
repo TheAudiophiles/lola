@@ -23,26 +23,26 @@ class SongController {
 			album: album
 		});
 
-		console.log('SONGCONTROLLER. FINDONE QUERY FOR SONG IN LIBRARY');
+		// console.log('SONGCONTROLLER. FINDONE QUERY FOR SONG IN LIBRARY');
 		Song.findOne({ title, artist }, (err, found) => {
 			if (err) {
 				console.log(err);
 			}
 			if (!found) {
-				console.log('SONGCONTROLLER. FINDONE QUERY. SONG IS NOT IN LIBRARY - song:', song);
+				console.log('SONGCONTROLLER. song is not in the song collection');
 				song.save(err => {
 					if (err) {
 						done(err);
 					} else {
-						done();
+						console.log('SONGCONTROLLER. finished creating song. returning it now:', song);
+						done(null, song); // returning undefined which is being used for everything on routes. NOT GOOD
 					}
 				});
+			} else { // song was already in the collection. no need to save
+				console.log('SONGCONTROLLER. finished creating song. returning it now:', song);
+				done(null, song);
 			}
 		});
-		console.log('SONGCONTROLLER. OUTSIDE OF FINDONE QUERY. RETURNING song:', song);
-		console.log('Done: ', done);
-		// return song;
-		done(null, song);
 	}
 }
 

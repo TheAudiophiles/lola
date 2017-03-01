@@ -28,9 +28,6 @@ class LibraryController {
 				done(err);
 			} else {
 				this.library = library;
-				console.log('LIBRARY CONTROLLER. RESULTS OF LIBRARY SEARCH FOR USER', user + ':');
-				console.log('library', library);
-				console.log('this.library', this.library);
 				done(null, library);
 			}
 		});
@@ -40,7 +37,6 @@ class LibraryController {
 		console.log('LIBRARY CONTROLLER - this.library before adding song:', this.library);
     let exists = false;
 		for (let song of this.library.songs) {
-			console.log(song.title, 'vs', newSong.title);
 			if (song.title === newSong.title) {
 				exists = true;
 				break;
@@ -48,7 +44,6 @@ class LibraryController {
 		}
 		if (!exists) {
 			console.log(newSong.title, 'hasn\'t been added to the library yet');
-			// this.library.songs = [...this.library.songs, newSong];
 			this.library.songs.push(newSong);
 			this.library.save(err => {
 				if (err) {
@@ -57,10 +52,11 @@ class LibraryController {
 					done();
 				}
 			});
-		}
-		// 	else return null // should let the user know the song is already in the db
+		} else {
+		// 	should let the user know the song is already in the db!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
     done();
+    }
 	}
 }
 
