@@ -11,26 +11,9 @@ class SongDetails extends Component {
     super(props);
   }
 
-
   addToLibraryClickHandler() {
-    // console.log('I see you\'re trying to add a song to your library - too fucking bad haha');
     let { allSongs, currentSongIndex } = this.props;
-    // console.log('SONGDETAILS ADDTOLIBRARYCLICKHANDLER - allSongs[currentSongIndex]:', allSongs[currentSongIndex]);
-    // create saga that makes the post request and then runs success afterwards
-    // just needs to add the song to state library after success
-    // upon loading the user, also set the library on state
-
     this.props.addSongToLibrary(allSongs[currentSongIndex]);
-
-
-    // axios.post('/addToLibrary', allSongs[currentSongIndex])
-    //   .then(function (response) {
-    //     console.log('SONG DETAILS COMPONENT - added song to library');
-    //     addSongToLibrarySuccess
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
   }
 
   render () {
