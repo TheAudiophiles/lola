@@ -24,7 +24,6 @@ const NextTrack = (props) => (
 );
 
 class AudioPlayer extends Component {
-
   componentWillReceiveProps(nextProps) {
     const { volumeChange, muted, isPlaying } = nextProps;
 
