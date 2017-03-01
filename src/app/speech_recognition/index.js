@@ -65,20 +65,20 @@ export const commands = [
     }
   },
   {
-    indexes: ['previous song'],
-    //smart: true,
+    indexes: ['previous song', 'previous', 'free', 'previa'],
+    //smart: true, 
     action:(i, wildcard) => {
       redux.previousSong();
     }
   },
   {
-    indexes: ['resume song'],
+    indexes: ['resume song', 'resume', 'museum', 'Ruiz', 'razoo'], 
     action: (i) => {
       redux.resumeSong();
     }
   },
   {
-    indexes: ['pause song'],
+    indexes: ['pause song', 'pause', 'paws', 'paws song', 'pawn shop', 'pods song', 'Pauls song'], 
     action: (i) => {
       redux.pauseSong();
     }
