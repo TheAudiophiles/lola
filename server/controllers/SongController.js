@@ -40,7 +40,9 @@ class SongController {
 			}
 		});
 		console.log('SONGCONTROLLER. OUTSIDE OF FINDONE QUERY. RETURNING song:', song);
-		return song;
+		console.log('Done: ', done);
+		// return song;
+		done(null, song);
 	}
 }
 

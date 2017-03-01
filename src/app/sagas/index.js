@@ -16,6 +16,8 @@ import {
   fetchSongVideoFailure,
   setTokensSuccess,
   setTokensFailure,
+  addSongToLibrarySuccess,
+  addSongToLibraryFailure
 } from '../actions';
 
 const spotifyApi = new Spotify();
@@ -79,9 +81,9 @@ function* addSongToLibrary({song}) {
     if (response.status !== 200) { // I think I can craft a response
       throw new Error('Failed to add song to library');
     }
-    yield put(fetchSongVideoSuccess(response.data));
+    yield put(addSongToLibrarySuccess(response.data));
   } catch(error) {
-    yield put(fetchSongVideoFailure(error));
+    yield put(addSongToLibraryFailure(error));
   }
 }
 /**

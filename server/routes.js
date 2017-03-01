@@ -248,11 +248,11 @@ router.post('/addToLibrary', (req, res) => {
   // console.log('ADDING SONG TO LIBRARY - req.body:', req.body);
   let songData = req.body;
   // Do some preprocessing of the song data in preperation for creating a song doc in the db
-  let song = songController.createSong(songData, err => {
+  songController.createSong(songData, (err, song) => {
     if (err) {
       return console.log(err);
     }
-    console.log('song created');
+    console.log('song created - song:', song);
     let userId = userController.getUserId();
 
     // console.log('ADDING SONG TO LIBRARY - userId:', userId);

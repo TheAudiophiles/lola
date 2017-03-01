@@ -60,6 +60,7 @@ class LibraryController {
 		}
 		// 	else return null // should let the user know the song is already in the db
 		console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
+    done();
 	}
 }
 
