@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
+
 export default class CommandInfo extends Component {
-  // getInitialState() {
-  //   return { show: false };
-  // }
   constructor(props){
     super(props);
 
@@ -20,13 +18,12 @@ export default class CommandInfo extends Component {
     return (
       <div className="modal-container" style={{height: 200}}>
         <Button
-          bsStyle="primary"
-          bsSize="large"
+          bsStyle="default"
+          bsSize="small"
           onClick={() => this.setState({ show: true})}
         >
-          See List of Commands
+          i
         </Button>
-
         <Modal
           show={this.state.show}
           onHide={close}
@@ -34,14 +31,19 @@ export default class CommandInfo extends Component {
           aria-labelledby="contained-modal-title"
         >
           <Modal.Header closeButton>
-            <Modal.Title id="contained-modal-title">Contained Modal</Modal.Title>
+            <Modal.Title id="contained-modal-title" style={{color: "black"}}>Lola's Commands</Modal.Title>
+            
           </Modal.Header>
-          <Modal.Body>
-            Elit est explicabo ipsum eaque dolorem blanditiis doloribus sed id ipsam, beatae, rem fuga id earum? Inventore et facilis obcaecati.
+          <Modal.Body> 
+            <div style={{color: "black"}}>Play Song by Lyrics</div>
+            <div style={{color: "black"}}>Play Song by Artist</div>
+            <div style={{color: "black"}}>Play Song by Track</div> 
+            <div style={{color: "black"}}>Pause Song</div>
+            <div style={{color: "black"}}>Previous Song</div>
+            <div style={{color: "black"}}>Next Song </div>
+            <div style={{color: "black"}}>Mute</div>
+            <div style={{color: "black"}}>Unmute</div>
           </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={close}>Close</Button>
-          </Modal.Footer>
         </Modal>
       </div>
     );
