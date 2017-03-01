@@ -10,30 +10,31 @@ import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
 import Load from '../../containers/load/Load';
 import SearchResults from '../../containers/searchResults/SearchResults';
-import Speech from '../speech/Speech';
-import Queue from '../../containers/queue/Queue';
 import Modal from '../../containers/command_info/CommandInfo';
+import Speech from '../../containers/speech/Speech';
+import QLToggle from '../../containers/qlToggle/QLToggle';
 
 export default () => (
   <div id="page-wrap">
-    <Grid style={{ display: 'flex' }} col={12} px={2}>
-      <Search style={{ margin: 'auto' }} />
-    </Grid>
-    <Grid col={4} px={2}>
-      <Queue />
-    </Grid>
-    <Grid col={4} px={2}>
-      <Block>
-        <Box>
-          <Load />
-        </Box>
-        <Speech />
-        <Modal />
-      </Block>
-    </Grid>
-    <Grid col={4} px={2}>
-      <SearchResults />
-    </Grid>
-    <Song />
-  </div>
+   <Grid style={{ display: 'flex' }} col={12} px={2}>
+     <Search style={{ margin: 'auto' }} />
+   </Grid>
+   <Grid col={4} px={2}>
+    <QLToggle />
+   </Grid>
+   <Grid col={4} px={2}>
+     <SongDetails />
+     <Block>
+       <Box>
+         <Load />
+       </Box>
+       <Speech />
+       <Modal />
+     </Block>
+   </Grid>
+   <Grid col={4} px={2}>
+     <SearchResults />
+   </Grid>
+   <Song />
+ </div>
 );

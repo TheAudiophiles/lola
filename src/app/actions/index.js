@@ -30,6 +30,8 @@ export const MUTE = 'MUTE';
 export const UNMUTE = 'UNMUTE';
 export const RESET_VOLUME_CHANGE = 'RESET_VOLUME_CHANGE';
 export const REMOVE_FROM_QUEUE = 'REMOVE_FROM_QUEUE';
+export const TOGGLE_QUEUE = 'TOGGLE_QUEUE';
+export const TOGGLE_LIBRARY = 'TOGGLE_LIBRARY';
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -256,24 +258,32 @@ export const addSongToLibraryFailure = error => ({
   error
 });
 
-export const increaseVolume = error => ({
-  type: INCREASE_VOLUME,
+export const increaseVolume = ()) => ({
+  type: INCREASE_VOLUME
 });
 
-export const decreaseVolume = error => ({
-  type: DECREASE_VOLUME,
+export const decreaseVolume = ()) => ({
+  type: DECREASE_VOLUME
 });
 
 export const mute = error => ({
-  type: MUTE,
+  type: MUTE
 });
 
 export const unmute = error => ({
-  type: UNMUTE,
+  type: UNMUTE
 });
 
 export const resetVolumeChange = error => ({
-  type: RESET_VOLUME_CHANGE,
+  type: RESET_VOLUME_CHANGE
+});
+
+export const toggleQueue = () => ({
+  type: TOGGLE_QUEUE
+});
+
+export const toggleLibrary = () => ({
+  type: TOGGLE_LIBRARY
 });
 
 export const removeFromQueue = (index) => ({ type: REMOVE_FROM_QUEUE, index });
