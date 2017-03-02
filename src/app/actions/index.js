@@ -32,6 +32,10 @@ export const RESET_VOLUME_CHANGE = 'RESET_VOLUME_CHANGE';
 export const REMOVE_FROM_QUEUE = 'REMOVE_FROM_QUEUE';
 export const TOGGLE_QUEUE = 'TOGGLE_QUEUE';
 export const TOGGLE_LIBRARY = 'TOGGLE_LIBRARY';
+export const FETCH_LIBRARY_BEGIN = 'FETCH_LIBRARY_BEGIN';
+export const FETCH_LIBRARY_SUCCESS = 'FETCH_LIBRARY_SUCCESS';
+export const FETCH_LIBRARY_FAILURE = 'FETCH_LIBRARY_FAILURE';
+
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -287,3 +291,17 @@ export const toggleLibrary = () => ({
 });
 
 export const removeFromQueue = (index) => ({ type: REMOVE_FROM_QUEUE, index });
+
+export const fetchLibrary = error => ({
+  type: FETCH_LIBRARY_BEGIN
+});
+
+export const fetchLibrarySuccess = librarySongs => ({
+  type: FETCH_LIBRARY_SUCCESS,
+  librarySongs
+});
+
+export const fetchLibraryFailure = err => ({
+  type: TOGGLE_LIBRARY_FAILURE,
+  err
+});

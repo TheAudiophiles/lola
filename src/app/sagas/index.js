@@ -9,6 +9,7 @@ import {
   SEARCH_SONG_NAME_BEGIN,
   SPOTIFY_TOKENS,
   ADD_SONG_TO_LIBRARY_BEGIN,
+  FETCH_LIBRARY_BEGIN,
   spotifyMeSuccess,
   spotifyMeFailure,
   fetchSongLoading,
@@ -17,7 +18,9 @@ import {
   setTokensSuccess,
   setTokensFailure,
   addSongToLibrarySuccess,
-  addSongToLibraryFailure
+  addSongToLibraryFailure,
+  fetchLibrarySuccess,
+  fetchLibraryFailure
 } from '../actions';
 
 const spotifyApi = new Spotify();
@@ -78,12 +81,25 @@ function* addSongToLibrary({song}) {
   try {
     const response = yield call(axios.post, `/addToLibrary`, song);
     console.log('response:', response);
-    if (response.status !== 200) { // I think I can craft a response
+    if (response.status !== 200) {
       throw new Error('Failed to add song to library');
     }
     yield put(addSongToLibrarySuccess(response.data));
   } catch(error) {
     yield put(addSongToLibraryFailure(error));
+  }
+}
+
+function* fetchLibrary() {
+  try {
+    const request = yield call(axios.get, `/fetchLibrary`);
+    console.log('SAGAS. FETCHLIBRARY - request:', request);
+    if (request.data.failed || typeof request.data !== 'object') {
+      throw new Error('Failed to get song');
+    }
+    yield put(fetchLibrarySuccess(request));
+  } catch(error) {
+    yield put(fetchLibraryFailure(error));
   }
 }
 /**
@@ -98,6 +114,7 @@ export default function* root() {
     takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
     takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
     takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
-    takeEvery(ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary)
+    takeEvery(ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary),
+    takeEvery(FETCH_LIBRARY_BEGIN, fetchLibrary)
   ]
 }

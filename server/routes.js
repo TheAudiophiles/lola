@@ -262,7 +262,7 @@ router.post('/addToLibrary', (req, res) => {
             return console.log(err);
           }
           console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
-          libraryController.addSong(song, err => { 
+          libraryController.addSong(song, err => {
             if (err) {
               return console.log(err);
             }
@@ -281,6 +281,29 @@ router.post('/addToLibrary', (req, res) => {
         });
       }
     });
+  });
+});
+
+router.get('/fetchLibrary', (req, res) => {
+  console.log('ROUTE /fetchLibrary ()====={@)=========================================>');
+  let userId = userController.getUserId();
+  libraryController.findLibrary(userId, (err, library) => {
+    if (err) {
+      return console.log(err);
+    }
+    if (!library) {
+      console.log('ROUTE /fetchLibrary. library for user', userId, ' NOT found');
+      res.end();
+    } else {
+      console.log('ROUTE /fetchLibrary. library for user', userId, 'found');
+      libraryController.getAll(err => {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('ROUTE /fetchLibrary. returning song after adding it to library:', song);
+        res.json(librarySongs);
+      });
+    }
   });
 });
 

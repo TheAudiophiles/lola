@@ -8,6 +8,10 @@ class LibraryController {
   // findSongsByArtist
   // findSongsByAlbum
 
+  getAll(done) {
+    done(this.library.songs);
+  }
+
   createLibrary(user, done) {
     this.library = new Library({
       user: user,

@@ -2,18 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, NavItem, Button } from 'rebass';
+// import { clearQueue, navigateTo } from '../../actions';
 
-import { clearQueue, navigateTo } from '../../actions';
+class Library extends Component {
+  // clearHandler = (e) => this.props.clearQueue();
 
-class Queue extends Component {
-  clearHandler = (e) => this.props.clearQueue();
-
-  playHandler(index) {
-    this.props.navigateTo(index);
-  }
+  // playHandler(index) {
+  //   this.props.navigateTo(index);
+  // }
 
   render() {
-    const { allSongs, currentSongIndex } = this.props.search;
+    const { library } = this.props;
 
     const style = {
       background: '#373a47',
@@ -22,40 +21,27 @@ class Queue extends Component {
 
     return (
       <Menu style={style} rounded>
-        {allSongs.map((song, i) => {
-          if (i !== currentSongIndex) {
-            console.log('SONG TRACK ARTIST:', song.track.name, song.track.artist);
+        {library.map((song, i) => {
+            console.log('LIBRARY COMPONENT - song in library:', song);
             return (
               <NavItem
-                key={song.vid.items && song.vid.items.length ? song.vid.items[0].id.videoId : i}
-                onClick={this.playHandler.bind(this, i)}
+                key={song.videoId ? song.videoId : i}
                 is="a">
-                {song.details
-                  ? song.details.name
-                  : `${song.track.name} - ${song.track.artist}`}
+                {song.title - song.artist}
               </NavItem>
             );
-          }
-        })}
-        <NavItem>
-          <Button
-            style={{width: '100%', textAlign: 'center'}}
-            backgroundColor="primary"
-            color="white"
-            inverted
-            rounded
-            onClick={this.clearHandler}>
-            Clear Queue
-          </Button>
-        </NavItem>
+        })
+        }
       </Menu>
     );
   }
 }
 
-const mapStateToProps = ({ search }) => ({ search });
+const mapStateToProps = ({ library }) => ({
+  library: library.library,
+});
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ clearQueue, navigateTo }, dispatch);
+// const mapDispatchToProps = dispatch =>
+//   bindActionCreators({ navigateTo }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Queue);
+export default connect(mapStateToProps)(Library);
