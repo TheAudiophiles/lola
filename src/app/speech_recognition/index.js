@@ -74,7 +74,6 @@ export const commands = [
   {
     indexes: ['resume song'],
     action: (i) => {
-      console.log('in resume song');
       redux.resumeSong();
     }
   },
@@ -87,8 +86,7 @@ export const commands = [
   {
     indexes:['add song to library'],
     action: (i) => {
-      let allSongs = store.getState().search.allSongs;
-      let currentSongIndex = store.getState().search.currentSongIndex;
+      const { allSongs, currentSongIndex } = store.getState().songs;
       redux.addSongToLibrary(allSongs[currentSongIndex]);
     }
   },
@@ -102,7 +100,6 @@ export const commands = [
     indexes:['decrease volume'],
     action: (i) => {
       redux.decreaseVolume();
-
     }
   },
   {

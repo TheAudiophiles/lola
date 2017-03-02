@@ -17,7 +17,7 @@ class Queue extends Component {
   }
 
   render() {
-    const { allSongs, currentSongIndex } = this.props.search;
+    const { allSongs, currentSongIndex } = this.props.songs;
 
     const style = {
       background: '#373a47',
@@ -64,7 +64,7 @@ class Queue extends Component {
   }
 }
 
-const mapStateToProps = ({ search }) => ({ search });
+const mapStateToProps = ({ songs }) => ({ songs });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ clearQueue, navigateTo, removeFromQueue }, dispatch);

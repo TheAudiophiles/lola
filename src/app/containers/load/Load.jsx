@@ -18,9 +18,9 @@ const Load = ({ loading, allSongs }) => {
   );
 };
 
-const mapStateToProps = ({ search }) => ({
-  loading: search.loading,
-  allSongs: search.allSongs
+const mapStateToProps = ({ songs }) => ({
+  loading: songs.loading,
+  allSongs: songs.allSongs
 });
 
 export default connect(mapStateToProps)(Load);

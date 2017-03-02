@@ -10,7 +10,6 @@ let RadiumLink = Radium(Link);
 
 import { spotifyLogout, resetLogout, clearState } from '../../actions';
 
-import Speech from '../../containers/speech/Speech';
 import Search from '../../containers/search/Search';
 
 const Header = (props) => {

@@ -3,11 +3,8 @@ import {
   SEARCH_LYRICS_SUCCESS,
   SEARCH_LYRICS_FAILURE,
   NAVIGATE_TO,
-  // PREVIOUS_SONG,
-  // NEXT_SONG,
-  // RESUME_SONG,
-  // STOP_SONG,
-  // PAUSE_SONG,
+  PREVIOUS_SONG,
+  NEXT_SONG,
   SELECT_SR,
   CLEAR_STATE,
   CLEAR_QUEUE,
@@ -62,26 +59,20 @@ export default function search(state = initialState, action) {
     case SEARCH_LYRICS_FAILURE:
       return { ...state, loading: false };
 
-    // case NEXT_SONG:
-    //   const prevSongIndex =
-    //     state.currentSongIndex < state.allSongs.length - 1
-    //       ? state.currentSongIndex + 1
-    //       : state.currentSongIndex;
-    //   return { ...state, currentSongIndex: prevSongIndex };
-    //
-    // case PREVIOUS_SONG:
-    //   const nextSongIndex =
-    //     state.currentSongIndex > 0
-    //       ? state.currentSongIndex - 1
-    //       : state.currentSongIndex;
-    //   return { ...state, currentSongIndex: nextSongIndex };
-    //
-    //
-    // case RESUME_SONG:
-    //   return{...state, isPlaying:true}
-    //
-    // case PAUSE_SONG:
-    //   return{...state, isPlaying:false}
+    case NEXT_SONG:
+      const prevSongIndex =
+        state.currentSongIndex < state.allSongs.length - 1
+          ? state.currentSongIndex + 1
+          : state.currentSongIndex;
+      return { ...state, currentSongIndex: prevSongIndex };
+
+    case PREVIOUS_SONG:
+      const nextSongIndex =
+        state.currentSongIndex > 0
+          ? state.currentSongIndex - 1
+          : state.currentSongIndex;
+      return { ...state, currentSongIndex: nextSongIndex };
+
     case NAVIGATE_TO:
       return { ...state, currentSongIndex: action.index };
 

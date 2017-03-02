@@ -63,8 +63,8 @@ class SearchResults extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ selectSR }, dispatch);
 
-const mapStateToProps = ({ search }) => ({
-  searchResults: search.searchResults
+const mapStateToProps = ({ songs }) => ({
+  searchResults: songs.searchResults
 });
 
 

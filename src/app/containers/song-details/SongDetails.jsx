@@ -67,9 +67,9 @@ class SongDetails extends Component {
 
 const mapDispatchToProps = dispatch => bindActionCreators({ addSongToLibrary }, dispatch);
 
-const mapStateToProps = ({ search }) => ({
-  allSongs: search.allSongs,
-  currentSongIndex: search.currentSongIndex
+const mapStateToProps = ({ songs }) => ({
+  allSongs: songs.allSongs,
+  currentSongIndex: songs.currentSongIndex
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongDetails);
