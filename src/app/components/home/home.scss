@@ -12,19 +12,19 @@
   }
 }
 
-.Grid {
-  margin-bottom: 30px;
-}
-
 #page-wrap {
   padding-top: 30px;
-  background: url('home/space.jpg');
+  background: url('home/milky_way.jpg');
   background-position: center center;
   background-size: cover;
   min-height: 100%;
   height: 100%;
   position: relative;
   margin: 0;
+
+  .Grid {
+    margin-bottom: 30px;
+  }
 
   .Block {
     // background-color: rgba(0, 0, 0, 0.875) !important;

@@ -4,7 +4,6 @@
 @import '../containers/song/song';
 @import '../containers/load/load';
 @import './home/home';
-@import './about/about';
 @import './login/login';
 @import './err/err';
 @import '../containers/song-details/song-details';
@@ -12,3 +11,4 @@
 @import '../containers/queue/queue';
 @import '../containers/library/library';
 @import '../containers/qlToggle/qlToggle';
+@import './command_info/command_info';

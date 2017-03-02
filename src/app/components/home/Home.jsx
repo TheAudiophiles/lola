@@ -10,9 +10,9 @@ import Search from '../../containers/search/Search';
 import Song from '../../containers/song/Song';
 import Load from '../../containers/load/Load';
 import SearchResults from '../../containers/searchResults/SearchResults';
-import Modal from '../../containers/command_info/CommandInfo';
 import Speech from '../speech/Speech';
 import QLToggle from '../../containers/qlToggle/QLToggle';
+import Modal from '../command_info/CommandInfo';
 
 export default () => (
   <div id="page-wrap">
