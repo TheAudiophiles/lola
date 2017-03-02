@@ -29,7 +29,7 @@ export const DECREASE_VOLUME = 'DECREASE_VOLUME';
 export const MUTE = 'MUTE';
 export const UNMUTE = 'UNMUTE';
 export const RESET_VOLUME_CHANGE = 'RESET_VOLUME_CHANGE';
-
+export const REMOVE_FROM_QUEUE = 'REMOVE_FROM_QUEUE';
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -275,3 +275,5 @@ export const unmute = error => ({
 export const resetVolumeChange = error => ({
   type: RESET_VOLUME_CHANGE,
 });
+
+export const removeFromQueue = (index) => ({ type: REMOVE_FROM_QUEUE, index });

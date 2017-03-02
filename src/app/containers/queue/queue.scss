@@ -1,0 +1,12 @@
+.queue-title {
+  color: #bdc3c7;
+  line-height: 1.2;
+  width: -webkit-calc(100% - 24px);
+  width:    -moz-calc(100% - 24px);
+  width:         calc(100% - 24px);
+
+  &:hover, &:focus {
+    color: #9da6ac;
+    text-decoration: none;
+  }
+}
