@@ -18,8 +18,9 @@ class Message extends Component {
         fontWeight:500, lineHeight:1.1, 
         color:"inherit", 
         display: "flex",
+        padding: 10, 
         justifyContent:"center"}}
-      >Lola is listening</div>
+      >Lola is Listening</div>
     )
   }
 }
