@@ -20,7 +20,7 @@ class Message extends Component {
         display: "flex",
         padding: 10, 
         justifyContent:"center"}}
-      >Lola is Listening</div>
+      >Lola is Listening . . .</div>
     )
   }
 }

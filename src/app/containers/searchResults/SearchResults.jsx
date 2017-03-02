@@ -40,7 +40,7 @@ class SearchResults extends Component {
         justifyContent:"center"}}
       >No Search Results</div>;
     }
-    
+
     return (
       <Carousel
         activeIndex={this.state.index}
