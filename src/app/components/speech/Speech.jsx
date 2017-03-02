@@ -11,7 +11,15 @@ class Message extends Component {
   }
   render(){
     return (
-      <div>Lola is listening</div>
+      <div 
+        style={{
+        fontSize:18, 
+        fontFamily:"inherit", 
+        fontWeight:500, lineHeight:1.1, 
+        color:"inherit", 
+        display: "flex",
+        justifyContent:"center"}}
+      >Lola is listening</div>
     )
   }
 }
