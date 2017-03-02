@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, NavItem, Button } from 'rebass';
-// import { clearQueue, navigateTo } from '../../actions';
+
+import { setSong } from '../../actions';
 
 class Library extends Component {
-  // clearHandler = (e) => this.props.clearQueue();
 
-  // playHandler(index) {
-  //   this.props.navigateTo(index);
-  // }
+  playHandler(song) {
+    this.props.setSong(song);
+  }
 
   render() {
     const { library } = this.props;
@@ -28,6 +28,7 @@ class Library extends Component {
             return (
               <NavItem
                 key={song.videoId ? song.videoId : i}
+                onClick={this.playHandler.bind(this, song)}
                 is="a">
                 {`${song.title} - ${song.artist}`}
               </NavItem>
@@ -43,7 +44,7 @@ const mapStateToProps = ({ library }) => ({
   library: library.library,
 });
 
-// const mapDispatchToProps = dispatch =>
-//   bindActionCreators({ navigateTo }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setSong }, dispatch);
 
-export default connect(mapStateToProps)(Library);
+export default connect(mapStateToProps, mapDispatchToProps)(Library);

@@ -35,6 +35,7 @@ export const TOGGLE_LIBRARY = 'TOGGLE_LIBRARY';
 export const FETCH_LIBRARY_BEGIN = 'FETCH_LIBRARY_BEGIN';
 export const FETCH_LIBRARY_SUCCESS = 'FETCH_LIBRARY_SUCCESS';
 export const FETCH_LIBRARY_FAILURE = 'FETCH_LIBRARY_FAILURE';
+export const SET_SONG = 'SET_SONG';
 
 
 export const fetchSongByName = (name, artist) => ({
@@ -304,4 +305,9 @@ export const fetchLibrarySuccess = librarySongs => ({
 export const fetchLibraryFailure = err => ({
   type: FETCH_LIBRARY_FAILURE,
   err
+});
+
+export const setSong = song => ({
+  type: SET_SONG,
+  song
 });
