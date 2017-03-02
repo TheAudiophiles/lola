@@ -5,6 +5,17 @@ import { Button } from 'rebass';
 
 import mic from './mic-icon.png';
 
+class Message extends Component {
+  constructor(){
+    super()
+  }
+  render(){
+    return (
+      <div>Lola is listening</div>
+    )
+  }
+}
+
 export default class Speech extends Component {
   constructor(props) {
     super(props);
@@ -13,19 +24,28 @@ export default class Speech extends Component {
     const { artyom, commands } = this.speech;
 
     artyom.addCommands(commands);
+
+    this.state = {
+      showClicked: false
+    }
   }
 
   clickHandler = (e) => {
     e.preventDefault();
 
     this.speech.init();
-  }
 
+    this.setState({showClicked: !this.state.showClicked})
+  }
+ 
   render() {
     return (
-      <a href="#" onClick={this.clickHandler}>
-        <img src={mic} />
-      </a>
+      <div>
+        <a href="#" onClick={this.clickHandler.bind(this)}>
+          <img src={mic} />
+        </a>
+        {this.state.showClicked && < Message />}
+      </div>
     );
   }
 }
