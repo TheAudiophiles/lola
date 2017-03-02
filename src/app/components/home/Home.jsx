@@ -12,6 +12,7 @@ import Load from '../../containers/load/Load';
 import SearchResults from '../../containers/searchResults/SearchResults';
 import Speech from '../speech/Speech';
 import Queue from '../../containers/queue/Queue';
+import Modal from '../../containers/command_info/CommandInfo';
 
 export default () => (
   <div id="page-wrap">
@@ -27,6 +28,7 @@ export default () => (
           <Load />
         </Box>
         <Speech />
+        <Modal />
       </Block>
     </Grid>
     <Grid col={4} px={2}>
