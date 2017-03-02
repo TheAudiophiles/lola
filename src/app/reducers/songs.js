@@ -8,7 +8,7 @@ import {
   SELECT_SR,
   CLEAR_STATE,
   CLEAR_QUEUE,
-  REMOVE_FROM_QUEUE
+  REMOVE_FROM_QUEUE,
   SET_SONG
 } from '../actions';
 

@@ -23,7 +23,6 @@ export default () => (
     <QLToggle />
    </Grid>
    <Grid col={4} px={2}>
-     <SongDetails />
      <Block>
        <Box>
          <Load />
