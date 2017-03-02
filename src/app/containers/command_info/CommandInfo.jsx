@@ -34,15 +34,26 @@ export default class CommandInfo extends Component {
             <Modal.Title id="contained-modal-title" style={{color: "black"}}>Lola's Commands</Modal.Title>
           </Modal.Header>
           <Modal.Body> 
-            <div style={{color: "black"}}>To play song by lyrics say: Song contains 'hello it's me'  </div>
-            <div style={{color: "black"}}>To play song by an artist say: Play 'Hello' by Adele </div> 
-            <div style={{color: "black"}}>To pause a song say: pause or pause song</div>
-            <div style={{color: "black"}}>To play the previous song in your queue say: previous song</div>
-            <div style={{color: "black"}}>To play the next song in your queue say: next song</div>
-            <div style={{color: "black"}}>To mute the song say: mute</div>
-            <div style={{color: "black"}}>To unmute the song say: unmute</div>
-            <div style={{color: "black"}}>To increase the volume say: increase volume</div>
-            <div style={{color: "black"}}>To decrease the volume say: unmute</div>
+            <div className='col-md-5' style={{color:"pink"}}>
+              <div>What you want to do:</div>
+              <div>Play a song from lyrics</div>
+              <div>Play a song by an artist</div>
+              <div>Pause a song</div>
+              <div>Play the last song</div>
+              <div>Play the next song</div>
+              <div>Mute the song</div>
+              <div>Unmute the song</div>
+            </div>       
+            <div className='col-md-5 col-md-offset-2' style={{color:"pink"}}>  
+              <div>What you should say:</div> 
+              <div>Song contains 'Hello it's me'</div>
+              <div>Play 'Hello' by Adele</div> 
+              <div>Pause or pause song</div>
+              <div>Previous song</div>
+              <div>Next song</div>
+              <div>Mute</div>
+              <div>Unmute</div>
+            </div>
           </Modal.Body>
         </Modal>
       </div>
