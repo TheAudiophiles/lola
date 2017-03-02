@@ -31,14 +31,14 @@ export default function search(state = initialState, action) {
       // Code to check if video already exists. If so, don't add it
       // and change currentSongIndex to index where it exists.
 
-      if (newSong.ytData) {
+      if (newSong.vid) {
         for (let i = 0; i < allSongs.length; i++) {
           if (
-            allSongs[i].ytData.items[0].id.videoId ===
-            newSong.ytData.items[0].id.videoId
+            allSongs[i].vid.items[0].id.videoId ===
+            newSong.vid.items[0].id.videoId
           ) {
             return {
-              allSongs,
+              ...state,
               currentSongIndex: i,
               loading: false
             };
@@ -136,6 +136,25 @@ export default function search(state = initialState, action) {
         }
       }
       let allSongsY = state.allSongs;
+
+      // Code to check if video already exists. If so, don't add it
+      // and change currentSongIndex to index where it exists.
+
+      // THIS RIGHT HERE...IS SOME BUGGITY SHIOT
+      if (newSongY.vid) {
+        for (let i = 0; i < allSongsY.length; i++) {
+          if (
+            allSongsY[i].vid.items[0].id.videoId ===
+            newSongY.vid.items[0].id.videoId
+          ) {
+            return {
+              ...state,
+              currentSongIndex: i
+            };
+          }
+        }
+      }
+
       let newIndexY = allSongsY.length;
       return {
         ...state,

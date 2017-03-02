@@ -8,6 +8,7 @@ import { setSong } from '../../actions';
 class Library extends Component {
 
   playHandler(song) {
+    console.log('LIBRARY COMPONENT - playHandler');
     this.props.setSong(song);
   }
 
@@ -32,7 +33,6 @@ class Library extends Component {
             return (
               <NavItem
                 key={song.videoId ? song.videoId : i}
-                onClick={this.playHandler.bind(this, song)}
                 is="div">
                 <a className="library-title" onClick={this.playHandler.bind(this, song)}>
                   {`${song.title} - ${song.artist}`}
