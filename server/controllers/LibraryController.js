@@ -53,13 +53,14 @@ class LibraryController {
         if (err) {
           done(err);
         } else {
-          done();
+          console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
+          done(false);
         }
       });
-    } else {
+    } else { // song is already in library
       // 	should let the user know the song is already in the db!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
-      done();
+
+      done(true);
     }
   }
 }

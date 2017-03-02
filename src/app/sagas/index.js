@@ -80,7 +80,7 @@ function* setSpotifyTokens({ accessToken, refreshToken }) {
 function* addSongToLibrary({song}) {
   try {
     const response = yield call(axios.post, `/addToLibrary`, song);
-    console.log('response:', response);
+    console.log('SAGAS. ADDSONGTOLIBRARY - response:', response);
     if (response.status !== 200) {
       throw new Error('Failed to add song to library');
     }

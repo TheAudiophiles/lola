@@ -262,22 +262,32 @@ router.post('/addToLibrary', (req, res) => {
             return console.log(err);
           }
           console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
-          libraryController.addSong(song, err => {
+          libraryController.addSong(song, (err, exists) => {
             if (err) {
               return console.log(err);
             }
-            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-            res.json(song);
+            if (!exists) {
+              console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+              res.json(song);
+            } else {
+              console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
+              res.json(null);
+            }
           });
         });
       } else { // library already exists, just add the song
         console.log('ROUTE /ADDTOLIBRARY. library for user', userId, 'found');
-        libraryController.addSong(song, err => {
+        libraryController.addSong(song, (err, exists) => {
           if (err) {
             return console.log(err);
           }
-          console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-          res.json(song);
+          if (!exists) {
+            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+            res.json(song);
+          } else {
+            console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
+            res.json(null);
+          }
         });
       }
     });

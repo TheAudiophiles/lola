@@ -12,8 +12,11 @@ const initialState = {
 export default function library(state = initialState, action) {
   switch (action.type) {
     case ADD_SONG_TO_LIBRARY_SUCCESS:
-      let { library } = state;
-      return { library: [ ...library, action.song ] };
+      if (action.song === null) return state;
+      else {
+        let { library } = state;
+        return { library: [ ...library, action.song ] };
+      }
 
     case ADD_SONG_TO_LIBRARY_FAILURE:
       return state;
