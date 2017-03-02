@@ -21,6 +21,7 @@ export default class CommandInfo extends Component {
           bsStyle="default"
           bsSize="small"
           onClick={() => this.setState({ show: true})}
+          style={{fontStyle: "italic"}}
         >
           i
         </Button>
@@ -49,16 +50,16 @@ export default class CommandInfo extends Component {
             </div>       
             <div className='col-md-5 col-md-offset-2' style={{color:"black"}}>  
               <div style={{fontSize:18, textDecoration:"underline"}}>What you should say:</div>
-              <div style={{fontStyle: "italic"}}>Song contains 'Hello it's me'</div>
-              <div style={{fontStyle: "italic"}}>Play 'Hello' by Adele</div> 
-              <div style={{fontStyle: "italic"}}>Add song to library</div>
-              <div style={{fontStyle: "italic"}}>Pause or pause song</div>
-              <div style={{fontStyle: "italic"}}>Previous song</div>
-              <div style={{fontStyle: "italic"}}>Next song</div>
-              <div style={{fontStyle: "italic"}}>Increase volume</div>
-              <div style={{fontStyle: "italic"}}>Decrease volume</div>
-              <div style={{fontStyle: "italic"}}>Mute</div>
-              <div style={{fontStyle: "italic"}}>Unmute</div>
+              <div>Song contains 'Hello it's me'</div>
+              <div>Play 'Hello' by Adele</div> 
+              <div>Add song to library</div>
+              <div>Pause or pause song</div>
+              <div>Previous song</div>
+              <div>Next song</div>
+              <div>Increase volume</div>
+              <div>Decrease volume</div>
+              <div>Mute</div>
+              <div>Unmute</div>
             </div>
           </Modal.Body>
         </Modal>
