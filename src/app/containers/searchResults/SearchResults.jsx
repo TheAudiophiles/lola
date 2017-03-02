@@ -27,7 +27,6 @@ class SearchResults extends Component {
 
   render() {
     const { searchResults } = this.props;
-    console.log('SEARCH RESULTS COMPONENT - searchResults:', searchResults);
 
     if (!searchResults.length) return <div>No Search Results</div>;
 
@@ -43,9 +42,8 @@ class SearchResults extends Component {
             onClick={() => { this.selectSearchResult.call(this, result) }}
           >
             <img
-              width={250}
-              height={250}
               alt="500x500"
+              style={{margin: 'auto', width: '60%', height: '60%', minWidth: '200px', minHeight: '200px'}}
               src={
                 result.details
                   ? result.details.album.images[0].url
@@ -53,7 +51,7 @@ class SearchResults extends Component {
               }
             />
             <Carousel.Caption>
-              <h3>{result.details ? result.details.name : result.track.name}</h3>
+              <h3 style={{background: '#000', opacity: 0.7}}>{result.details ? result.details.name : result.track.name}</h3>
             </Carousel.Caption>
           </Carousel.Item>
         ))}
@@ -65,8 +63,8 @@ class SearchResults extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ selectSR }, dispatch);
 
-const mapStateToProps = ({ search }) => ({
-  searchResults: search.searchResults
+const mapStateToProps = ({ songs }) => ({
+  searchResults: songs.searchResults
 });
 
 

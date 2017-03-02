@@ -5,8 +5,6 @@ import {
   UNMUTE,
   RESET_VOLUME_CHANGE,
   PAUSE_SONG,
-  PREVIOUS_SONG,
-  NEXT_SONG,
   RESUME_SONG,
   STOP_SONG
 } from '../actions';
@@ -33,21 +31,6 @@ export default function audioPlayer(state = initialState, action) {
 
     case UNMUTE:
       return { ...state, muted: false };
-
-    case NEXT_SONG:
-      const prevSongIndex =
-        state.currentSongIndex < state.allSongs.length - 1
-          ? state.currentSongIndex + 1
-          : state.currentSongIndex;
-      return { ...state, currentSongIndex: prevSongIndex };
-
-    case PREVIOUS_SONG:
-      const nextSongIndex =
-        state.currentSongIndex > 0
-          ? state.currentSongIndex - 1
-          : state.currentSongIndex;
-      return { ...state, currentSongIndex: nextSongIndex };
-
 
     case RESUME_SONG:
       return {...state, isPlaying: true};

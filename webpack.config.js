@@ -17,7 +17,8 @@ var config = {
     extensions: ['.js', '.jsx'],
   },
   module: {
-    loaders: [{
+    loaders: [
+      {
         test: /\.svg$/,
         loader: 'raw-loader'
       },
@@ -31,9 +32,20 @@ var config = {
         loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
       },
       {
-        test: /\.png$/,
-        loader: "url-loader",
-        query: { mimetype: "image/png" }
+        test: /\.(gif|png|jpe?g)$/i,
+        loaders: [
+          'file-loader',
+          {
+            loader: 'image-webpack-loader',
+            query: {
+              progressive: true,
+              pngquant: {
+                quality: '65-90',
+                speed: 4
+              }
+            }
+          }
+        ]
       }
     ]
   },

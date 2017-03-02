@@ -3,9 +3,12 @@ import {
   SEARCH_LYRICS_SUCCESS,
   SEARCH_LYRICS_FAILURE,
   NAVIGATE_TO,
+  PREVIOUS_SONG,
+  NEXT_SONG,
   SELECT_SR,
   CLEAR_STATE,
-  CLEAR_QUEUE
+  CLEAR_QUEUE,
+  REMOVE_FROM_QUEUE
 } from '../actions';
 
 const initialState = {
@@ -56,6 +59,20 @@ export default function search(state = initialState, action) {
     case SEARCH_LYRICS_FAILURE:
       return { ...state, loading: false };
 
+    case NEXT_SONG:
+      const prevSongIndex =
+        state.currentSongIndex < state.allSongs.length - 1
+          ? state.currentSongIndex + 1
+          : state.currentSongIndex;
+      return { ...state, currentSongIndex: prevSongIndex };
+
+    case PREVIOUS_SONG:
+      const nextSongIndex =
+        state.currentSongIndex > 0
+          ? state.currentSongIndex - 1
+          : state.currentSongIndex;
+      return { ...state, currentSongIndex: nextSongIndex };
+
     case NAVIGATE_TO:
       return { ...state, currentSongIndex: action.index };
 
@@ -70,6 +87,20 @@ export default function search(state = initialState, action) {
         currentSongIndex: newIndexX,
         loading: false,
         searchResults: [] // clear search results
+      };
+
+    case REMOVE_FROM_QUEUE:
+      const currIdx = action.index <= state.currentSongIndex
+        ? state.currentSongIndex - 1
+        : state.currentSongIndex;
+
+      return {
+        ...state,
+        allSongs: [
+          ...state.allSongs.slice(0, action.index),
+          ...state.allSongs.slice(action.index + 1)
+        ],
+        currentSongIndex: currIdx
       };
 
     case CLEAR_STATE:
