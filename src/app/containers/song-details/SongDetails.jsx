@@ -57,6 +57,7 @@ class SongDetails extends Component {
           color="white"
           inverted
           rounded
+          style={{width: '100%', textAlign: 'center'}}
           onClick={this.addToLibraryClickHandler.bind(this)}>
           Add to Library
         </Button>
