@@ -132,7 +132,7 @@ export default function search(state = initialState, action) {
           artists: [{
             name: action.song.artist
           }],
-          name: action.song,name
+          name: action.song.title
         }
       }
       let allSongsY = state.allSongs;
