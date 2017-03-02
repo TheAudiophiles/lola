@@ -70,7 +70,6 @@ const Header = (props) => {
       pageWrapId={ "page-wrap" }
       outerContainerId={ "outer-container" }>
       <RadiumLink id="home" className="menu-item" to="/home">Home</RadiumLink>
-      <RadiumLink id="about" className="menu-item" to="/about">About</RadiumLink>
       <a id="logout" className="menu-item" onClick={logoutHandler} href="#">Logout</a>
     </Menu>
   );
