@@ -14,6 +14,8 @@ class Library extends Component {
   render() {
     const { library } = this.props;
 
+    console.log('LIBRARY COMPONENT - library:', library);
+
     const style = {
       background: '#373a47',
       color: '#bdc3c7'
@@ -27,7 +29,7 @@ class Library extends Component {
               <NavItem
                 key={song.videoId ? song.videoId : i}
                 is="a">
-                {song.title - song.artist}
+                {`${song.title} - ${song.artist}`}
               </NavItem>
             );
         })

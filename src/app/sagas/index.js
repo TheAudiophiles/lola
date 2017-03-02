@@ -95,9 +95,9 @@ function* fetchLibrary() {
     const request = yield call(axios.get, `/fetchLibrary`);
     console.log('SAGAS. FETCHLIBRARY - request:', request);
     if (request.data.failed || typeof request.data !== 'object') {
-      throw new Error('Failed to get song');
+      throw new Error('Failed to get songs from user\'s library');
     }
-    yield put(fetchLibrarySuccess(request));
+    yield put(fetchLibrarySuccess(request.data));
   } catch(error) {
     yield put(fetchLibraryFailure(error));
   }

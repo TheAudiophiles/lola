@@ -24,7 +24,7 @@ class QLToggle extends Component {
     return (
       <div>
       <div className='buttons'>
-        <Button onClick={this.toggleQueueClickHandler.bind(this)} disabled={this.props.queueOn}>Queue</Button>
+        <Button onClick={this.toggleQueueClickHandler.bind(this)} disabled={this.props.queueOn} color='purple'>Queue</Button>
         <Button onClick={this.toggleLibraryClickHandler.bind(this)} disabled={this.props.libraryOn}>Library</Button>
       </div>
       <div className='toggle'>

@@ -302,6 +302,6 @@ export const fetchLibrarySuccess = librarySongs => ({
 });
 
 export const fetchLibraryFailure = err => ({
-  type: TOGGLE_LIBRARY_FAILURE,
+  type: FETCH_LIBRARY_FAILURE,
   err
 });

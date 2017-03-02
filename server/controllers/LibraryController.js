@@ -9,7 +9,7 @@ class LibraryController {
   // findSongsByAlbum
 
   getAll(done) {
-    done(this.library.songs);
+    done(null, this.library.songs);
   }
 
   createLibrary(user, done) {

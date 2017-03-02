@@ -296,11 +296,11 @@ router.get('/fetchLibrary', (req, res) => {
       res.end();
     } else {
       console.log('ROUTE /fetchLibrary. library for user', userId, 'found');
-      libraryController.getAll(err => {
+      libraryController.getAll((err, librarySongs) => {
         if (err) {
           return console.log(err);
         }
-        console.log('ROUTE /fetchLibrary. returning song after adding it to library:', song);
+        console.log('ROUTE /fetchLibrary. returning songs from library:', librarySongs);
         res.json(librarySongs);
       });
     }
