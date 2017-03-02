@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Block, Card, CardImage, Text, Heading, Media, Button } from 'rebass';
+import { Block, Card, CardImage, Text, Heading, Media } from 'rebass';
+import { Button, Glyphicon, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Flex, Box } from 'reflexbox';
 import { addSongToLibrary } from '../../actions';
 import axios from 'axios';
@@ -39,6 +40,10 @@ class SongDetails extends Component {
       width: '50px'
     }
 
+    const tooltip = (
+      <Tooltip id="tooltip"><strong>Add to Library</strong></Tooltip>
+    );
+
     return (
       <Card>
         <CardImage className="image-responsive" src={cover ? cover : 'http://previews.123rf.com/images/varka/varka1312/varka131200487/24584085-DJ-girl-Profile-of-pretty-girl-with-long-hair-in-headphones-Stock-Vector.jpg'} />
@@ -52,15 +57,13 @@ class SongDetails extends Component {
           <br/>
           Album: {album ? album : 'album not found'}
         </Text>
-        <Button
-          backgroundColor="primary"
-          color="white"
-          inverted
-          rounded
-          style={{width: '100%', textAlign: 'center'}}
-          onClick={this.addToLibraryClickHandler.bind(this)}>
-          Add to Library
-        </Button>
+        <OverlayTrigger placement="right" overlay={tooltip}>
+          <Button
+            bsStyle="primary"
+            onClick={this.addToLibraryClickHandler.bind(this)}>
+              <Glyphicon glyph="plus" />
+          </Button>
+        </OverlayTrigger>
       </Card>
     );
   }
@@ -74,5 +77,15 @@ const mapStateToProps = ({ songs }) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongDetails);
+
+// <Button
+//   backgroundColor="primary"
+//   color="white"
+//   inverted
+//   rounded
+//   style={{width: '100%', textAlign: 'center'}}
+//   onClick={this.addToLibraryClickHandler.bind(this)}>
+//   Add to Library
+// </Button>
 
 // addtolibrary button pic - http://www.iconarchive.com/download/i7968/hopstarter/soft-scraps/Button-Add.ico
