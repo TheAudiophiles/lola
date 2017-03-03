@@ -82,7 +82,7 @@ class Queue extends Component {
           right: 0
         }}>
           <Button
-            backgroundColor="primary"
+            backgroundColor="#337ab7"
             color="white"
             inverted
             rounded

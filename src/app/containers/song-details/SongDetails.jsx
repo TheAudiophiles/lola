@@ -13,7 +13,6 @@ class SongDetails extends Component {
   }
 
   addToLibraryClickHandler() {
-    console.log('clicked addToLibrary');
     let { allSongs, currentSongIndex } = this.props;
     this.props.addSongToLibrary(allSongs[currentSongIndex]);
   }
@@ -56,7 +55,8 @@ class SongDetails extends Component {
         </Text>
         <OverlayTrigger placement="right" overlay={tooltip}>
           <Button
-            bsStyle="primary"
+            bsStyle='primary'
+            className = 'add'
             onClick={this.addToLibraryClickHandler.bind(this)}>
               <Glyphicon glyph="plus" />
           </Button>
