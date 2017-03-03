@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Table } from 'react-bootstrap';
+import { Modal, Button, Table, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 
 export default class CommandInfo extends Component {
@@ -15,15 +15,21 @@ export default class CommandInfo extends Component {
 
     let close = () => this.setState({ show: false});
 
+    const tooltip = (
+      <Tooltip id="tooltip"><strong>Command Info</strong></Tooltip>
+    );
+
     return (
       <div className="modal-container">
-        <Button
-          bsStyle="default"
-          bsSize="small"
-          onClick={() => this.setState({ show: true})}
-        >
-          i
-        </Button>
+        <OverlayTrigger placement="right" overlay={tooltip}>
+          <Button
+            bsStyle="default"
+            bsSize="small"
+            onClick={() => this.setState({ show: true})}
+          >
+            i
+          </Button>
+        </OverlayTrigger>
         <Modal
           show={this.state.show}
           onHide={close}
