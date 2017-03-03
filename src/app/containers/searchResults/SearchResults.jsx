@@ -54,7 +54,7 @@ class SearchResults extends Component {
           >
             <img
               alt="500x500"
-              style={{margin: 'auto', width: '60%', height: '60%', minWidth: '200px', minHeight: '200px'}}
+              style={{margin: 'auto', width: '100%', height: '100%', minWidth: '200px', minHeight: '200px'}}
               src={
                 result.details
                   ? result.details.album.images[0].url

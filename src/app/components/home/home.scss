@@ -23,7 +23,14 @@
   margin: 0;
 
   .Grid {
-    margin-bottom: 30px;
+    // margin-bottom: 30px;
+    margin-top: 20px;
+    min-height: -webkit-calc(100% - 140px);
+    min-height:    -moz-calc(100% - 140px);
+    min-height:         calc(100% - 140px);
+    height: -webkit-calc(100% - 140px);
+    height:    -moz-calc(100% - 140px);
+    height:         calc(100% - 140px);
   }
 
   .Block {

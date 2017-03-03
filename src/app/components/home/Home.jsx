@@ -19,24 +19,24 @@ export default () => (
     <div className='lola'>
       Lola
     </div>
-   <Grid style={{ display: 'flex' }} col={12} px={2}>
-     <Search style={{ margin: 'auto' }} />
-   </Grid>
-   <Grid col={4} px={2}>
-    <QLToggle />
-   </Grid>
-   <Grid col={4} px={2}>
-     <Block>
-       <Box>
-         <Load />
-       </Box>
-       <Speech />
-       <Modal />
-     </Block>
-   </Grid>
-   <Grid col={4} px={2}>
-     <SearchResults />
-   </Grid>
-   <Song />
- </div>
+    <Box style={{ display: 'flex' }} col={12} px={2}>
+      <Search style={{ margin: 'auto' }} />
+    </Box>
+    <Grid col={4} px={2}>
+      <QLToggle />
+    </Grid>
+    <Grid col={4} px={2}>
+      <Block>
+        <Box>
+          <Load />
+        </Box>
+        <Speech />
+        <Modal />
+      </Block>
+    </Grid>
+    <Grid col={4} px={2}>
+      <SearchResults />
+    </Grid>
+    <Song />
+  </div>
 );

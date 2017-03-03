@@ -16,64 +16,72 @@ class Queue extends Component {
     this.props.removeFromQueue(index);
   }
 
-  render() {
+  renderSongs() {
     const { allSongs, currentSongIndex } = this.props.songs;
 
-    const style = {
-      background: '#373a47',
-      color: '#bdc3c7'
-    };
+    if (!allSongs.length) {
+      return (
+        <h3>No songs in queue. Search or play song from library.</h3>
+      );
+    }
 
+    return allSongs.map((song, i) => {
+      if (i !== currentSongIndex) {
+        return (
+          <NavItem
+            key={
+              song.vid.items &&
+              song.vid.items.length
+                ? song.vid.items[0].id.videoId
+                : i
+            }
+            is="div">
+            <a className="queue-title" onClick={this.playHandler.bind(this, i)}>
+              {song.details
+                ? song.details.artists.length
+                  ? `${song.details.name} - ${song.details.artists[0].name}`
+                  : song.details.name
+                : `${song.track.name} - ${song.track.artist}`}
+            </a>
+            <a onClick={this.removeHandler.bind(this, i)}>
+              <img
+                style={{width: '24px', float: 'right'}}
+                src={deleteBtnBase64()} />
+            </a>
+            <div style={{display: 'none'}}>
+              Icons made by
+              <a
+                href="http://www.flaticon.com/authors/madebyoliver"
+                title="Madebyoliver">
+                Madebyoliver
+              </a> from
+              <a href="http://www.flaticon.com" title="Flaticon">
+                www.flaticon.com
+              </a> is licensed by
+              <a
+                href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+                target="_blank">
+                CC 3.0 BY
+              </a>
+            </div>
+          </NavItem>
+        );
+      }
+    })
+  }
+
+  render() {
     return (
-      <Menu style={style} rounded>
-        {allSongs.map((song, i) => {
-          if (i !== currentSongIndex) {
-            return (
-              <NavItem
-                key={
-                  song.vid.items &&
-                  song.vid.items.length
-                    ? song.vid.items[0].id.videoId
-                    : i
-                }
-                is="div"
-                style={{width: '100%'}}>
-                <a className="queue-title" onClick={this.playHandler.bind(this, i)}>
-                  {song.details
-                    ? song.details.artists.length
-                      ? `${song.details.name} - ${song.details.artists[0].name}`
-                      : song.details.name
-                    : `${song.track.name} - ${song.track.artist}`}
-                </a>
-                <a onClick={this.removeHandler.bind(this, i)}>
-                  <img
-                    style={{width: '24px', float: 'right'}}
-                    src={deleteBtnBase64()} />
-                </a>
-                <div style={{display: 'none'}}>
-                  Icons made by
-                  <a
-                    href="http://www.flaticon.com/authors/madebyoliver"
-                    title="Madebyoliver">
-                    Madebyoliver
-                  </a> from
-                  <a href="http://www.flaticon.com" title="Flaticon">
-                    www.flaticon.com
-                  </a> is licensed by
-                  <a
-                    href="http://creativecommons.org/licenses/by/3.0/"
-                    title="Creative Commons BY 3.0"
-                    target="_blank">
-                    CC 3.0 BY
-                  </a>
-                </div>
-              </NavItem>
-            );
-          }
-        })}
-        <NavItem>
+      <Menu rounded>
+        {this.renderSongs()}
+        <NavItem style={{
+          position: 'absolute',
+          bottom: '0',
+          left: '0',
+          right: '0'
+        }}>
           <Button
-            style={{width: '100%', textAlign: 'center'}}
             backgroundColor="primary"
             color="white"
             inverted
