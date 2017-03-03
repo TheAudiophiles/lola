@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Menu, NavItem, Button } from 'rebass';
 
-import { setSong } from '../../actions';
+import { setSong, removeSongFromLibrary } from '../../actions';
 
 class Library extends Component {
 
@@ -12,9 +12,9 @@ class Library extends Component {
     this.props.setSong(song);
   }
 
-  // removeHandler(index) {
-  //   this.props.removeFromLibrary(index);
-  // }
+  removeHandler(song) {
+    this.props.removeSongFromLibrary(song);
+  }
 
   render() {
     const { library } = this.props;
@@ -28,7 +28,7 @@ class Library extends Component {
 
     return (
       <Menu style={style} rounded>
-        {library.map((song, i) => {
+        {library.map((song) => {
             // console.log('LIBRARY COMPONENT - song in library:', song);
             return (
               <NavItem
@@ -37,7 +37,7 @@ class Library extends Component {
                 <a className="library-title" onClick={this.playHandler.bind(this, song)}>
                   {`${song.title} - ${song.artist}`}
                 </a>
-                <a>
+                <a onClick={this.removeHandler.bind(this, song)}>
                   <img
                     style={{width: '24px', float: 'right'}}
                     src={deleteBtnBase64()} />
@@ -73,7 +73,7 @@ const mapStateToProps = ({ library }) => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ setSong }, dispatch);
+  bindActionCreators({ setSong, removeSongFromLibrary }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Library);
 

@@ -294,6 +294,20 @@ router.post('/addToLibrary', (req, res) => {
   });
 });
 
+router.post('/removeFromLibrary', (req, res) => {
+  console.log('ROUTE /REMOVEFROMLIBRARY ()====={@)=========================================>');
+  let song = req.body;
+  console.log('ROUTE /REMOVEFROMLIBRARY - trying to remove song:', song);
+
+  libraryController.removeSong(song, (err, deletedSong) => {
+    if (err) {
+      console.error(err);
+    }
+    console.log('ROUTE /REMOVEFROMLIBRARY. returning deleted song:', deletedSong);
+    res.json(deletedSong);
+  });
+});
+
 router.get('/fetchLibrary', (req, res) => {
   console.log('ROUTE /fetchLibrary ()====={@)=========================================>');
   let userId = userController.getUserId();

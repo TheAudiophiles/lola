@@ -10,6 +10,7 @@ import {
   SPOTIFY_TOKENS,
   ADD_SONG_TO_LIBRARY_BEGIN,
   FETCH_LIBRARY_BEGIN,
+  REMOVE_SONG_FROM_LIBRARY_BEGIN,
   spotifyMeSuccess,
   spotifyMeFailure,
   fetchSongLoading,
@@ -20,7 +21,9 @@ import {
   addSongToLibrarySuccess,
   addSongToLibraryFailure,
   fetchLibrarySuccess,
-  fetchLibraryFailure
+  fetchLibraryFailure,
+  removeSongFromLibrarySuccess,
+  removeSongFromLibraryFailure
 } from '../actions';
 
 const spotifyApi = new Spotify();
@@ -102,6 +105,19 @@ function* fetchLibrary() {
     yield put(fetchLibraryFailure(error));
   }
 }
+
+function* removeSongFromLibrary({song}) {
+  try {
+    const response = yield call(axios.post, `/removeFromLibrary`, song);
+    console.log('SAGAS. REMOVESONGFROMLIBRARY - response:', response); // should be the deleted song
+    if (response.status !== 200) {
+      throw new Error('Failed to remove song from library');
+    }
+    yield put(removeSongFromLibrarySuccess(response.data)); // should be just the song
+  } catch(error) {
+    yield put(removeSongFromLibraryFailure(error));
+  }
+}
 /**
  * =======================================
  *  WATCHERS (in root saga)
@@ -115,6 +131,7 @@ export default function* root() {
     takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
     takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
     takeEvery(ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary),
-    takeEvery(FETCH_LIBRARY_BEGIN, fetchLibrary)
+    takeEvery(FETCH_LIBRARY_BEGIN, fetchLibrary),
+    takeEvery(REMOVE_SONG_FROM_LIBRARY_BEGIN, removeSongFromLibrary)
   ]
 }

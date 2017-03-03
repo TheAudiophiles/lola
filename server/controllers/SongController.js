@@ -23,7 +23,6 @@ class SongController {
       album: album
     });
 
-    // console.log('SONGCONTROLLER. FINDONE QUERY FOR SONG IN LIBRARY');
     Song.findOne({ title, artist }, (err, found) => {
       if (err) {
         console.log(err);
@@ -35,7 +34,7 @@ class SongController {
             done(err);
           } else {
             console.log('SONGCONTROLLER. finished creating song. returning it now:', song);
-            done(null, song); // returning undefined which is being used for everything on routes. NOT GOOD
+            done(null, song);
           }
         });
       } else { // song was already in the collection. no need to save

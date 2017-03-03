@@ -36,7 +36,9 @@ export const FETCH_LIBRARY_BEGIN = 'FETCH_LIBRARY_BEGIN';
 export const FETCH_LIBRARY_SUCCESS = 'FETCH_LIBRARY_SUCCESS';
 export const FETCH_LIBRARY_FAILURE = 'FETCH_LIBRARY_FAILURE';
 export const SET_SONG = 'SET_SONG';
-
+export const REMOVE_SONG_FROM_LIBRARY_BEGIN = 'REMOVE_SONG_FROM_LIBRARY_BEGIN';
+export const REMOVE_SONG_FROM_LIBRARY_SUCCESS = 'REMOVE_SONG_FROM_LIBRARY_SUCCESS';
+export const REMOVE_SONG_FROM_LIBRARY_FAILURE = 'REMOVE_SONG_FROM_LIBRARY_FAILURE';
 
 export const fetchSongByName = (name, artist) => ({
   type: SEARCH_SONG_NAME_BEGIN,
@@ -310,4 +312,19 @@ export const fetchLibraryFailure = err => ({
 export const setSong = song => ({
   type: SET_SONG,
   song
+});
+
+export const removeSongFromLibrary = song => ({
+  type: REMOVE_SONG_FROM_LIBRARY_BEGIN,
+  song
+});
+
+export const removeSongFromLibrarySuccess = deletedSong => ({
+  type: REMOVE_SONG_FROM_LIBRARY_SUCCESS,
+  deletedSong
+});
+
+export const removeSongFromLibraryFailure = error => ({
+  type: REMOVE_SONG_FROM_LIBRARY_FAILURE,
+  error
 });
