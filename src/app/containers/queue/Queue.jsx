@@ -21,7 +21,9 @@ class Queue extends Component {
 
     if (!allSongs.length) {
       return (
-        <h3>No songs in queue. Search or play song from library.</h3>
+        <h3 className="queue-empty-msg">
+          No songs in queue. Search or play song from library.
+        </h3>
       );
     }
 

@@ -22,7 +22,7 @@ export default () => (
     <Box style={{ display: 'flex' }} col={12} px={2}>
       <Search style={{ margin: 'auto' }} />
     </Box>
-    <Grid col={4} px={2}>
+    <Grid col={4} px={2} style={{marginTop: -12}}>
       <QLToggle />
     </Grid>
     <Grid col={4} px={2}>

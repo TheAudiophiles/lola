@@ -18,19 +18,26 @@ class QLToggle extends Component {
   }
 
   render() {
-    let component;
-    this.props.queueOn ? component = <Queue/> : component = <Library/>;
+    const component = this.props.queueOn ? <Queue /> : <Library />;
 
     return (
-      <div>
-      <div className='buttons'>
-        <Button onClick={this.toggleQueueClickHandler.bind(this)} disabled={this.props.queueOn}>Queue</Button>
-        <Button onClick={this.toggleLibraryClickHandler.bind(this)} disabled={this.props.libraryOn}>Library</Button>
+      <div className="ql-toggle">
+        <div className='buttons'>
+          <Button
+            onClick={this.toggleQueueClickHandler.bind(this)}
+            disabled={this.props.queueOn}>
+            Queue
+          </Button>
+          <Button
+            onClick={this.toggleLibraryClickHandler.bind(this)}
+            disabled={this.props.libraryOn}>
+            Library
+          </Button>
+        </div>
+        <div className='toggle'>
+          {component}
+        </div>
       </div>
-      <div className='toggle'>
-        {component}
-      </div>
-    </div>
     );
   }
 }
@@ -40,6 +47,7 @@ const mapStateToProps = ({ queueLibrary }) => ({
   libraryOn: queueLibrary.libraryOn
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ toggleQueue, toggleLibrary, fetchLibrary }, dispatch);
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ toggleQueue, toggleLibrary, fetchLibrary }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(QLToggle);

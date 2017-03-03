@@ -14,7 +14,7 @@
 
 #page-wrap {
   padding-top: 30px;
-  background: url('home/milky_way.jpg');
+  background: url('home/space.jpg');
   background-position: center center;
   background-size: cover;
   min-height: 100%;
@@ -25,32 +25,34 @@
   .Grid {
     // margin-bottom: 30px;
     margin-top: 20px;
-    min-height: -webkit-calc(100% - 140px);
-    min-height:    -moz-calc(100% - 140px);
-    min-height:         calc(100% - 140px);
-    height: -webkit-calc(100% - 140px);
-    height:    -moz-calc(100% - 140px);
-    height:         calc(100% - 140px);
-  }
+    min-height: -webkit-calc(100% - 175px);
+    min-height:    -moz-calc(100% - 175px);
+    min-height:         calc(100% - 175px);
+    height: -webkit-calc(100% - 175px);
+    height:    -moz-calc(100% - 175px);
+    height:         calc(100% - 175px);
 
-  .Block {
-    // background-color: rgba(0, 0, 0, 0.875) !important;
-    // opacity: .8 !important;
-    // padding: 30px;
-    // border-radius: 5px;
-    // display: flex;
+    .Block {
+      // background-color: rgba(0, 0, 0, 0.875) !important;
+      // opacity: .8 !important;
+      // padding: 30px;
+      // border-radius: 5px;
+      // display: flex;
+      margin-top: 20px !important;
 
-    a img {
-      display: block;
-      margin: auto;
+      a img {
+        display: block;
+        margin: auto;
+      }
     }
   }
+
 }
 
 .menu-item {
   color: #bdc3c7;
-  font-size:24px;
-  padding:24px;
+  font-size: 20px;
+  padding: 15px;
 
   &:hover {
     color: #9da6ac;

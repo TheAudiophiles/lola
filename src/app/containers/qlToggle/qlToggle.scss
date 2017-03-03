@@ -1,11 +1,16 @@
-.buttons{
+.ql-toggle {
+  height: 100%;
 
-  .Button {
-    // color: #eaabe0;
-    background-color: #6996AD !important;
+  .buttons{
+    .Button {
+      background-color: #6996AD !important;
+    }
+    .Button:disabled {
+      background-color: #05B8CC !important;
+    }
   }
-  .Button:disabled {
-    // color: #eaabe0;
-    background-color: #05B8CC !important;
+
+  .toggle {
+    height: 100%;
   }
 }
