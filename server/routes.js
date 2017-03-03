@@ -313,14 +313,14 @@ router.get('/fetchLibrary', (req, res) => {
   let userId = userController.getUserId();
   libraryController.findLibrary(userId, (err, library) => {
     if (err) {
-      return console.log(err);
+      return console.error(err);
     }
     if (!library) {
       console.log('ROUTE /fetchLibrary. library for user', userId, ' NOT found');
       res.end();
     } else {
       console.log('ROUTE /fetchLibrary. library for user', userId, 'found');
-      libraryController.getAll((err, librarySongs) => {
+      libraryController.getAll(userId, (err, librarySongs) => {
         if (err) {
           return console.log(err);
         }

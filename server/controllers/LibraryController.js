@@ -8,8 +8,17 @@ class LibraryController {
   // findSongsByArtist
   // findSongsByAlbum
 
-  getAll(done) {
-    done(null, this.library.songs);
+  getAll(user, done) {
+    Library.findOne({ user }, (err, library) => {
+      if (err) {
+        console.log('LIBRARYCONTROLLER. GETALL - an error occurred while attempting to find get songs from library for user,', user);
+        done(err);
+      } else {
+        console.log('LIBRARYCONTROLLER - successfully retrieved songs from library for user,', user);
+        this.library = library;
+        done(null, this.library.songs);
+      }
+    });
   }
 
   createLibrary(user, done) {
@@ -29,8 +38,10 @@ class LibraryController {
   findLibrary(user, done) {
     Library.findOne({ user }, (err, library) => {
       if (err) {
+        console.log('LIBRARYCONTROLLER - an error occurred while attempting to find library for user,', user);
         done(err);
       } else {
+        console.log('LIBRARYCONTROLLER - found library for user,', user);
         this.library = library;
         done(null, library);
       }

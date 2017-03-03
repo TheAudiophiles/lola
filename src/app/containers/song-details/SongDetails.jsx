@@ -13,7 +13,6 @@ class SongDetails extends Component {
   }
 
   addToLibraryClickHandler() {
-    console.log('clicked addToLibrary');
     let { allSongs, currentSongIndex } = this.props;
     this.props.addSongToLibrary(allSongs[currentSongIndex]);
   }
