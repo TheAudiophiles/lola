@@ -1,10 +1,16 @@
 .Card {
-  max-width: 200px;
+  max-width: 340px;
   margin: auto;
   background: #373a47;
   color: #bdc3c7;
+  text-align: center !important;
+  
+  .Heading {
+  	font-size:18px !important;
+  }
 
   .Text {
-    font-size: 14px !important;
+    font-size: 18px !important;
+    text-align: center !important;
   }
 }

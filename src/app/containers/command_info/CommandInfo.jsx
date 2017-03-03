@@ -16,7 +16,7 @@ export default class CommandInfo extends Component {
     let close = () => this.setState({ show: false});
 
     return (
-      <div className="modal-container" style={{height: 200}}>
+      <div className="modal-container" style={{height: 50}}>
         <Button
           bsStyle="default"
           bsSize="small"

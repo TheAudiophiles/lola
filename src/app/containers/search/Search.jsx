@@ -49,7 +49,7 @@ class Search extends Component {
 
   render() {
     return (
-      <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+      <div style={{ marginLeft: 'auto', marginRight: 'auto'}}>
         <Input
           label=""
           name="search_song_name"

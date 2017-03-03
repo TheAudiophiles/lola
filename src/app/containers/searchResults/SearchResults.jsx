@@ -28,7 +28,18 @@ class SearchResults extends Component {
   render() {
     const { searchResults } = this.props;
 
-    if (!searchResults.length) return <div>No Search Results</div>;
+    if (!searchResults.length) {
+      return <div 
+        style={{
+        fontSize:18, 
+        fontFamily:"inherit", 
+        fontWeight:500, lineHeight:1.1, 
+        color:"inherit", 
+        display: "flex",
+        padding: 10, 
+        justifyContent:"center"}}
+      >No Search Results</div>;
+    }
 
     return (
       <Carousel
