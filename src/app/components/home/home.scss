@@ -14,17 +14,22 @@
 
 #page-wrap {
   padding-top: 30px;
-  background: url('home/space.jpg');
-  background-position: center center;
+  background: url('home/space.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
   background-size: cover;
   min-height: 100%;
   height: 100%;
   position: relative;
   margin: 0;
+  overflow: visible;
+
+  .Box {
+    display: flex !important;
+  }
 
   .Grid {
-    // margin-bottom: 30px;
-    margin-top: 20px;
+    margin-top: 50px;
     min-height: -webkit-calc(100% - 175px);
     min-height:    -moz-calc(100% - 175px);
     min-height:         calc(100% - 175px);
@@ -33,11 +38,6 @@
     height:         calc(100% - 175px);
 
     .Block {
-      // background-color: rgba(0, 0, 0, 0.875) !important;
-      // opacity: .8 !important;
-      // padding: 30px;
-      // border-radius: 5px;
-      // display: flex;
       margin-top: 20px !important;
 
       a img {
@@ -61,12 +61,20 @@
 }
 
 .lola {
-  color: #ce15ea !important;
-  font-family: 'Audiowide', serif;
-  font-weight: bold;
-  font-size: 46px;
   left: 13px;
   margin: 0px;
-  top: 0;
+  top: 20px;
   position: absolute;
+  background-color: rgba(237, 255, 113, 0.5);
+  border-radius: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
+
+  h1 {
+    font-size: 50px !important;
+    font-weight: bold !important;
+    color: #ce15ea !important;
+    margin: 0 !important;
+    font-family: 'Audiowide', serif;
+  }
 }

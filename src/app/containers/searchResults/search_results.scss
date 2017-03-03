@@ -1,0 +1,22 @@
+.no-results {
+  font-size: 18px;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+}
+
+.carousel-img {
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.carousel-caption > h3 {
+  background: rgba(0, 0, 0, 0.7);
+}

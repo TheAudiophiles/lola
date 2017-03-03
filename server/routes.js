@@ -24,7 +24,7 @@ const scopes = ['user-read-private', 'user-read-email'];
 const spotifyApi = new Spotify({
   clientId: SPOTIFY_API_KEY.clientID,
   clientSecret: SPOTIFY_API_KEY.clientSecret,
-  redirectUri: 'http://localhost:3000/callback'
+  redirectUri: SPOTIFY_API_KEY.callbackUrl
 });
 
 const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);

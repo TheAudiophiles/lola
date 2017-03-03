@@ -27,46 +27,9 @@ const Header = (props) => {
     window.location = '/logout';
   }
 
-  // Will be moved to scss file
-  var styles = {
-    bmBurgerButton: {
-      position: 'fixed',
-      width: '36px',
-      height: '30px',
-      right: '36px',
-      top: '36px'
-    },
-    bmBurgerBars: {
-      background: '#bdc3c7'
-    },
-    bmCrossButton: {
-      height: '24px',
-      width: '24px'
-    },
-    bmCross: {
-      background: '#bdc3c7'
-    },
-    bmMenu: {
-      background: '#373a47',
-      padding: '2.5em 1.5em 0',
-      fontSize: '1.15em'
-    },
-    bmMorphShape: {
-      fill: '#373a47'
-    },
-    bmItemList: {
-      color: '#b8b7ad',
-      padding: '0.8em'
-    },
-    bmOverlay: {
-      background: 'rgba(0, 0, 0, 0.3)'
-    }
-  }
-
   return (
     <Menu
       right
-      styles={styles}
       pageWrapId={ "page-wrap" }
       outerContainerId={ "outer-container" }>
       <RadiumLink id="home" className="menu-item" to="/home">Home</RadiumLink>

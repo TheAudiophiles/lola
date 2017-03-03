@@ -46,11 +46,9 @@ class Queue extends Component {
                 : `${song.track.name} - ${song.track.artist}`}
             </a>
             <a onClick={this.removeHandler.bind(this, i)}>
-              <img
-                style={{width: '24px', float: 'right'}}
-                src={deleteBtnBase64()} />
+              <img className="delete-btn" src={deleteBtnBase64()} />
             </a>
-            <div style={{display: 'none'}}>
+            <div className="flat-icon-credit">
               Icons made by
               <a
                 href="http://www.flaticon.com/authors/madebyoliver"
@@ -71,7 +69,7 @@ class Queue extends Component {
         );
       }
     })
-  }
+  };
 
   render() {
     return (
@@ -79,9 +77,9 @@ class Queue extends Component {
         {this.renderSongs()}
         <NavItem style={{
           position: 'absolute',
-          bottom: '0',
-          left: '0',
-          right: '0'
+          bottom: 0,
+          left: 0,
+          right: 0
         }}>
           <Button
             backgroundColor="primary"

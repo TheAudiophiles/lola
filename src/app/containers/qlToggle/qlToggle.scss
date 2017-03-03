@@ -2,15 +2,21 @@
   height: 100%;
 
   .buttons{
+
     .Button {
-      background-color: #6996AD !important;
+      background-color: #69a4aa !important;
+      opacity: 0.5 !important;
+
     }
+
     .Button:disabled {
-      background-color: #05B8CC !important;
+      background-color: #337ab7 !important;
+      opacity: 1 !important;
     }
   }
 
   .toggle {
-    height: 100%;
+    height: 31.1vw;
+    width: 31.1vw;
   }
 }

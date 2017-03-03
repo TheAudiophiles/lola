@@ -74,15 +74,3 @@ const mapStateToProps = ({ songs }) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SongDetails);
-
-// <Button
-//   backgroundColor="primary"
-//   color="white"
-//   inverted
-//   rounded
-//   style={{width: '100%', textAlign: 'center'}}
-//   onClick={this.addToLibraryClickHandler.bind(this)}>
-//   Add to Library
-// </Button>
-
-// addtolibrary button pic - http://www.iconarchive.com/download/i7968/hopstarter/soft-scraps/Button-Add.ico
