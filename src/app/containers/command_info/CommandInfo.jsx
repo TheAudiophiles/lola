@@ -34,7 +34,7 @@ export default class CommandInfo extends Component {
           <Modal.Header closeButton>
             <Modal.Title id="contained-modal-title" style={{color: "black"}}>Lola's Commands</Modal.Title>
           </Modal.Header>
-          <Modal.Body style={{height: 250}}> 
+          <Modal.Body style={{height: 250}}>
             <div className='col-md-5' style={{color:"black"}}>
               <div style={{fontSize:18, textDecoration:"underline"}} >What you want to do:</div>
               <div>Play a song from lyrics</div>
@@ -47,11 +47,11 @@ export default class CommandInfo extends Component {
               <div>Turn the music down</div>
               <div>Mute the song</div>
               <div>Unmute the song</div>
-            </div>       
-            <div className='col-md-5 col-md-offset-2' style={{color:"black"}}>  
+            </div>
+            <div className='col-md-5 col-md-offset-2' style={{color:"black"}}>
               <div style={{fontSize:18, textDecoration:"underline"}}>What you should say:</div>
-              <div>Song contains 'Hello it's me'</div>
-              <div>Play 'Hello' by Adele</div> 
+              <div>Song contains 'Hello it\'s me'</div>
+              <div>Play 'Hello' by Adele</div>
               <div>Add song to library</div>
               <div>Pause or pause song</div>
               <div>Previous song</div>

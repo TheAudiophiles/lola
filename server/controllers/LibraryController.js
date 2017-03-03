@@ -8,6 +8,10 @@ class LibraryController {
   // findSongsByArtist
   // findSongsByAlbum
 
+  getAll(done) {
+    done(null, this.library.songs);
+  }
+
   createLibrary(user, done) {
     this.library = new Library({
       user: user,
@@ -49,14 +53,35 @@ class LibraryController {
         if (err) {
           done(err);
         } else {
-          done();
+          console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
+          done(false);
         }
       });
-    } else {
+    } else { // song is already in library
       // 	should let the user know the song is already in the db!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      console.log('LIBRARY CONTROLLER - this.library after adding song:', this.library);
-      done();
+
+      done(true);
     }
+  }
+
+  removeSong(target, done) {
+    console.log('LIBRARYCONTROLLER. REMOVESONG - library before removing song:', this.library);
+    for (let i = 0; i < this.library.songs.length; i++) {
+      if (this.library.songs[i].title === target.title && this.library.songs[i].videoId === target.videoId) {
+        let deletedSong = this.library.songs.splice(i, 1)[0];
+        console.log('LIBRARYCONTROLLER. REMOVESONG - library after removing song:', this.library);
+        this.library.save(err => {
+          if (err) {
+            done(err);
+          } else {
+            done(null, deletedSong);
+          }
+        })
+      }
+    }
+    // CURRENTLY NOT HANDLING THE CASE WHERE WE TRY TO REMOVE A SONG THAT ISNT IN THE LIBRARY. these 2 lines shouldn't never get run
+    // console.log('LIBRARYCONTROLLER - target song does not exist in the library');
+    // done();
   }
 }
 

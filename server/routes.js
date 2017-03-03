@@ -262,25 +262,72 @@ router.post('/addToLibrary', (req, res) => {
             return console.log(err);
           }
           console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
-          libraryController.addSong(song, err => { 
+          libraryController.addSong(song, (err, exists) => {
             if (err) {
               return console.log(err);
             }
-            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-            res.json(song);
+            if (!exists) {
+              console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+              res.json(song);
+            } else {
+              console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
+              res.json(null);
+            }
           });
         });
       } else { // library already exists, just add the song
         console.log('ROUTE /ADDTOLIBRARY. library for user', userId, 'found');
-        libraryController.addSong(song, err => {
+        libraryController.addSong(song, (err, exists) => {
           if (err) {
             return console.log(err);
           }
-          console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-          res.json(song);
+          if (!exists) {
+            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
+            res.json(song);
+          } else {
+            console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
+            res.json(null);
+          }
         });
       }
     });
+  });
+});
+
+router.post('/removeFromLibrary', (req, res) => {
+  console.log('ROUTE /REMOVEFROMLIBRARY ()====={@)=========================================>');
+  let song = req.body;
+  console.log('ROUTE /REMOVEFROMLIBRARY - trying to remove song:', song);
+
+  libraryController.removeSong(song, (err, deletedSong) => {
+    if (err) {
+      console.error(err);
+    }
+    console.log('ROUTE /REMOVEFROMLIBRARY. returning deleted song:', deletedSong);
+    res.json(deletedSong);
+  });
+});
+
+router.get('/fetchLibrary', (req, res) => {
+  console.log('ROUTE /fetchLibrary ()====={@)=========================================>');
+  let userId = userController.getUserId();
+  libraryController.findLibrary(userId, (err, library) => {
+    if (err) {
+      return console.log(err);
+    }
+    if (!library) {
+      console.log('ROUTE /fetchLibrary. library for user', userId, ' NOT found');
+      res.end();
+    } else {
+      console.log('ROUTE /fetchLibrary. library for user', userId, 'found');
+      libraryController.getAll((err, librarySongs) => {
+        if (err) {
+          return console.log(err);
+        }
+        console.log('ROUTE /fetchLibrary. returning songs from library:', librarySongs);
+        res.json(librarySongs);
+      });
+    }
   });
 });
 
