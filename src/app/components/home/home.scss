@@ -12,10 +12,6 @@
   }
 }
 
-.Grid {
-  margin-bottom: 30px;
-}
-
 #page-wrap {
   padding-top: 30px;
   background: url('home/space.jpg');
@@ -26,24 +22,37 @@
   position: relative;
   margin: 0;
 
-  .Block {
-    // background-color: rgba(0, 0, 0, 0.875) !important;
-    // opacity: .8 !important;
-    // padding: 30px;
-    // border-radius: 5px;
-    // display: flex;
+  .Grid {
+    // margin-bottom: 30px;
+    margin-top: 20px;
+    min-height: -webkit-calc(100% - 175px);
+    min-height:    -moz-calc(100% - 175px);
+    min-height:         calc(100% - 175px);
+    height: -webkit-calc(100% - 175px);
+    height:    -moz-calc(100% - 175px);
+    height:         calc(100% - 175px);
 
-    a img {
-      display: block;
-      margin: auto;
+    .Block {
+      // background-color: rgba(0, 0, 0, 0.875) !important;
+      // opacity: .8 !important;
+      // padding: 30px;
+      // border-radius: 5px;
+      // display: flex;
+      margin-top: 20px !important;
+
+      a img {
+        display: block;
+        margin: auto;
+      }
     }
   }
+
 }
 
 .menu-item {
   color: #bdc3c7;
-  font-size:24px;
-  padding:24px;
+  font-size: 20px;
+  padding: 15px;
 
   &:hover {
     color: #9da6ac;
@@ -55,9 +64,9 @@
   color: #ce15ea !important;
   font-family: 'Audiowide', serif;
   font-weight: bold;
-  font-size: 72px;
+  font-size: 46px;
   left: 13px;
   margin: 0px;
-  top: 5px;
+  top: 0;
   position: absolute;
 }

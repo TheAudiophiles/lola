@@ -1,0 +1,20 @@
+.modal-container, .modal, .modal-dialog, .modal-content, .modal-body {
+  height: 95% !important;
+  min-height: 95% !important;
+}
+
+.modal-container {
+
+  .modal {
+    color: #000;
+  }
+
+  button.btn {
+    margin: 15px auto;
+    display: block;
+    padding: 0 10px;
+    border-radius: 50%;
+    font-style: italic;
+    font-size: 16px;
+  }
+}

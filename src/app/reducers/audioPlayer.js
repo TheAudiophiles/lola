@@ -5,8 +5,7 @@ import {
   UNMUTE,
   RESET_VOLUME_CHANGE,
   PAUSE_SONG,
-  RESUME_SONG,
-  STOP_SONG
+  RESUME_SONG
 } from '../actions';
 
 const initialState = {

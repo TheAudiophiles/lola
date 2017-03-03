@@ -5,25 +5,20 @@ import { Button } from 'rebass';
 
 import mic from './mic-icon.png';
 
-class Message extends Component {
-  constructor(){
-    super()
-  }
-  render(){
-    return (
-      <div 
-        style={{
-        fontSize:18, 
-        fontFamily:"inherit", 
-        fontWeight:500, lineHeight:1.1, 
-        color:"inherit", 
-        display: "flex",
-        padding: 10, 
-        justifyContent:"center"}}
-      >Lola is Listening . . .</div>
-    )
-  }
-}
+// style={{
+//   fontSize:18,
+//   fontFamily:"inherit",
+//   fontWeight:500,
+//   lineHeight:1.1,
+//   color:"inherit",
+//   display: "flex",
+//   padding: 10,
+//   justifyContent:"center"
+// }}
+
+const Message = () => (
+  <div className="speech-message">Lola is Listening . . .</div>
+);
 
 export default class Speech extends Component {
   constructor(props) {
@@ -46,14 +41,14 @@ export default class Speech extends Component {
 
     this.setState({showClicked: !this.state.showClicked})
   }
- 
+
   render() {
     return (
-      <div>
+      <div className="speech-icon">
         <a href="#" onClick={this.clickHandler.bind(this)}>
           <img src={mic} />
         </a>
-        {this.state.showClicked && < Message />}
+        {this.state.showClicked && <Message />}
       </div>
     );
   }

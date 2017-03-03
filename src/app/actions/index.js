@@ -6,9 +6,7 @@ export const SEARCH_LYRICS_FAILURE = 'SEARCH_LYRICS_FAILURE';
 export const PREVIOUS_SONG = 'PREVIOUS_SONG';
 export const NEXT_SONG = 'NEXT_SONG';
 export const RESUME_SONG = 'RESUME_SONG';
-export const STOP_SONG = 'STOP_SONG';
 export const PAUSE_SONG = 'PAUSE_SONG';
-export const PLAY_PAUSE = 'PLAY_PAUSE';
 export const NAVIGATE_TO = 'NAVIGATE_TO';
 export const SPOTIFY_TOKENS = 'SPOTIFY_TOKENS';
 export const SPOTIFY_TOKENS_SUCCESS = 'SPOTIFY_TOKENS_SUCCESS';
@@ -133,7 +131,10 @@ export const pauseSong = () => ({
   type: PAUSE_SONG
 })
 
-export const navigateTo = index => ({ type: NAVIGATE_TO, index });
+export const navigateTo = index => ({
+  type: NAVIGATE_TO,
+  index
+});
 
 
 /**
@@ -293,7 +294,9 @@ export const toggleLibrary = () => ({
   type: TOGGLE_LIBRARY
 });
 
-export const removeFromQueue = (index) => ({ type: REMOVE_FROM_QUEUE, index });
+export const removeFromQueue = (index) => ({
+  type: REMOVE_FROM_QUEUE, index
+});
 
 export const fetchLibrary = error => ({
   type: FETCH_LIBRARY_BEGIN

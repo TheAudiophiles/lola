@@ -13,7 +13,6 @@ import rootSaga from './sagas';
 
 import App from './components/App';
 import Home from './components/home/Home';
-import About from './components/about/About';
 import NotFound from './components/not_found/NotFound';
 import Login from './components/login/Login';
 import Err from './components/err/Err';
@@ -23,21 +22,6 @@ import CheckAuth from './containers/checkAuth/CheckAuth';
 import './components/bundle.scss';
 
 const sagaMiddleware = createSagaMiddleware();
-
-// const createStoreWithMiddleware = applyMiddleware(
-//   sagaMiddleware
-// )(createStore);
-//
-// const enhancer = compose(persistState());
-//
-// const middleware = [];
-//
-//
-// const store = createStoreWithMiddleware(
-//   combineReducers({ ...reducers, routing: routerReducer }),
-//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-//   enhancer
-// );
 
 const createStoreWithMiddleware = applyMiddleware(
   sagaMiddleware
@@ -60,7 +44,6 @@ ReactDOM.render(
     <Router onUpdate={() => window.scrollTo(0, 0)} history={history}>
       <Route path="/" component={App}>
         <IndexRoute component={Login} />
-        <Route path="/about" component={About} />
         <Route path="/error/:errorMsg" component={Err} />
         <Route path="/user/:accessToken/:refreshToken" component={User} />
         <Route component={CheckAuth}>

@@ -37,10 +37,6 @@ class SongDetails extends Component {
       artist = allSongs[currentSongIndex].track.artist;
     }
 
-    const style2 = {
-      width: '50px'
-    }
-
     const tooltip = (
       <Tooltip id="tooltip"><strong>Add to Library</strong></Tooltip>
     );
