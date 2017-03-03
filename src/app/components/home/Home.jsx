@@ -17,12 +17,12 @@ import Modal from '../command_info/CommandInfo';
 export default () => (
   <div id="page-wrap">
     <div className='lola'>
-      Lola
+      <h1>Lola</h1>
     </div>
-    <Box style={{ display: 'flex' }} col={12} px={2}>
+    <Box col={12} px={2}>
       <Search style={{ margin: 'auto' }} />
     </Box>
-    <Grid col={4} px={2} style={{marginTop: -12}}>
+    <Grid col={4} px={2} style={{marginTop: 18}}>
       <QLToggle />
     </Grid>
     <Grid col={4} px={2}>

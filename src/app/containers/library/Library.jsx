@@ -8,7 +8,6 @@ import { setSong, removeSongFromLibrary } from '../../actions';
 class Library extends Component {
 
   playHandler(song) {
-    console.log('LIBRARY COMPONENT - playHandler');
     this.props.setSong(song);
   }
 
@@ -19,17 +18,9 @@ class Library extends Component {
   render() {
     const { library } = this.props;
 
-    // console.log('LIBRARY COMPONENT - library:', library);
-
-    const style = {
-      background: '#373a47',
-      color: '#bdc3c7'
-    };
-
     return (
-      <Menu style={style} rounded>
+      <Menu rounded>
         {library.map((song) => {
-            // console.log('LIBRARY COMPONENT - song in library:', song);
             return (
               <NavItem
                 key={song.videoId ? song.videoId : i}
@@ -38,11 +29,9 @@ class Library extends Component {
                   {`${song.title} - ${song.artist}`}
                 </a>
                 <a onClick={this.removeHandler.bind(this, song)}>
-                  <img
-                    style={{width: '24px', float: 'right'}}
-                    src={deleteBtnBase64()} />
+                  <img className="delete-btn" src={deleteBtnBase64()} />
                 </a>
-                <div style={{display: 'none'}}>
+                <div className="flat-icon-credit">
                   Icons made by
                   <a
                     href="http://www.flaticon.com/authors/madebyoliver"

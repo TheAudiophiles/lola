@@ -5,17 +5,6 @@ import { Button } from 'rebass';
 
 import mic from './mic-icon.png';
 
-// style={{
-//   fontSize:18,
-//   fontFamily:"inherit",
-//   fontWeight:500,
-//   lineHeight:1.1,
-//   color:"inherit",
-//   display: "flex",
-//   padding: 10,
-//   justifyContent:"center"
-// }}
-
 const Message = () => (
   <div className="speech-message">Lola is Listening . . .</div>
 );

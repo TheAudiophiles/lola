@@ -29,16 +29,7 @@ class SearchResults extends Component {
     const { searchResults } = this.props;
 
     if (!searchResults.length) {
-      return <div 
-        style={{
-        fontSize:18, 
-        fontFamily:"inherit", 
-        fontWeight:500, lineHeight:1.1, 
-        color:"inherit", 
-        display: "flex",
-        padding: 10, 
-        justifyContent:"center"}}
-      >No Search Results</div>;
+      return <div className="no-results">No Search Results</div>;
     }
 
     return (
@@ -54,7 +45,7 @@ class SearchResults extends Component {
           >
             <img
               alt="500x500"
-              style={{margin: 'auto', width: '100%', height: '100%', minWidth: '200px', minHeight: '200px'}}
+              className="carousel-img"
               src={
                 result.details
                   ? result.details.album.images[0].url
@@ -62,7 +53,7 @@ class SearchResults extends Component {
               }
             />
             <Carousel.Caption>
-              <h3 style={{background: '#000', opacity: 0.7}}>{result.details ? result.details.name : result.track.name}</h3>
+              <h3>{result.details ? result.details.name : result.track.name}</h3>
             </Carousel.Caption>
           </Carousel.Item>
         ))}
