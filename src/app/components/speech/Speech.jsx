@@ -37,7 +37,6 @@ export default class Speech extends Component {
         <a href="#" onClick={this.clickHandler.bind(this)}>
           <img src={mic} />
         </a>
-        {this.state.showClicked && <Message />}
       </div>
     );
   }
