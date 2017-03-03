@@ -56,7 +56,8 @@ class SongDetails extends Component {
         </Text>
         <OverlayTrigger placement="right" overlay={tooltip}>
           <Button
-            bsStyle="primary"
+            bsStyle='primary'
+            className = 'add'
             onClick={this.addToLibraryClickHandler.bind(this)}>
               <Glyphicon glyph="plus" />
           </Button>
