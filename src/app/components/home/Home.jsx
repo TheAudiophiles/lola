@@ -16,6 +16,9 @@ import QLToggle from '../../containers/qlToggle/QLToggle';
 
 export default () => (
   <div id="page-wrap">
+    <div className='lola'>
+      Lola
+    </div>
    <Grid style={{ display: 'flex' }} col={12} px={2}>
      <Search style={{ margin: 'auto' }} />
    </Grid>
