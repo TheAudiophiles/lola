@@ -36,7 +36,7 @@ export default function library(state = initialState, action) {
           libraryX.splice(i, 1);
         }
       }
-      return { library: libraryX };
+      return { library: [...libraryX] };
 
     case REMOVE_SONG_FROM_LIBRARY_FAILURE:
       return state;
