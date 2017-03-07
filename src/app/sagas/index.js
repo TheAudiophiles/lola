@@ -27,7 +27,6 @@ import {
 } from '../actions';
 
 const spotifyApi = new Spotify();
-window.spotify = spotifyApi;
 
 /**
  * =======================================
