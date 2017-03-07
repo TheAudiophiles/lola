@@ -1,5 +1,7 @@
 # lola
 
+* [lolasound.net](http://lolasound.net) - Try out Lola
+
 This application is still in active development.
 
 Interactive voice-controlled music dashboard for making listening to your favorite music easy, fun, and social
