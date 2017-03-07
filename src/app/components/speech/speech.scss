@@ -11,4 +11,17 @@
 
 .speech-icon {
   margin-top: 15px;
+  box-sizing: border-box;
+
+  img {
+    border: 2px solid transparent;
+
+    &:hover {
+      outline: none;
+      border: 2px solid rgba(81, 203, 238, 1);
+      box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+      border-radius: 50%;
+      box-sizing: border-box;
+    }
+  }
 }
