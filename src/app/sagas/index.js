@@ -34,7 +34,7 @@ const spotifyApi = new Spotify();
  * =======================================
  */
 
-function* fetchUser() {
+export function* fetchUser() {
   try {
     const request = yield call(spotifyApi.getMe);
     yield put(spotifyMeSuccess(request));
@@ -43,7 +43,7 @@ function* fetchUser() {
   }
 }
 
-function* fetchSongByLyrics({ lyrics }) {
+export function* fetchSongByLyrics({ lyrics }) {
   try {
     yield put(fetchSongLoading());
     const request = yield call(axios.get, `/api/lyrics-search/${lyrics}/null`);
@@ -56,7 +56,7 @@ function* fetchSongByLyrics({ lyrics }) {
   }
 }
 
-function* fetchSongByName({ name, artist }) {
+export function* fetchSongByName({ name, artist }) {
   try {
     yield put(fetchSongLoading());
     if (!artist) artist = 'null';
@@ -70,7 +70,7 @@ function* fetchSongByName({ name, artist }) {
   }
 }
 
-function* setSpotifyTokens({ accessToken, refreshToken }) {
+export function* setSpotifyTokens({ accessToken, refreshToken }) {
   if (accessToken && refreshToken) {
     spotifyApi.setAccessToken(accessToken);
     yield put(setTokensSuccess({ accessToken, refreshToken }));
@@ -79,10 +79,9 @@ function* setSpotifyTokens({ accessToken, refreshToken }) {
   }
 }
 
-function* addSongToLibrary({song}) {
+export function* addSongToLibrary({ song }) {
   try {
     const response = yield call(axios.post, `/addToLibrary`, song);
-    console.log('SAGAS. ADDSONGTOLIBRARY - response:', response);
     if (response.status !== 200) {
       throw new Error('Failed to add song to library');
     }
@@ -92,10 +91,9 @@ function* addSongToLibrary({song}) {
   }
 }
 
-function* fetchLibrary() {
+export function* fetchLibrary() {
   try {
     const request = yield call(axios.get, `/fetchLibrary`);
-    console.log('SAGAS. FETCHLIBRARY - request:', request);
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get songs from user\'s library');
     }
@@ -105,10 +103,9 @@ function* fetchLibrary() {
   }
 }
 
-function* removeSongFromLibrary({song}) {
+export function* removeSongFromLibrary({ song }) {
   try {
     const response = yield call(axios.post, `/removeFromLibrary`, song);
-    console.log('SAGAS. REMOVESONGFROMLIBRARY - response:', response); // should be the deleted song
     if (response.status !== 200) {
       throw new Error('Failed to remove song from library');
     }
