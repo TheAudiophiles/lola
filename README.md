@@ -69,7 +69,7 @@ window.localStorage.removeItem('redux')
 
 ### Test
 
-At the moment there are only tests written for the action creators, sagas, and a couple of reducers.
+At the moment there are only tests written for the action creators, sagas, and reducers.
 
 ```
 npm test
