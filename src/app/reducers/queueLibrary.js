@@ -11,10 +11,10 @@ const initialState = {
 export default function queueLibrary(state = initialState, action) {
   switch (action.type) {
     case TOGGLE_QUEUE:
-      return { queueOn: true, libraryOn: false}
+      return { queueOn: true, libraryOn: false }
 
     case TOGGLE_LIBRARY:
-      return { queueOn: false, libraryOn: true}
+      return { queueOn: false, libraryOn: true }
 
     default:
       return state;
