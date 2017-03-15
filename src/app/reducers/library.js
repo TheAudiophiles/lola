@@ -30,13 +30,23 @@ export default function library(state = initialState, action) {
       return state;
 
     case REMOVE_SONG_FROM_LIBRARY_SUCCESS:
-      let libraryX = state.library;
-      for (let i = 0; i < libraryX.length; i++) {
-        if (libraryX[i].title === action.deletedSong.title && libraryX[i].videoId === action.deletedSong.videoId) {
-          libraryX.splice(i, 1);
+      const { title, videoId } = action.deletedSong;
+      const { library } = state;
+
+      let songIdx;
+      for (let i = 0; i < library.length; i++) {
+        if (library[i].title === title && library[i].videoId === videoId) {
+          songIdx = i;
         }
       }
-      return { library: [...libraryX] };
+      return songIdx !== undefined
+        ? {
+          library: [
+            ...library.slice(0, songIdx),
+            ...library.slice(songIdx + 1)
+          ]
+        }
+        : state;
 
     case REMOVE_SONG_FROM_LIBRARY_FAILURE:
       return state;

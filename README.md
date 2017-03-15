@@ -4,7 +4,7 @@
 
 This application is still in active development.
 
-Interactive voice-controlled music dashboard for making listening to your favorite music easy, fun, and social
+Interactive voice-controlled music dashboard for making listening to your favorite music easy, fun, and social. Thesis project for Hack Reactor.
 
 ## Getting Started
 
@@ -69,8 +69,7 @@ window.localStorage.removeItem('redux')
 
 ### Test
 
-At the moment there are only a few tests written for some of the action creators,
-the sagas, and a couple of reducers.
+At the moment there are only tests written for the action creators, sagas, and a couple of reducers.
 
 ```
 npm test
