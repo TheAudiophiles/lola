@@ -274,4 +274,18 @@ describe('actions', () => {
     };
     expect(action.removeFromQueue(index)).toEqual(expectedAction);
   });
+
+  it('should create an action to reset addFailed in library state', () => {
+    const expectedAction = {
+      type: type.RESET_LIBRARY_ADD_FAILED
+    };
+    expect(action.resetLibraryAddFailed()).toEqual(expectedAction);
+  });
+
+  it('should create an action to reset removeFailed in library state', () => {
+    const expectedAction = {
+      type: type.RESET_LIBRARY_REMOVE_FAILED
+    };
+    expect(action.resetLibraryRemoveFailed()).toEqual(expectedAction);
+  });
 });

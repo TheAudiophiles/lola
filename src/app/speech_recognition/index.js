@@ -1,36 +1,22 @@
 import { bindActionCreators } from 'redux'
 import artyomjs from 'artyom.js';
 
-import {
-  fetchSongByName,
-  fetchSongVideo,
-  addSongToLibrary,
-  increaseVolume,
-  decreaseVolume,
-  mute,
-  unmute,
-  previousSong,
-  nextSong,
-  pauseSong,
-  resumeSong
- } from '../actions';
+import * as action from '../actions';
+import { store } from '../';
 
-import { store } from '../index.js';
-
-const redux = bindActionCreators(
-  {
-    fetchSongByName,
-    fetchSongVideo,
-    addSongToLibrary,
-    increaseVolume,
-    decreaseVolume,
-    mute,
-    unmute,
-    previousSong,
-    nextSong,
-    pauseSong,
-    resumeSong
-  }, store.dispatch);
+const redux = bindActionCreators({
+  fetchSongByName: action.fetchSongByName,
+  fetchSongVideo: action.fetchSongVideo,
+  addSongToLibrary: action.addSongToLibrary,
+  increaseVolume: action.increaseVolume,
+  decreaseVolume: action.decreaseVolume,
+  mute: action.mute,
+  unmute: action.unmute,
+  previousSong: action.previousSong,
+  nextSong: action.nextSong,
+  pauseSong: action.pauseSong,
+  resumeSong: action.resumeSong
+}, store.dispatch);
 
 export const artyom = artyomjs.ArtyomBuilder.getInstance();
 
@@ -66,21 +52,20 @@ export const commands = [
   },
   {
     indexes: ['previous song', 'previous', 'previa'],
-    //smart: true, 
+    //smart: true,
     action:(i, wildcard) => {
       redux.previousSong();
     }
   },
   {
-    indexes: ['resume song', 'resume', 'museum'], 
+    indexes: ['resume song', 'resume', 'museum'],
     action: (i) => {
       redux.resumeSong();
     }
   },
   {
-    indexes: ['pause song', 'pause', 'paws', 'paws song', 'Pauls song'], 
+    indexes: ['pause song', 'pause', 'paws', 'paws song', 'Pauls song', 'Paul song'],
     action: (i) => {
-      console.log('in pause song');
       redux.pauseSong();
     }
   },
@@ -122,8 +107,6 @@ export const init = () => {
     lang: "en-GB",
     soundex: true,
     debug: true,
-    // obeyKeyword: 'lola',
-    // executionKeyword: 'now',
     listen: true
   }).then(() => {
     console.log("Artyom has been succesfully initialized");

@@ -39,7 +39,7 @@ describe('fetch user from spotify fails', () => {
   });
 
   it('should yield put to spotifyMeFailure with error message', result => {
-    expect(result).toEqual(put(action.spotifyMeFailure(error)));
+    expect(result).toEqual(put(action.spotifyMeFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -75,6 +75,7 @@ describe('fetch song by lyrics failed on server', () => {
   const lyrics = 'These are the lyrics';
   const it = sagaHelper(saga.fetchSongByLyrics({ lyrics }));
   const data = { data: { failed: true } };
+  const error = new Error('Failed to get song');
 
   it('should yield put to fetch song loading', result => {
     expect(result).toEqual(put(action.fetchSongLoading()));
@@ -88,7 +89,7 @@ describe('fetch song by lyrics failed on server', () => {
 
   it('should yield put to fetchSongVideoSuccess', result => {
     expect(result).toEqual(put(
-      action.fetchSongVideoFailure(new Error('Failed to get song'))
+      action.fetchSongVideoFailure(error.message)
     ));
   });
 
@@ -113,7 +114,7 @@ describe('fetch song by lyrics failed on client', () => {
   });
 
   it('should yield put to fetchSongVideoSuccess', result => {
-    expect(result).toEqual(put(action.fetchSongVideoFailure(error)));
+    expect(result).toEqual(put(action.fetchSongVideoFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -175,6 +176,7 @@ describe('fetch song by name w/ artist fails on server', () => {
   const artist = 'Some Artist';
   const it = sagaHelper(saga.fetchSongByName({ name, artist }));
   const data = { data: { failed: true } };
+  const error = new Error('Failed to get song');
 
   it('should yield put to fetch song loading', result => {
     expect(result).toEqual(put(action.fetchSongLoading()));
@@ -188,7 +190,7 @@ describe('fetch song by name w/ artist fails on server', () => {
 
   it('should yield put to fetchSongVideoSuccess with data', result => {
     expect(result).toEqual(put(
-      action.fetchSongVideoFailure(new Error('Failed to get song'))
+      action.fetchSongVideoFailure(error.message)
     ));
   });
 
@@ -201,6 +203,7 @@ describe('fetch song by name w/o artist fails on server', () => {
   const name = 'Some Song';
   const it = sagaHelper(saga.fetchSongByName({ name }));
   const data = { data: { failed: true } };
+  const error = new Error('Failed to get song');
 
   it('should yield put to fetch song loading', result => {
     expect(result).toEqual(put(action.fetchSongLoading()));
@@ -214,7 +217,7 @@ describe('fetch song by name w/o artist fails on server', () => {
 
   it('should yield put to fetchSongVideoSuccess with data', result => {
     expect(result).toEqual(put(
-      action.fetchSongVideoFailure(new Error('Failed to get song'))
+      action.fetchSongVideoFailure(error.message)
     ));
   });
 
@@ -240,7 +243,7 @@ describe('fetch song by name w/ artist fails on client', () => {
   });
 
   it('should yield put to fetchSongVideoSuccess with data', result => {
-    expect(result).toEqual(put(action.fetchSongVideoFailure(error)));
+    expect(result).toEqual(put(action.fetchSongVideoFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -264,7 +267,7 @@ describe('fetch song by name w/o artist fails on server', () => {
   });
 
   it('should yield put to fetchSongVideoSuccess with data', result => {
-    expect(result).toEqual(put(action.fetchSongVideoFailure(error)));
+    expect(result).toEqual(put(action.fetchSongVideoFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -334,7 +337,7 @@ describe('add song to library fails with status code 500', () => {
   });
 
   it('should yield to addSongToLibraryFailure with error', result => {
-    expect(result).toEqual(put(action.addSongToLibraryFailure(error)));
+    expect(result).toEqual(put(action.addSongToLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -354,7 +357,7 @@ describe('add song to library fails on client', () => {
   });
 
   it('should yield to addSongToLibraryFailure with error', result => {
-    expect(result).toEqual(put(action.addSongToLibraryFailure(error)));
+    expect(result).toEqual(put(action.addSongToLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -393,7 +396,7 @@ describe('fetch song library fails at server', () => {
   });
 
   it('should yield to fetch library failure with error', result => {
-    expect(result).toEqual(put(action.fetchLibraryFailure(error)));
+    expect(result).toEqual(put(action.fetchLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -412,7 +415,7 @@ describe('fetch song library fails at client', () => {
   });
 
   it('should yield to fetch library failure with error', result => {
-    expect(result).toEqual(put(action.fetchLibraryFailure(error)));
+    expect(result).toEqual(put(action.fetchLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -453,7 +456,7 @@ describe('remove song from library fails with 500', () => {
   });
 
   it('should yield to removeSongFromLibraryFailure with error', result => {
-    expect(result).toEqual(put(action.removeSongFromLibraryFailure(error)));
+    expect(result).toEqual(put(action.removeSongFromLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {
@@ -473,7 +476,7 @@ describe('remove song from library fails on client', () => {
   });
 
   it('should yield to removeSongFromLibraryFailure with error', result => {
-    expect(result).toEqual(put(action.removeSongFromLibraryFailure(error)));
+    expect(result).toEqual(put(action.removeSongFromLibraryFailure(error.message)));
   });
 
   it('and then nothing', result => {

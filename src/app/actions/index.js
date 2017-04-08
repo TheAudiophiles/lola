@@ -120,15 +120,15 @@ export const decreaseVolume = () => ({
   type: type.DECREASE_VOLUME
 });
 
-export const mute = error => ({
+export const mute = () => ({
   type: type.MUTE
 });
 
-export const unmute = error => ({
+export const unmute = () => ({
   type: type.UNMUTE
 });
 
-export const resetVolumeChange = error => ({
+export const resetVolumeChange = () => ({
   type: type.RESET_VOLUME_CHANGE
 });
 
@@ -144,7 +144,7 @@ export const removeFromQueue = (index) => ({
   type: type.REMOVE_FROM_QUEUE, index
 });
 
-export const fetchLibrary = error => ({
+export const fetchLibrary = () => ({
   type: type.FETCH_LIBRARY_BEGIN
 });
 
@@ -153,9 +153,9 @@ export const fetchLibrarySuccess = librarySongs => ({
   librarySongs
 });
 
-export const fetchLibraryFailure = err => ({
+export const fetchLibraryFailure = error => ({
   type: type.FETCH_LIBRARY_FAILURE,
-  err
+  error
 });
 
 export const setSong = song => ({
@@ -176,4 +176,16 @@ export const removeSongFromLibrarySuccess = deletedSong => ({
 export const removeSongFromLibraryFailure = error => ({
   type: type.REMOVE_SONG_FROM_LIBRARY_FAILURE,
   error
+});
+
+export const resetLibraryAddFailed = () => ({
+  type: type.RESET_LIBRARY_ADD_FAILED
+});
+
+export const resetLibraryFetchFailed = () => ({
+  type: type.RESET_LIBRARY_FETCH_FAILED
+});
+
+export const resetLibraryRemoveFailed = () => ({
+  type: type.RESET_LIBRARY_REMOVE_FAILED
 });

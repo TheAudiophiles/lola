@@ -55,21 +55,20 @@ class LibraryController {
         if (err) {
           done(err);
         } else {
-          done(false);
+          done(null, false);
         }
       });
     } else { // song is already in library
 
-      done(true);
+      done(null, true);
     }
   }
 
   removeSong(target, done) {
     for (let i = 0; i < this.library.songs.length; i++) {
-      if (
-        this.library.songs[i].title === target.title &&
-        this.library.songs[i].videoId === target.videoId
-      ) {
+      const song = this.library.songs[i];
+
+      if (song.title === target.title && song.videoId === target.videoId) {
         let deletedSong = this.library.songs.splice(i, 1)[0];
 
         this.library.save(err => {
@@ -78,7 +77,7 @@ class LibraryController {
           } else {
             done(null, deletedSong);
           }
-        })
+        });
       }
     }
   }

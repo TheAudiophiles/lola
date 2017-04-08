@@ -25,7 +25,7 @@ class SongController {
 
     Song.findOne({ title, artist }, (err, found) => {
       if (err) {
-        console.log(err);
+        done(err);
       }
       if (!found) {
         song.save(err => {

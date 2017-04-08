@@ -19,7 +19,7 @@ export function* fetchUser() {
     const request = yield call(spotifyApi.getMe);
     yield put(action.spotifyMeSuccess(request));
   } catch(error) {
-    yield put(action.spotifyMeFailure(error));
+    yield put(action.spotifyMeFailure(error.message));
   }
 }
 
@@ -32,7 +32,7 @@ export function* fetchSongByLyrics({ lyrics }) {
     }
     yield put(action.fetchSongVideoSuccess(request));
   } catch(error) {
-    yield put(action.fetchSongVideoFailure(error));
+    yield put(action.fetchSongVideoFailure(error.message));
   }
 }
 
@@ -46,7 +46,7 @@ export function* fetchSongByName({ name, artist }) {
     }
     yield put(action.fetchSongVideoSuccess(request));
   } catch(error) {
-    yield put(action.fetchSongVideoFailure(error));
+    yield put(action.fetchSongVideoFailure(error.message));
   }
 }
 
@@ -67,7 +67,7 @@ export function* addSongToLibrary({ song }) {
     }
     yield put(action.addSongToLibrarySuccess(response.data));
   } catch(error) {
-    yield put(action.addSongToLibraryFailure(error));
+    yield put(action.addSongToLibraryFailure(error.message));
   }
 }
 
@@ -79,7 +79,7 @@ export function* fetchLibrary() {
     }
     yield put(action.fetchLibrarySuccess(request.data));
   } catch(error) {
-    yield put(action.fetchLibraryFailure(error));
+    yield put(action.fetchLibraryFailure(error.message));
   }
 }
 
@@ -91,7 +91,7 @@ export function* removeSongFromLibrary({ song }) {
     }
     yield put(action.removeSongFromLibrarySuccess(response.data));
   } catch(error) {
-    yield put(action.removeSongFromLibraryFailure(error));
+    yield put(action.removeSongFromLibraryFailure(error.message));
   }
 }
 /**

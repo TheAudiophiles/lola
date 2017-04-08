@@ -21,8 +21,8 @@ const { MUSIXMATCH_URL, MUSIXMATCH_API_KEY } = require('./config/musixmatch.conf
 const STATE_KEY = 'spotify_auth_state';
 const scopes = ['user-read-private', 'user-read-email'];
 
-// add 1 sec timeout to axios
-axios.defaults.timeout = 1000;
+// add 2.5 sec timeout to axios
+axios.defaults.timeout = 2500;
 
 const spotifyApi = new Spotify({
   clientId: SPOTIFY_API_KEY.clientID,
@@ -55,7 +55,7 @@ const isAuth = (req, res, next) => {
  */
 function youtubeSearch(query) {
   // if (query) {
-    const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
+    const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance&type=video';
     const youtubeOpts = `&q=${query}&key=${YOUTUBE_API_KEY}`;
     const youtubeSearchUrl = `${YOUTUBE_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
 
@@ -94,29 +94,70 @@ function getAllSongs(options, res) {
   let resultsSpotify = [];
   let tracks = [];
 
-  function songDetailsAndVideo(i) {
+  // closure function for getting making parallel ajax requests
+  // to get youtube video data and spotify data for up to 2
+  // songs at a time. Check if both have search strings before ajax
+  function songDetailsAndVideo(i, j) {
     if (resultsYoutube[i] && resultsSpotify[i]) {
-      return axios.all([
+      const songOneRequests = [
         youtubeSearch(resultsYoutube[i]),
         spotifyApi.searchTracks(resultsSpotify[i])
-      ]);
+      ];
+      if (resultsYoutube[j] && resultsSpotify[j]) {
+        return axios.all([
+          ...songOneRequests,
+          youtubeSearch(resultsYoutube[j]),
+          spotifyApi.searchTracks(resultsSpotify[j])
+        ]);
+      } else {
+        return axios.all(songOneRequests);
+      }
     }
   }
 
-  function addSongDetailsAndVideo(i, youtubeData, spotifyData) {
-    if (resultsYoutube[i] && resultsSpotify[i] && youtubeData && spotifyData) {
-      results.push({
-        vid: youtubeData.data,
+  // closure function passed into axios.spread for handling data
+  // returned from up to 4 parallel ajax requests. Adds song object with
+  // video data and spotify data to results.
+  function addSongDetailsAndVideo(
+    i, j, youtubeData0, spotifyData0, youtubeData1, spotifyData1
+  ) {
+    if (
+      resultsYoutube[i] &&
+      resultsSpotify[i] &&
+      youtubeData0 &&
+      spotifyData0 &&
+      tracks[i]
+    ) {
+      const songOneData = {
+        vid: youtubeData0.data,
         track: tracks[i],
-        details: spotifyData.body.tracks.items[0]
-      });
+        details: spotifyData0.body.tracks.items[0]
+      };
+      if (
+        resultsYoutube[j] &&
+        resultsSpotify[j] &&
+        youtubeData1 &&
+        spotifyData1 &&
+        tracks[j]
+      ) {
+        results.push(songOneData, {
+          vid: youtubeData1.data,
+          track: tracks[j],
+          details: spotifyData1.body.tracks.items[0]
+        });
+      } else {
+        results.push(songOneData);
+      }
     }
   }
 
+  // enter promise returned from musixmatch ajax request
+  // and deal with the <= 20 search results
   musixmatchSearch(options)
     .then(({ data }) => {
 
-      // store all unique results. First result is unique
+      // store all unique results. First
+      // result will be considered unique
       let uniqueResultsYoutube = [];
       let uniqueResultsSpotify = [];
       let uniqueTracks = [];
@@ -172,18 +213,14 @@ function getAllSongs(options, res) {
       tracks = uniqueTracks.slice(0, 4);
     })
 
-    // Get song details and video details in parallel for each
-    // result. Have them separated by each result, so if one
+    // Get song details and video details in parallel for 2 songs
+    // at a time. Have them separated by each result, so if it
     // fails, any others that have been added to the results
     // array with still be returned to the user
-    .then(songDetailsAndVideo.bind(null, 0))
-    .then(axios.spread(addSongDetailsAndVideo.bind(null, 0)))
-    .then(songDetailsAndVideo.bind(null, 1))
-    .then(axios.spread(addSongDetailsAndVideo.bind(null, 1)))
-    .then(songDetailsAndVideo.bind(null, 2))
-    .then(axios.spread(addSongDetailsAndVideo.bind(null, 2)))
-    .then(songDetailsAndVideo.bind(null, 3))
-    .then(axios.spread(addSongDetailsAndVideo.bind(null, 3)))
+    .then(songDetailsAndVideo.bind(null, 0, 1))
+    .then(axios.spread(addSongDetailsAndVideo.bind(null, 0, 1)))
+    .then(songDetailsAndVideo.bind(null, 2, 3))
+    .then(axios.spread(addSongDetailsAndVideo.bind(null, 2, 3)))
     .then(() => res.json(results))
     .catch(error => {
       console.log(error);
