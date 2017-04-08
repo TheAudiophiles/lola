@@ -1,11 +1,4 @@
-import {
-  ADD_SONG_TO_LIBRARY_SUCCESS,
-  ADD_SONG_TO_LIBRARY_FAILURE,
-  FETCH_LIBRARY_SUCCESS,
-  FETCH_LIBRARY_FAILURE,
-  REMOVE_SONG_FROM_LIBRARY_SUCCESS,
-  REMOVE_SONG_FROM_LIBRARY_FAILURE
-} from '../actions';
+import * as type from '../constants/types';
 
 const initialState = {
   library: []
@@ -13,23 +6,23 @@ const initialState = {
 
 export default function library(state = initialState, action) {
   switch (action.type) {
-    case ADD_SONG_TO_LIBRARY_SUCCESS:
+    case type.ADD_SONG_TO_LIBRARY_SUCCESS:
       if (action.song === null) return state;
       else {
         let { library } = state;
         return { library: [ ...library, action.song ] };
       }
 
-    case ADD_SONG_TO_LIBRARY_FAILURE:
+    case type.ADD_SONG_TO_LIBRARY_FAILURE:
       return state;
 
-    case FETCH_LIBRARY_SUCCESS:
+    case type.FETCH_LIBRARY_SUCCESS:
       return { library: action.librarySongs };
 
-    case ADD_SONG_TO_LIBRARY_FAILURE:
+    case type.ADD_SONG_TO_LIBRARY_FAILURE:
       return state;
 
-    case REMOVE_SONG_FROM_LIBRARY_SUCCESS:
+    case type.REMOVE_SONG_FROM_LIBRARY_SUCCESS:
       const { title, videoId } = action.deletedSong;
       const { library } = state;
 
@@ -48,7 +41,7 @@ export default function library(state = initialState, action) {
         }
         : state;
 
-    case REMOVE_SONG_FROM_LIBRARY_FAILURE:
+    case type.REMOVE_SONG_FROM_LIBRARY_FAILURE:
       return state;
 
     default:
