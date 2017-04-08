@@ -1,18 +1,5 @@
 import reducer from '../src/app/reducers/songs';
-
-import {
-  SEARCH_LYRICS_LOADING,
-  SEARCH_LYRICS_SUCCESS,
-  SEARCH_LYRICS_FAILURE,
-  NAVIGATE_TO,
-  PREVIOUS_SONG,
-  NEXT_SONG,
-  SELECT_SR,
-  CLEAR_STATE,
-  CLEAR_QUEUE,
-  REMOVE_FROM_QUEUE,
-  SET_SONG
-} from '../src/app/actions';
+import * as type from '../src/app/constants/types';
 
 describe('songs reducer', () => {
   const initialState = {
@@ -20,6 +7,7 @@ describe('songs reducer', () => {
     currentSongIndex: 0,
     searchResults: [],
     loading: false,
+    searchEmpty: false
   };
 
   it('should return initialState', () => {
@@ -31,6 +19,6 @@ describe('songs reducer', () => {
       ...initialState,
       loading: true
     };
-    expect(reducer(initialState, { type: SEARCH_LYRICS_LOADING })).toEqual(expectedState);
+    expect(reducer(initialState, { type: type.SEARCH_LYRICS_LOADING })).toEqual(expectedState);
   });
 });

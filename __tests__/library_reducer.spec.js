@@ -1,13 +1,5 @@
 import reducer from '../src/app/reducers/library';
-
-import {
-  ADD_SONG_TO_LIBRARY_SUCCESS,
-  ADD_SONG_TO_LIBRARY_FAILURE,
-  FETCH_LIBRARY_SUCCESS,
-  FETCH_LIBRARY_FAILURE,
-  REMOVE_SONG_FROM_LIBRARY_SUCCESS,
-  REMOVE_SONG_FROM_LIBRARY_FAILURE
-} from '../src/app/actions';
+import * as type from '../src/app/constants/types';
 
 describe('library reducer', () => {
   const initialState = {
@@ -27,7 +19,7 @@ describe('library reducer', () => {
     expect(reducer(
       beginState,
       {
-        type: ADD_SONG_TO_LIBRARY_SUCCESS,
+        type: type.ADD_SONG_TO_LIBRARY_SUCCESS,
         song: null
       }
     )).toEqual(beginState);
@@ -40,7 +32,7 @@ describe('library reducer', () => {
     expect(reducer(
       initialState,
       {
-        type: ADD_SONG_TO_LIBRARY_SUCCESS,
+        type: type.ADD_SONG_TO_LIBRARY_SUCCESS,
         song
       }
     )).toEqual(expectedState);
@@ -50,7 +42,9 @@ describe('library reducer', () => {
     const beginState = {
       library: [ song ]
     };
-    expect(reducer(beginState, { type: ADD_SONG_TO_LIBRARY_FAILURE })).toEqual(beginState);
+    expect(reducer(beginState, {
+      type: type.ADD_SONG_TO_LIBRARY_FAILURE
+    })).toEqual(beginState);
   });
 
   it('should handle FETCH_LIBRARY_SUCCESS', () => {
@@ -61,14 +55,16 @@ describe('library reducer', () => {
     expect(reducer(
       initialState,
       {
-        type: FETCH_LIBRARY_SUCCESS,
+        type: type.FETCH_LIBRARY_SUCCESS,
         librarySongs: songs
       }
     )).toEqual(expectedState);
   });
 
   it('should handle FETCH_LIBRARY_FAILURE', () => {
-    expect(reducer(initialState, { type: FETCH_LIBRARY_FAILURE })).toEqual(initialState);
+    expect(reducer(initialState, {
+      type: type.FETCH_LIBRARY_FAILURE
+    })).toEqual(initialState);
   });
 
   it('should handle REMOVE_SONG_FROM_LIBRARY_SUCCESS', () => {
@@ -82,7 +78,7 @@ describe('library reducer', () => {
     expect(reducer(
       beginState,
       {
-        type: REMOVE_SONG_FROM_LIBRARY_SUCCESS,
+        type: type.REMOVE_SONG_FROM_LIBRARY_SUCCESS,
         deletedSong: song
       }
     )).toEqual(expectedState);
@@ -92,6 +88,8 @@ describe('library reducer', () => {
     const beginState = {
       library: [ song ]
     };
-    expect(reducer(beginState, { type: REMOVE_SONG_FROM_LIBRARY_FAILURE })).toEqual(beginState);
+    expect(reducer(beginState, {
+      type: type.REMOVE_SONG_FROM_LIBRARY_FAILURE
+    })).toEqual(beginState);
   });
 });
