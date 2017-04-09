@@ -84,8 +84,8 @@ export const resetLogout = () => ({
   type: type.RESET_LOGGEDOUT
 });
 
-export const selectSR = payload => ({
-  type: type.SELECT_SR,
+export const selectSearchResult = payload => ({
+  type: type.SELECT_SEARCH_RESULT,
   payload
 });
 

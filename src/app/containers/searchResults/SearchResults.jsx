@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 import { Carousel } from 'react-bootstrap';
-import { selectSR } from '../../actions';
+import { selectSearchResult } from '../../actions';
 
 class SearchResults extends Component {
   constructor(props){
@@ -22,7 +22,7 @@ class SearchResults extends Component {
   }
 
   selectSearchResult(result) {
-    this.props.selectSR(result);
+    this.props.selectSearchResult(result);
   }
 
   render() {
@@ -63,7 +63,7 @@ class SearchResults extends Component {
 };
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ selectSR }, dispatch);
+  bindActionCreators({ selectSearchResult }, dispatch);
 
 const mapStateToProps = ({ songs }) => ({
   searchResults: songs.searchResults

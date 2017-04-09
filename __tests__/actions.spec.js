@@ -174,10 +174,10 @@ describe('actions', () => {
       payloadExists: true
     };
     const expectedAction = {
-      type: type.SELECT_SR,
+      type: type.SELECT_SEARCH_RESULT,
       payload
     };
-    expect(action.selectSR(payload)).toEqual(expectedAction);
+    expect(action.selectSearchResult(payload)).toEqual(expectedAction);
   });
 
   it('should create an action to clear state', () => {

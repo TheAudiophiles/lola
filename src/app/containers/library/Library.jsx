@@ -21,37 +21,36 @@ class Library extends Component {
     return (
       <Menu rounded>
         {library.map((song) => {
-            return (
-              <NavItem
-                key={song.videoId ? song.videoId : i}
-                is="div">
-                <a className="library-title" onClick={this.playHandler.bind(this, song)}>
-                  {`${song.title} - ${song.artist}`}
+          return (
+            <NavItem
+              key={song.videoId ? song.videoId : i}
+              is="div">
+              <a className="library-title" onClick={this.playHandler.bind(this, song)}>
+                {`${song.title} - ${song.artist}`}
+              </a>
+              <a onClick={this.removeHandler.bind(this, song)}>
+                <img className="delete-btn" src={deleteBtnBase64()} />
+              </a>
+              <div className="flat-icon-credit">
+                Icons made by
+                <a
+                  href="http://www.flaticon.com/authors/madebyoliver"
+                  title="Madebyoliver">
+                  Madebyoliver
+                </a> from
+                <a href="http://www.flaticon.com" title="Flaticon">
+                  www.flaticon.com
+                </a> is licensed by
+                <a
+                  href="http://creativecommons.org/licenses/by/3.0/"
+                  title="Creative Commons BY 3.0"
+                  target="_blank">
+                  CC 3.0 BY
                 </a>
-                <a onClick={this.removeHandler.bind(this, song)}>
-                  <img className="delete-btn" src={deleteBtnBase64()} />
-                </a>
-                <div className="flat-icon-credit">
-                  Icons made by
-                  <a
-                    href="http://www.flaticon.com/authors/madebyoliver"
-                    title="Madebyoliver">
-                    Madebyoliver
-                  </a> from
-                  <a href="http://www.flaticon.com" title="Flaticon">
-                    www.flaticon.com
-                  </a> is licensed by
-                  <a
-                    href="http://creativecommons.org/licenses/by/3.0/"
-                    title="Creative Commons BY 3.0"
-                    target="_blank">
-                    CC 3.0 BY
-                  </a>
-                </div>
-              </NavItem>
-            );
-        })
-        }
+              </div>
+            </NavItem>
+          );
+        })}
       </Menu>
     );
   }
