@@ -37,6 +37,9 @@ const generateRandomString = N =>
  * Middleware to check if user is logged in before
  * allowing access to route
  *
+ * @param {object} req node http request stream
+ * @param {object} res node http response stream
+ * @param {Function} next callback function
  * @return {Function} go to callback function for route
  *                    or redirect to login component
  */
@@ -94,9 +97,9 @@ function getAllSongs(options, res) {
   let resultsSpotify = [];
   let tracks = [];
 
-  // closure function for getting making parallel ajax requests
+  // closure function for making parallel ajax requests
   // to get youtube video data and spotify data for up to 2
-  // songs at a time. Check if both have search strings before ajax
+  // songs at a time. Check if both have search strings before
   function songDetailsAndVideo(i, j) {
     if (resultsYoutube[i] && resultsSpotify[i]) {
       const songOneRequests = [
@@ -269,7 +272,6 @@ function getUser(done) {
   if (!userId) {
     spotifyApi.getMe()
     .then(({ body }) => {
-      console.log('SPOTIFY GET ME BODY', body);
       userController.findUser(body.id, (err, user) => {
         if (err || !user) {
           return done(new Error('Couldn\'t find user'));
@@ -374,12 +376,14 @@ router.get('/callback', (req, res) => {
           access_token,
           refresh_token
         } = data.body;
-        console.log('Expires in:', expires_in);
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(access_token);
         spotifyApi.setRefreshToken(refresh_token);
-        // use the access token to access the Spotify Web API
+
+        // call refreshSpotifyAuthTimeout to set up to
+        // refresh token before it expires
         refreshSpotifyAuthTimeout(req);
+
         return spotifyApi.getMe();
       })
       .then(({ body }) => {
