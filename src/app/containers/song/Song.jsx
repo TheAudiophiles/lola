@@ -24,15 +24,13 @@ class Song extends Component {
     }
 
     const { allSongs, currentSongIndex } = this.props;
+    const { videoId } = allSongs[currentSongIndex].vid.items[0].id;
 
     return (
       <AudioPlayer
         onPrevTrack={this.toPreviousSong}
         onNextTrack={this.toNextSong}
-        src={
-          'https://www.youtube.com/embed/' +
-          allSongs[currentSongIndex].vid.items[0].id.videoId
-        }
+        src={`https://www.youtube.com/embed/${videoId}`}
       />
     );
   }

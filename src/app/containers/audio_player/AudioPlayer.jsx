@@ -5,7 +5,13 @@ import { connect } from 'react-redux';
 import { Media, Player, controls, utils } from 'react-media-player';
 import PlayPause from '../../components/play_pause/PlayPause';
 import MuteUnmute from '../../components/mute_unmute/MuteUnmute';
-import { resetVolumeChange } from '../../actions';
+import {
+  resetVolumeChange,
+  resumeSong,
+  pauseSong,
+  unmute,
+  mute
+} from '../../actions';
 import './audio_player.scss';
 
 const { CurrentTime, Progress, SeekBar, Duration, Volume, Fullscreen } = controls;
@@ -26,10 +32,13 @@ const NextTrack = (props) => (
 class AudioPlayer extends Component {
   componentWillReceiveProps(nextProps) {
     const { volumeChange, muted, isPlaying } = nextProps;
+    const volStatus = volumeChange.status;
+    const volDir = volumeChange.direction;
 
-    if (volumeChange.status === true) {
-      let currentVolume = this._player.context.media.volume;
-      volumeChange.direction === 'up' ? this.changeVolume(currentVolume + 0.15) : this.changeVolume(currentVolume - 0.15);
+    if (volStatus) {
+      const currVol = this._player.context.media.volume;
+      const newVol = volDir === 'up' ? currVol + 0.15 : currVol - 0.15;
+      this.changeVolume(newVol);
     }
 
     if (muted !== this._player.context.media.isMuted) this.mute(muted);
@@ -81,6 +90,26 @@ class AudioPlayer extends Component {
     }
   }
 
+  // change audioPlayer.isPlaying to true in redux store
+  // on click of playPause react-media-player controls button
+  updateResumeSongState = () => {
+    this.props.resumeSong();
+  }
+
+  // change audioPlayer.isPlaying to false in redux store
+  // on click of playPause react-media-player controls button
+  updatePauseSongState = () => {
+    this.props.pauseSong();
+  }
+
+  updateMuteSongState = () => {
+    this.props.mute();
+  }
+
+  updateUnmuteSongState = () => {
+    this.props.unmute();
+  }
+
   render() {
     return (
       <Media>
@@ -91,14 +120,28 @@ class AudioPlayer extends Component {
             autoPlay
           />
           <div className="media-controls">
-            <PrevTrack className="media-control media-control--prev-track" onClick={this._handlePrevTrack}/>
-            <PlayPause className="media-control media-control--play-pause"/>
-            <NextTrack className="media-control media-control--next-track" onClick={this._handleNextTrack}/>
-            <CurrentTime className="media-control media-control--current-time"/>
-            <SeekBar className="media-control media-control--volume-range"/>
-            <Duration className="media-control media-control--duration"/>
-            <MuteUnmute className="media-control media-control--mute-unmute"/>
-            <Volume className="media-control media-control--volume"/>
+            <PrevTrack
+              className="media-control media-control--prev-track"
+              onClick={this._handlePrevTrack}
+            />
+            <PlayPause
+              className="media-control media-control--play-pause"
+              resumeSongState={this.updateResumeSongState}
+              pauseSongState={this.updatePauseSongState}
+            />
+            <NextTrack
+              className="media-control media-control--next-track"
+              onClick={this._handleNextTrack}
+            />
+            <CurrentTime className="media-control media-control--current-time" />
+            <SeekBar className="media-control media-control--volume-range" />
+            <Duration className="media-control media-control--duration" />
+            <MuteUnmute
+              className="media-control media-control--mute-unmute"
+              unmuteSongState={this.updateUnmuteSongState}
+              muteSongState={this.updateMuteSongState}
+            />
+            <Volume className="media-control media-control--volume" />
           </div>
         </div>
       </Media>
@@ -106,7 +149,13 @@ class AudioPlayer extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ resetVolumeChange }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  resetVolumeChange,
+  resumeSong,
+  pauseSong,
+  unmute,
+  mute
+}, dispatch);
 
 const mapStateToProps = ({ audioPlayer }) => ({
     volumeChange: audioPlayer.volumeChange,
