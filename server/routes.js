@@ -237,6 +237,9 @@ function getAllSongs(options, res) {
 /**
  * addSong
  * Add song to library
+ *
+ * @param {object} song
+ * @param {object} res response stream
  */
 function addSong(song, res) {
   libraryController.addSong(song, (err, exists) => {
@@ -250,6 +253,87 @@ function addSong(song, res) {
       res.json(null);
     }
   });
+}
+
+/**
+ * getUser
+ * Get user id from userController.user or if it doesn't exist
+ * use the spotify api to get login credentials and get user from
+ * user controller with those
+ *
+ * @param {Function} done callback function
+ */
+function getUser(done) {
+  let userId = userController.getUserId();
+
+  if (!userId) {
+    spotifyApi.getMe()
+    .then(({ body }) => {
+      console.log('SPOTIFY GET ME BODY', body);
+      userController.findUser(body.id, (err, user) => {
+        if (err || !user) {
+          return done(new Error('Couldn\'t find user'));
+        }
+        userId = user._id;
+        done(null, userId);
+      });
+    })
+    .catch(err => {
+      // Current Access token / refresh Token are no good
+      // 401 is Unauthorized. If so try to refresh token
+      if (err.statusCode === 401) {
+        spotifyApi.refreshAccessToken()
+          .then(data => {
+            // Success!!! set new access token and recursively call
+            // getUser to get the userId
+            spotifyApi.setAccessToken(data.body['access_token']);
+            getUser(done);
+          })
+          .catch(err => {
+            done(err);
+          });
+      } else {
+        done(err);
+      }
+    });
+  } else {
+    done(null, userId);
+  }
+}
+
+/**
+ * refreshSpotifyAuth
+ * Refresh spotify authentication. Called every 3s by
+ *
+ * @param {object} req node http request stream
+ */
+function refreshSpotifyAuth(req) {
+  if (
+    req.session.loggedIn &&
+    spotifyApi.getAccessToken() &&
+    spotifyApi.getRefreshToken()
+  ) {
+    spotifyApi.refreshAccessToken()
+      .then(data => {
+        spotifyApi.setAccessToken(data.body['access_token']);
+
+        // set it up to refresh again in another 3400 ms
+        refreshSpotifyAuthTimeout(req);
+      })
+      .catch(err => {
+        console.log('Couldn\'t refresh access token', err);
+      });
+  }
+}
+
+/**
+ * refreshSpotifyAuthTimeout
+ * Try to refresh spotify after 3000 ms. It expires every 3600
+ *
+ * @param {object} req node http request stream
+ */
+function refreshSpotifyAuthTimeout(req) {
+  setTimeout(() => { refreshSpotifyAuth(req) }, 3000);
 }
 
 /**
@@ -290,32 +374,33 @@ router.get('/callback', (req, res) => {
           access_token,
           refresh_token
         } = data.body;
+        console.log('Expires in:', expires_in);
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(access_token);
         spotifyApi.setRefreshToken(refresh_token);
         // use the access token to access the Spotify Web API
-        spotifyApi.getMe()
-          .then(({
-            body
-          }) => {
-
-            userController.findUser(body.id, (err, user) => {
+        refreshSpotifyAuthTimeout(req);
+        return spotifyApi.getMe();
+      })
+      .then(({ body }) => {
+        userController.findUser(body.id, (err, user) => {
+          if (err) {
+            return console.log(err);
+          }
+          if (!user) {
+            userController.createUser(body, err => {
               if (err) {
                 return console.log(err);
               }
-              if (!user) {
-                userController.createUser(body, err => {
-                  if (err) {
-                    return console.log(err);
-                  }
-                  console.log('User saved');
-                });
-              }
-
-              req.session.loggedIn = true;
-              res.redirect(`/#/user/${access_token}/${refresh_token}`);
+              console.log('User saved');
             });
-          });
+          }
+
+          req.session.loggedIn = true;
+          const accessToken = spotifyApi.getAccessToken();
+          const refreshToken = spotifyApi.getRefreshToken();
+          res.redirect(`/#/user/${accessToken}/${refreshToken}`);
+        });
       })
       .catch(err => {
         res.redirect('/#/error/invalid token');
@@ -377,24 +462,29 @@ router.post('/addToLibrary', (req, res) => {
       console.error(err);
       return res.json({ failed: true });
     }
-    let userId = userController.getUserId();
-
-    libraryController.findLibrary(userId, (err, library) => {
+    getUser((err, userId) => {
       if (err) {
         console.error(err);
         return res.json({ failed: true });
       }
-      if (!library) {
-        libraryController.createLibrary(userId, err => {
-          if (err) {
-            console.log(err);
-            return res.json({ failed: true });
-          }
+
+      libraryController.findLibrary(userId, (err, library) => {
+        if (err) {
+          console.error(err);
+          return res.json({ failed: true });
+        }
+        if (!library) {
+          libraryController.createLibrary(userId, err => {
+            if (err) {
+              console.log(err);
+              return res.json({ failed: true });
+            }
+            addSong(song, res);
+          });
+        } else { // library already exists, just add the song
           addSong(song, res);
-        });
-      } else { // library already exists, just add the song
-        addSong(song, res);
-      }
+        }
+      });
     });
   });
 });
@@ -406,50 +496,63 @@ router.post('/addToLibrary', (req, res) => {
  */
 router.post('/removeFromLibrary', (req, res) => {
   const song = req.body;
-  const userId = userController.getUserId();
 
-  libraryController.findLibrary(userId, (err, library) => {
+  getUser((err, userId) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return res.json({ failed: true });
     }
 
-    if (!library) {
-      res.end();
-    } else {
-      libraryController.removeSong(song, (err, deletedSong) => {
-        if (err) {
-          console.error(err);
-          return res.json({ failed: true });
-        }
-        res.json(deletedSong);
-      });
-    }
+    libraryController.findLibrary(userId, (err, library) => {
+      if (err) {
+        console.log(err);
+        return res.json({ failed: true });
+      }
+
+      if (!library) {
+        res.json({ failed: true });
+      } else {
+        libraryController.removeSong(song, (err, deletedSong) => {
+          if (err) {
+            console.error(err);
+            return res.json({ failed: true });
+          }
+          res.json(deletedSong);
+        });
+      }
+    });
   });
 });
 
 /**
  * /fetchLibrary
- * Fetch user's library
+ * Fetch user's library. Get userid, if it's not in userController,
+ * find user (sets to userController.user) and then fetch library
  */
 router.get('/fetchLibrary', (req, res) => {
-  const userId = userController.getUserId();
-  libraryController.findLibrary(userId, (err, library) => {
+  getUser((err, userId) => {
     if (err) {
       console.error(err);
       return res.json({ failed: true });
     }
-    if (!library) {
-      res.end();
-    } else {
-      libraryController.getAll(userId, (err, librarySongs) => {
-        if (err) {
-          console.error(err);
-          return res.json({ failed: true });
-        }
-        res.json(librarySongs);
-      });
-    }
+
+    libraryController.findLibrary(userId, (err, library) => {
+      if (err) {
+        console.error(err);
+        return res.json({ failed: true });
+      }
+      if (!library) {
+        res.end();
+      } else {
+        libraryController.getAll(userId, (err, librarySongs) => {
+          if (err) {
+            console.error(err);
+            return res.json({ failed: true });
+          }
+          res.json(librarySongs);
+        });
+      }
+    });
   });
 });
 

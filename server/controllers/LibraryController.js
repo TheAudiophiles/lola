@@ -69,13 +69,13 @@ class LibraryController {
       const song = this.library.songs[i];
 
       if (song.title === target.title && song.videoId === target.videoId) {
-        let deletedSong = this.library.songs.splice(i, 1)[0];
+        this.library.songs.splice(i, 1);
 
         this.library.save(err => {
           if (err) {
             done(err);
           } else {
-            done(null, deletedSong);
+            done(null, song);
           }
         });
       }
