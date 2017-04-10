@@ -1,46 +1,55 @@
-import {
-  ADD_SONG_TO_LIBRARY_SUCCESS,
-  ADD_SONG_TO_LIBRARY_FAILURE,
-  FETCH_LIBRARY_SUCCESS,
-  FETCH_LIBRARY_FAILURE,
-  REMOVE_SONG_FROM_LIBRARY_SUCCESS,
-  REMOVE_SONG_FROM_LIBRARY_FAILURE
-} from '../actions';
+import * as type from '../constants/types';
 
 const initialState = {
-  library: []
+  library: [],
+  error: '',
+  addFailed: false,
+  fetchFailed: false,
+  removeFailed: false
 };
 
 export default function library(state = initialState, action) {
   switch (action.type) {
-    case ADD_SONG_TO_LIBRARY_SUCCESS:
+    case type.ADD_SONG_TO_LIBRARY_SUCCESS:
       if (action.song === null) return state;
       else {
         let { library } = state;
-        return { library: [ ...library, action.song ] };
+        return {
+          ...state,
+          library: [ ...library, action.song ]
+        };
       }
 
-    case ADD_SONG_TO_LIBRARY_FAILURE:
-      return state;
+    case type.ADD_SONG_TO_LIBRARY_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+        addFailed: true
+      };
 
-    case FETCH_LIBRARY_SUCCESS:
-      return { library: action.librarySongs };
+    case type.FETCH_LIBRARY_SUCCESS:
+      return {
+        ...state,
+        library: action.librarySongs
+      };
 
-    case ADD_SONG_TO_LIBRARY_FAILURE:
-      return state;
+    case type.FETCH_LIBRARY_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+        fetchFailed: true
+      };
 
-    case REMOVE_SONG_FROM_LIBRARY_SUCCESS:
+    case type.REMOVE_SONG_FROM_LIBRARY_SUCCESS:
       const { title, videoId } = action.deletedSong;
       const { library } = state;
+      const songIdx = library.findIndex(song =>
+        song.title === title && song.videoId === videoId
+      );
 
-      let songIdx;
-      for (let i = 0; i < library.length; i++) {
-        if (library[i].title === title && library[i].videoId === videoId) {
-          songIdx = i;
-        }
-      }
       return songIdx !== undefined
         ? {
+          ...state,
           library: [
             ...library.slice(0, songIdx),
             ...library.slice(songIdx + 1)
@@ -48,8 +57,33 @@ export default function library(state = initialState, action) {
         }
         : state;
 
-    case REMOVE_SONG_FROM_LIBRARY_FAILURE:
-      return state;
+    case type.REMOVE_SONG_FROM_LIBRARY_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+        removeFailed: true
+      };
+
+    case type.RESET_LIBRARY_ADD_FAILED:
+      return {
+        ...state,
+        error: '',
+        addFailed: false
+      };
+
+    case type.RESET_LIBRARY_FETCH_FAILED:
+      return {
+        ...state,
+        error: '',
+        fetchFailed: false
+      };
+
+    case type.RESET_LIBRARY_REMOVE_FAILED:
+      return {
+        ...state,
+        error: '',
+        removeFailed: false
+      };
 
     default:
       return state;

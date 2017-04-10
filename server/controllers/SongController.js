@@ -25,20 +25,17 @@ class SongController {
 
     Song.findOne({ title, artist }, (err, found) => {
       if (err) {
-        console.log(err);
+        done(err);
       }
       if (!found) {
-        console.log('SONGCONTROLLER. song is not in the song collection');
         song.save(err => {
           if (err) {
             done(err);
           } else {
-            console.log('SONGCONTROLLER. finished creating song. returning it now:', song);
             done(null, song);
           }
         });
       } else { // song was already in the collection. no need to save
-        console.log('SONGCONTROLLER. finished creating song. returning it now:', song);
         done(null, song);
       }
     });

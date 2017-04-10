@@ -1,38 +1,50 @@
-import {
-  SEARCH_LYRICS_LOADING,
-  SEARCH_LYRICS_SUCCESS,
-  SEARCH_LYRICS_FAILURE,
-  NAVIGATE_TO,
-  PREVIOUS_SONG,
-  NEXT_SONG,
-  SELECT_SR,
-  CLEAR_STATE,
-  CLEAR_QUEUE,
-  REMOVE_FROM_QUEUE,
-  SET_SONG
-} from '../actions';
+import * as type from '../constants/types';
 
 const initialState = {
   allSongs: [],
   currentSongIndex: 0,
   searchResults: [],
   loading: false,
+  searchEmpty: false
 };
 
 export default function search(state = initialState, action) {
   switch (action.type) {
-    case SEARCH_LYRICS_LOADING:
+    case type.SEARCH_LYRICS_LOADING: {
       return { ...state, loading: true };
+    }
 
-    case SEARCH_LYRICS_SUCCESS:
-      let newSong = action.payload.data[0];
-      let { allSongs } = state;
+    case type.SEARCH_LYRICS_SUCCESS: {
+      if (!action.payload.data || !action.payload.data.length) {
+        return {
+          ...state,
+          searchEmpty: true
+        };
+      }
+
+      const { allSongs } = state;
+      const newSong = action.payload.data[0];
       let searchResults = action.payload.data.slice(1);
-      // Code to check if video already exists. If so, don't add it
-      // and change currentSongIndex to index where it exists.
 
+      // Check if video already exists in state. If so, don't add it
+      // and change currentSongIndex to that index.
       if (newSong.vid) {
         for (let i = 0; i < allSongs.length; i++) {
+
+          // check search results for songs that already exist in
+          // allSongs. If it does, remove it from searchResults
+          for (let j = 0; j < searchResults.length; j++) {
+            if (
+              searchResults[j].vid.items[0].id.videoId ===
+              allSongs[i].vid.items[0].id.videoId
+            ) {
+              searchResults = [
+                ...searchResults.slice(0, i),
+                ...searchResults.slice(i + 1)
+              ];
+            }
+          }
+
           if (
             allSongs[i].vid.items[0].id.videoId ===
             newSong.vid.items[0].id.videoId
@@ -40,7 +52,9 @@ export default function search(state = initialState, action) {
             return {
               ...state,
               currentSongIndex: i,
-              loading: false
+              loading: false,
+              searchResults,
+              searchEmpty: false
             };
           }
         }
@@ -54,118 +68,130 @@ export default function search(state = initialState, action) {
         ],
         currentSongIndex: newIndex,
         loading: false,
-        searchResults: searchResults
+        searchResults,
+        searchEmpty: false
       };
+    }
 
-    case SEARCH_LYRICS_FAILURE:
+    case type.SEARCH_LYRICS_FAILURE: {
       return { ...state, loading: false };
+    }
 
-    case NEXT_SONG:
+    case type.NEXT_SONG: {
       const prevSongIndex =
         state.currentSongIndex < state.allSongs.length - 1
           ? state.currentSongIndex + 1
           : state.currentSongIndex;
       return { ...state, currentSongIndex: prevSongIndex };
+    }
 
-    case PREVIOUS_SONG:
+    case type.PREVIOUS_SONG: {
       const nextSongIndex =
         state.currentSongIndex > 0
           ? state.currentSongIndex - 1
           : state.currentSongIndex;
       return { ...state, currentSongIndex: nextSongIndex };
+    }
 
-    case NAVIGATE_TO:
+    case type.NAVIGATE_TO: {
       return { ...state, currentSongIndex: action.index };
+    }
 
-    case SELECT_SR:
-      const newSongX = action.payload;
-      const allSongsX = state.allSongs;
-      const newIndexX = allSongsX.length;
-      return { allSongs: [
-          ...allSongsX,
-          newSongX
-        ],
-        currentSongIndex: newIndexX,
-        loading: false,
-        searchResults: [] // clear search results
-      };
+    case type.SELECT_SEARCH_RESULT: {
+      const newSong = action.payload;
+      const { allSongs, searchResults } = state;
+      const newIndex = allSongs.length;
+      const newSongVideoId = newSong.vid.items[0].id.videoId;
 
-    case REMOVE_FROM_QUEUE:
-      const currIdx = action.index <= state.currentSongIndex
-        ? state.currentSongIndex - 1
-        : state.currentSongIndex;
+      // get index to remove song from search results
+      const srIdx = searchResults.findIndex(song =>
+        song.vid.items[0].id.videoId === newSongVideoId
+      );
 
       return {
         ...state,
         allSongs: [
-          ...state.allSongs.slice(0, action.index),
-          ...state.allSongs.slice(action.index + 1)
+          ...allSongs,
+          newSong
+        ],
+        currentSongIndex: newIndex,
+        loading: false,
+        searchResults: [
+          ...searchResults.slice(0, srIdx),
+          ...searchResults.slice(srIdx + 1)
+        ]
+      };
+    }
+
+    case type.REMOVE_FROM_QUEUE: {
+      const { allSongs, currentSongIndex } = state;
+      const { index } = action;
+      const currIdx = index <= currentSongIndex
+        ? currentSongIndex - 1
+        : currentSongIndex;
+
+      return {
+        ...state,
+        allSongs: [
+          ...allSongs.slice(0, index),
+          ...allSongs.slice(index + 1)
         ],
         currentSongIndex: currIdx
       };
+    }
 
-    case CLEAR_STATE:
-    case CLEAR_QUEUE:
+    case type.CLEAR_STATE:
+    case type.CLEAR_QUEUE: {
       return initialState;
+    }
 
-    case SET_SONG:
-      // THEY CAN'T HANDLE THE TRUTH
-      let newSongY = {
+    case type.SET_SONG: {
+      const { album, artist, image, title, videoId } = action.song;
+      const { allSongs } = state;
+      const newSong = {
         vid: {
           items: [{
-            id: {
-              videoId: action.song.videoId
-            }
+            id: { videoId }
           }]
         },
         track: {
-          name: action.song.title,
-          artist: action.song.artist
+          name: title,
+          artist
         },
         details: {
           album: {
-            name: action.song.album,
-            images: [{
-              url: action.song.image
-            }]
+            name: album,
+            images: [{ url: image }]
           },
-          artists: [{
-            name: action.song.artist
-          }],
-          name: action.song.title
+          artists: [{ name: artist }],
+          name: title
         }
-      }
-      let allSongsY = state.allSongs;
+      };
 
       // Code to check if video already exists. If so, don't add it
       // and change currentSongIndex to index where it exists.
-
-      // THIS RIGHT HERE...IS SOME BUGGITY SHIOT
-      if (newSongY.vid) {
-        for (let i = 0; i < allSongsY.length; i++) {
-          if (
-            allSongsY[i].vid.items[0].id.videoId ===
-            newSongY.vid.items[0].id.videoId
-          ) {
-            return {
-              ...state,
-              currentSongIndex: i
-            };
+      if (videoId) {
+        for (let i = 0; i < allSongs.length; i++) {
+          if (allSongs[i].vid.items[0].id.videoId === videoId) {
+            return { ...state, currentSongIndex: i };
           }
         }
       }
 
-      let newIndexY = allSongsY.length;
+      const newIndex = allSongs.length;
+
       return {
         ...state,
         allSongs: [
-          ...allSongsY,
-          newSongY
+          ...allSongs,
+          newSong
         ],
-        currentSongIndex: newIndexY,
+        currentSongIndex: newIndex
       };
+    }
 
-    default:
+    default: {
       return state;
+    }
   }
 }

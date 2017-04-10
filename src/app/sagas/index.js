@@ -3,28 +3,8 @@ import { takeEvery, takeLatest } from 'redux-saga';
 import axios from 'axios';
 import Spotify from 'spotify-web-api-js';
 
-import {
-  SPOTIFY_ME_BEGIN,
-  SEARCH_LYRICS_BEGIN,
-  SEARCH_SONG_NAME_BEGIN,
-  SPOTIFY_TOKENS,
-  ADD_SONG_TO_LIBRARY_BEGIN,
-  FETCH_LIBRARY_BEGIN,
-  REMOVE_SONG_FROM_LIBRARY_BEGIN,
-  spotifyMeSuccess,
-  spotifyMeFailure,
-  fetchSongLoading,
-  fetchSongVideoSuccess,
-  fetchSongVideoFailure,
-  setTokensSuccess,
-  setTokensFailure,
-  addSongToLibrarySuccess,
-  addSongToLibraryFailure,
-  fetchLibrarySuccess,
-  fetchLibraryFailure,
-  removeSongFromLibrarySuccess,
-  removeSongFromLibraryFailure
-} from '../actions';
+import * as type from '../constants/types';
+import * as action from '../actions';
 
 const spotifyApi = new Spotify();
 
@@ -37,57 +17,57 @@ const spotifyApi = new Spotify();
 export function* fetchUser() {
   try {
     const request = yield call(spotifyApi.getMe);
-    yield put(spotifyMeSuccess(request));
+    yield put(action.spotifyMeSuccess(request));
   } catch(error) {
-    yield put(spotifyMeFailure(error));
+    yield put(action.spotifyMeFailure(error.message));
   }
 }
 
 export function* fetchSongByLyrics({ lyrics }) {
   try {
-    yield put(fetchSongLoading());
+    yield put(action.fetchSongLoading());
     const request = yield call(axios.get, `/api/lyrics-search/${lyrics}/null`);
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get song');
     }
-    yield put(fetchSongVideoSuccess(request));
+    yield put(action.fetchSongVideoSuccess(request));
   } catch(error) {
-    yield put(fetchSongVideoFailure(error));
+    yield put(action.fetchSongVideoFailure(error.message));
   }
 }
 
 export function* fetchSongByName({ name, artist }) {
   try {
-    yield put(fetchSongLoading());
+    yield put(action.fetchSongLoading());
     if (!artist) artist = 'null';
     const request = yield call(axios.get, `/api/song-search/${name}/${artist}`);
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get song');
     }
-    yield put(fetchSongVideoSuccess(request));
+    yield put(action.fetchSongVideoSuccess(request));
   } catch(error) {
-    yield put(fetchSongVideoFailure(error));
+    yield put(action.fetchSongVideoFailure(error.message));
   }
 }
 
 export function* setSpotifyTokens({ accessToken, refreshToken }) {
   if (accessToken && refreshToken) {
     spotifyApi.setAccessToken(accessToken);
-    yield put(setTokensSuccess({ accessToken, refreshToken }));
+    yield put(action.setTokensSuccess({ accessToken, refreshToken }));
   } else {
-    yield put(setTokensFailure());
+    yield put(action.setTokensFailure());
   }
 }
 
 export function* addSongToLibrary({ song }) {
   try {
     const response = yield call(axios.post, `/addToLibrary`, song);
-    if (response.status !== 200) {
+    if (response.status !== 200 || response.data.failed) {
       throw new Error('Failed to add song to library');
     }
-    yield put(addSongToLibrarySuccess(response.data));
+    yield put(action.addSongToLibrarySuccess(response.data));
   } catch(error) {
-    yield put(addSongToLibraryFailure(error));
+    yield put(action.addSongToLibraryFailure(error.message));
   }
 }
 
@@ -97,21 +77,21 @@ export function* fetchLibrary() {
     if (request.data.failed || typeof request.data !== 'object') {
       throw new Error('Failed to get songs from user\'s library');
     }
-    yield put(fetchLibrarySuccess(request.data));
+    yield put(action.fetchLibrarySuccess(request.data));
   } catch(error) {
-    yield put(fetchLibraryFailure(error));
+    yield put(action.fetchLibraryFailure(error.message));
   }
 }
 
 export function* removeSongFromLibrary({ song }) {
   try {
     const response = yield call(axios.post, `/removeFromLibrary`, song);
-    if (response.status !== 200) {
+    if (response.status !== 200 || response.data.failed) {
       throw new Error('Failed to remove song from library');
     }
-    yield put(removeSongFromLibrarySuccess(response.data)); // should be just the song
+    yield put(action.removeSongFromLibrarySuccess(response.data));
   } catch(error) {
-    yield put(removeSongFromLibraryFailure(error));
+    yield put(action.removeSongFromLibraryFailure(error.message));
   }
 }
 /**
@@ -122,12 +102,12 @@ export function* removeSongFromLibrary({ song }) {
 
 export default function* root() {
   yield [
-    takeLatest(SPOTIFY_ME_BEGIN, fetchUser),
-    takeEvery(SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
-    takeEvery(SEARCH_SONG_NAME_BEGIN, fetchSongByName),
-    takeEvery(SPOTIFY_TOKENS, setSpotifyTokens),
-    takeEvery(ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary),
-    takeEvery(FETCH_LIBRARY_BEGIN, fetchLibrary),
-    takeEvery(REMOVE_SONG_FROM_LIBRARY_BEGIN, removeSongFromLibrary)
+    takeLatest(type.SPOTIFY_ME_BEGIN, fetchUser),
+    takeEvery(type.SEARCH_LYRICS_BEGIN, fetchSongByLyrics),
+    takeEvery(type.SEARCH_SONG_NAME_BEGIN, fetchSongByName),
+    takeEvery(type.SPOTIFY_TOKENS, setSpotifyTokens),
+    takeEvery(type.ADD_SONG_TO_LIBRARY_BEGIN, addSongToLibrary),
+    takeEvery(type.FETCH_LIBRARY_BEGIN, fetchLibrary),
+    takeEvery(type.REMOVE_SONG_FROM_LIBRARY_BEGIN, removeSongFromLibrary)
   ]
 }

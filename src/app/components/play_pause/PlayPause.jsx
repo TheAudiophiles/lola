@@ -18,14 +18,31 @@ class ScaleX extends Component {
 
 class PlayPause extends Component {
   _handlePlayPause = () => {
-    if (this.props.media.duration > 0.1) {
-      this.props.media.playPause();
+    if (this.props.media) {
+      const { isPlaying, play, pause } = this.props.media;
+      // At the moment there is an issue with react-media-player
+      // not setting this.props.media.isPlaying to true on
+      // autoplay so isPlaying is always the opposite of what
+      // it should be. So if it's false then we play and change
+      // isPlaying redux state to true, if true then we pause
+      // and change isPlaying redux state to false
+      if (!isPlaying) {
+        play();
+        // change audioPlayer.isPlaying in redux store to true
+        this.props.resumeSongState();
+      } else {
+        pause();
+        // change audioPlayer.isPlaying in redux store to false
+        this.props.pauseSongState();
+      }
     }
   }
 
-  componentWillReceiveProps(){
-    const { media: { isPlaying }, className } = this.props;
-  }
+  // not sure what these lone const declarations
+  // are doing here, commenting out for now
+  // componentWillReceiveProps() {
+  //   const { media: { isPlaying }, className } = this.props;
+  // }
 
   render() {
     const { media: { isPlaying }, className } = this.props;

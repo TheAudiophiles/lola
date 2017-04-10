@@ -1,9 +1,5 @@
 import reducer from '../src/app/reducers/queueLibrary';
-
-import {
-  TOGGLE_QUEUE,
-  TOGGLE_LIBRARY
-} from '../src/app/actions';
+import * as type from '../src/app/constants/types';
 
 describe('queueLibrary reducer', () => {
   const initialState = {
@@ -20,7 +16,7 @@ describe('queueLibrary reducer', () => {
       queueOn: false,
       libraryOn: true
     };
-    expect(reducer(beginState, { type: TOGGLE_QUEUE })).toEqual(initialState);
+    expect(reducer(beginState, { type: type.TOGGLE_QUEUE })).toEqual(initialState);
   });
 
   it('should handle TOGGLE_LIBRARY', () => {
@@ -28,6 +24,6 @@ describe('queueLibrary reducer', () => {
       queueOn: false,
       libraryOn: true
     };
-    expect(reducer(initialState, { type: TOGGLE_LIBRARY })).toEqual(expectedState);
+    expect(reducer(initialState, { type: type.TOGGLE_LIBRARY })).toEqual(expectedState);
   });
 });

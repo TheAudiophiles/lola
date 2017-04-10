@@ -1,14 +1,5 @@
 import reducer from '../src/app/reducers/audioPlayer';
-
-import {
-  INCREASE_VOLUME,
-  DECREASE_VOLUME,
-  MUTE,
-  UNMUTE,
-  RESET_VOLUME_CHANGE,
-  PAUSE_SONG,
-  RESUME_SONG
-} from '../src/app/actions';
+import * as type from '../src/app/constants/types';
 
 describe('audioPlayer reducer', () => {
   const initialState = {
@@ -27,7 +18,9 @@ describe('audioPlayer reducer', () => {
       muted: false,
       volumeChange: { status: true, direction: 'up' }
     };
-    expect(reducer(initialState, { type: INCREASE_VOLUME })).toEqual(expectedState);
+    expect(reducer(initialState, {
+      type: type.INCREASE_VOLUME
+    })).toEqual(expectedState);
   });
 
   it('should handle DECREASE_VOLUME', () => {
@@ -36,7 +29,9 @@ describe('audioPlayer reducer', () => {
       muted: false,
       volumeChange: { status: true, direction: 'down' }
     };
-    expect(reducer(initialState, { type: DECREASE_VOLUME })).toEqual(expectedState);
+    expect(reducer(initialState, {
+      type: type.DECREASE_VOLUME
+    })).toEqual(expectedState);
   });
 
   it('should handle RESET_VOLUME_CHANGE', () => {
@@ -45,7 +40,9 @@ describe('audioPlayer reducer', () => {
       muted: false,
       volumeChange: { status: true, direction: 'down' }
     };
-    expect(reducer(beginState, { type: RESET_VOLUME_CHANGE })).toEqual(initialState);
+    expect(reducer(beginState, {
+      type: type.RESET_VOLUME_CHANGE
+    })).toEqual(initialState);
   });
 
   it('should handle MUTE', () => {
@@ -54,7 +51,7 @@ describe('audioPlayer reducer', () => {
       muted: true,
       volumeChange: { status: false, direction: null }
     };
-    expect(reducer(initialState, { type: MUTE })).toEqual(expectedState);
+    expect(reducer(initialState, { type: type.MUTE })).toEqual(expectedState);
   });
 
   it('should handle UNMUTE', () => {
@@ -63,7 +60,7 @@ describe('audioPlayer reducer', () => {
       muted: true,
       volumeChange: { status: false, direction: null }
     };
-    expect(reducer(beginState, { type: UNMUTE })).toEqual(initialState);
+    expect(reducer(beginState, { type: type.UNMUTE })).toEqual(initialState);
   });
 
   it('should handle RESUME_SONG', () => {
@@ -72,7 +69,7 @@ describe('audioPlayer reducer', () => {
       muted: false,
       volumeChange: { status: false, direction: null }
     };
-    expect(reducer(beginState, { type: RESUME_SONG })).toEqual(initialState);
+    expect(reducer(beginState, { type: type.RESUME_SONG })).toEqual(initialState);
   });
 
   it('should handle PAUSE_SONG', () => {
@@ -81,6 +78,6 @@ describe('audioPlayer reducer', () => {
       muted: false,
       volumeChange: { status: false, direction: null }
     };
-    expect(reducer(initialState, { type: PAUSE_SONG })).toEqual(expectedState);
+    expect(reducer(initialState, { type: type.PAUSE_SONG })).toEqual(expectedState);
   });
 });

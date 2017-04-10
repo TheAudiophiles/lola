@@ -1,14 +1,5 @@
 import reducer from '../src/app/reducers/auth';
-
-import {
-  SPOTIFY_TOKENS_SUCCESS,
-  SPOTIFY_TOKENS_FAILURE,
-  SPOTIFY_ME_SUCCESS,
-  SPOTIFY_ME_FAILURE,
-  SPOTIFY_LOGOUT,
-  RESET_LOGGEDOUT,
-  CLEAR_STATE
-} from '../src/app/actions';
+import * as type from '../src/app/constants/types';
 
 describe('auth reducer', () => {
   const initialState = {
@@ -48,7 +39,7 @@ describe('auth reducer', () => {
     expect(reducer(
       initialState,
       {
-        type: SPOTIFY_TOKENS_SUCCESS,
+        type: type.SPOTIFY_TOKENS_SUCCESS,
         accessToken,
         refreshToken
       }
@@ -61,7 +52,9 @@ describe('auth reducer', () => {
       failed: true,
       loggedIn: false
     };
-    expect(reducer(initialState, { type: SPOTIFY_TOKENS_FAILURE })).toEqual(expectedState);
+    expect(reducer(initialState, {
+      type: type.SPOTIFY_TOKENS_FAILURE
+    })).toEqual(expectedState);
   });
 
   it('should handle SPOTIFY_LOGOUT', () => {
@@ -70,7 +63,9 @@ describe('auth reducer', () => {
       loggedOut: true,
       loggedIn: false
     };
-    expect(reducer(undefined, { type: SPOTIFY_LOGOUT })).toEqual(expectedState);
+    expect(reducer(undefined, {
+      type: type.SPOTIFY_LOGOUT
+    })).toEqual(expectedState);
   });
 
   it('should handle RESET_LOGGEDOUT', () => {
@@ -83,7 +78,9 @@ describe('auth reducer', () => {
       ...beginState,
       loggedOut: false
     };
-    expect(reducer(beginState, { type: RESET_LOGGEDOUT })).toEqual(expectedState);
+    expect(reducer(beginState, {
+      type: type.RESET_LOGGEDOUT
+    })).toEqual(expectedState);
   });
 
   it('should handle CLEAR_STATE', () => {
@@ -108,6 +105,6 @@ describe('auth reducer', () => {
       failed: false,
       loggedIn: false
     };
-    expect(reducer(beginState, { type: CLEAR_STATE })).toEqual(initialState);
+    expect(reducer(beginState, { type: type.CLEAR_STATE })).toEqual(initialState);
   });
 });

@@ -15,11 +15,14 @@ const SongController = require('./controllers/SongController');
 const songController = new SongController();
 
 const SPOTIFY_API_KEY = require('./config/spotify.conf');
-const YOUTUBE_API_KEY = require('./config/youtube.conf');
-const MUSIXMATCH_API_KEY = require('./config/musixmatch.conf');
+const { YOUTUBE_URL, YOUTUBE_API_KEY } = require('./config/youtube.conf');
+const { MUSIXMATCH_URL, MUSIXMATCH_API_KEY } = require('./config/musixmatch.conf');
 
 const STATE_KEY = 'spotify_auth_state';
 const scopes = ['user-read-private', 'user-read-email'];
+
+// add 2.5 sec timeout to axios
+axios.defaults.timeout = 2500;
 
 const spotifyApi = new Spotify({
   clientId: SPOTIFY_API_KEY.clientID,
@@ -27,12 +30,16 @@ const spotifyApi = new Spotify({
   redirectUri: SPOTIFY_API_KEY.callbackUrl
 });
 
-const generateRandomString = N => (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
+const generateRandomString = N =>
+  (Math.random().toString(36) + Array(N).join('0')).slice(2, N + 2);
 
 /**
  * Middleware to check if user is logged in before
  * allowing access to route
  *
+ * @param {object} req node http request stream
+ * @param {object} res node http response stream
+ * @param {Function} next callback function
  * @return {Function} go to callback function for route
  *                    or redirect to login component
  */
@@ -42,6 +49,294 @@ const isAuth = (req, res, next) => {
   }
   res.redirect('/');
 };
+
+/**
+ * youtubeSearch - call to youtube API search endpoint
+ *
+ * @param {string} query
+ * @return {Promise} axios promise for ajax request
+ */
+function youtubeSearch(query) {
+  // if (query) {
+    const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance&type=video';
+    const youtubeOpts = `&q=${query}&key=${YOUTUBE_API_KEY}`;
+    const youtubeSearchUrl = `${YOUTUBE_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`;
+
+    return axios.get(youtubeSearchUrl);
+  // }
+}
+
+/**
+ * musixmatchSearch - call to musixmatch API search endpoint
+ *
+ * @param {string} query
+ * @return {Promise} axios promise for ajax request
+ */
+function musixmatchSearch(options) {
+  const TRACK_STATIC_OPTS = 'page_size=20&page=1&s_track_rating=desc&quorum_factor=0.9';
+  let trackOpts = `&apikey=${MUSIXMATCH_API_KEY}${options}`;
+  const trackUrl = `${MUSIXMATCH_URL}?${TRACK_STATIC_OPTS}${trackOpts}`;
+
+  return axios.get(trackUrl);
+}
+
+/**
+ * getAllSongs - promise chain, state, and handler for lyrics-search
+ * and song-search. Makes call to musixmatch to get search results,
+ * stores the most unique songs, then uses those to make calls to
+ * youtube and spotify simultaneously for up to 4 songs (max unique
+ * songs). If it fails at any point and there are results, it sends
+ * the results to the client.
+ *
+ * @param {object} options for musixmatch
+ * @param {object} res node http response stream
+ */
+function getAllSongs(options, res) {
+  let results = [];
+  let resultsYoutube = [];
+  let resultsSpotify = [];
+  let tracks = [];
+
+  // closure function for making parallel ajax requests
+  // to get youtube video data and spotify data for up to 2
+  // songs at a time. Check if both have search strings before
+  function songDetailsAndVideo(i, j) {
+    if (resultsYoutube[i] && resultsSpotify[i]) {
+      const songOneRequests = [
+        youtubeSearch(resultsYoutube[i]),
+        spotifyApi.searchTracks(resultsSpotify[i])
+      ];
+      if (resultsYoutube[j] && resultsSpotify[j]) {
+        return axios.all([
+          ...songOneRequests,
+          youtubeSearch(resultsYoutube[j]),
+          spotifyApi.searchTracks(resultsSpotify[j])
+        ]);
+      } else {
+        return axios.all(songOneRequests);
+      }
+    }
+  }
+
+  // closure function passed into axios.spread for handling data
+  // returned from up to 4 parallel ajax requests. Adds song object with
+  // video data and spotify data to results.
+  function addSongDetailsAndVideo(
+    i, j, youtubeData0, spotifyData0, youtubeData1, spotifyData1
+  ) {
+    if (
+      resultsYoutube[i] &&
+      resultsSpotify[i] &&
+      youtubeData0 &&
+      spotifyData0 &&
+      tracks[i]
+    ) {
+      const songOneData = {
+        vid: youtubeData0.data,
+        track: tracks[i],
+        details: spotifyData0.body.tracks.items[0]
+      };
+      if (
+        resultsYoutube[j] &&
+        resultsSpotify[j] &&
+        youtubeData1 &&
+        spotifyData1 &&
+        tracks[j]
+      ) {
+        results.push(songOneData, {
+          vid: youtubeData1.data,
+          track: tracks[j],
+          details: spotifyData1.body.tracks.items[0]
+        });
+      } else {
+        results.push(songOneData);
+      }
+    }
+  }
+
+  // enter promise returned from musixmatch ajax request
+  // and deal with the <= 20 search results
+  musixmatchSearch(options)
+    .then(({ data }) => {
+
+      // store all unique results. First
+      // result will be considered unique
+      let uniqueResultsYoutube = [];
+      let uniqueResultsSpotify = [];
+      let uniqueTracks = [];
+
+      // other results are determined to be unique based
+      // on similarity (compared with string-similarity library)
+      let otherResultsYoutube = [];
+      let otherResultsSpotify = [];
+      let otherTracks = [];
+
+      // iterate over songs returned from musixmatch call
+      // add string to be used for youtube and spotify api calls
+      // for each request
+      data.message.body.track_list.forEach((result, i) => {
+        const ytStr = `${result.track.artist_name} ${result.track.track_name}`;
+        const spotStr = `track:${result.track.track_name} artist:${result.track.artist_name}`;
+        const track = { name: result.track.track_name, artist: result.track.artist_name };
+
+        // if it's the first item, we're counting it as unique
+        if (i === 0) {
+          uniqueResultsYoutube.push(ytStr);
+          uniqueResultsSpotify.push(spotStr);
+          uniqueTracks.push(track);
+        } else {
+          otherResultsYoutube.push(ytStr);
+          otherResultsSpotify.push(spotStr);
+          otherTracks.push(track);
+        }
+      });
+
+      for (let i = 0; i < otherResultsYoutube.length; i++) {
+
+        // use some to check whether any string in uniqueResults
+        // is similar to the current other results value
+        const similar = uniqueResultsYoutube.some(uniqueResult => {
+          let similarity = stringSimilarity.compareTwoStrings(
+            otherResultsYoutube[i], uniqueResult
+          );
+          return similarity > 0.3;
+        });
+
+        // if not similar add result to unique results arrays
+        if (!similar) {
+          uniqueResultsYoutube.push(otherResultsYoutube[i]);
+          uniqueResultsSpotify.push(otherResultsSpotify[i]);
+          uniqueTracks.push(otherTracks[i]);
+        }
+      }
+
+      // remove all but the first 4 unique values
+      resultsYoutube = uniqueResultsYoutube.slice(0, 4);
+      resultsSpotify = uniqueResultsSpotify.slice(0, 4);
+      tracks = uniqueTracks.slice(0, 4);
+    })
+
+    // Get song details and video details in parallel for 2 songs
+    // at a time. Have them separated by each result, so if it
+    // fails, any others that have been added to the results
+    // array with still be returned to the user
+    .then(songDetailsAndVideo.bind(null, 0, 1))
+    .then(axios.spread(addSongDetailsAndVideo.bind(null, 0, 1)))
+    .then(songDetailsAndVideo.bind(null, 2, 3))
+    .then(axios.spread(addSongDetailsAndVideo.bind(null, 2, 3)))
+    .then(() => res.json(results))
+    .catch(error => {
+      console.log(error);
+      // if there is something in results,
+      // go ahead and return what we have
+      if (results.length) {
+        res.json(results);
+      } else {
+        res.json({ failed: true });
+      }
+    });
+}
+
+/**
+ * addSong
+ * Add song to library
+ *
+ * @param {object} song
+ * @param {object} res response stream
+ */
+function addSong(song, res) {
+  libraryController.addSong(song, (err, exists) => {
+    if (err) {
+      console.log(err);
+      return res.json({ failed: true });
+    }
+    if (!exists) {
+      res.json(song);
+    } else {
+      res.json(null);
+    }
+  });
+}
+
+/**
+ * getUser
+ * Get user id from userController.user or if it doesn't exist
+ * use the spotify api to get login credentials and get user from
+ * user controller with those
+ *
+ * @param {Function} done callback function
+ */
+function getUser(done) {
+  let userId = userController.getUserId();
+
+  if (!userId) {
+    spotifyApi.getMe()
+    .then(({ body }) => {
+      userController.findUser(body.id, (err, user) => {
+        if (err || !user) {
+          return done(new Error('Couldn\'t find user'));
+        }
+        userId = user._id;
+        done(null, userId);
+      });
+    })
+    .catch(err => {
+      // Current Access token / refresh Token are no good
+      // 401 is Unauthorized. If so try to refresh token
+      if (err.statusCode === 401) {
+        spotifyApi.refreshAccessToken()
+          .then(data => {
+            // Success!!! set new access token and recursively call
+            // getUser to get the userId
+            spotifyApi.setAccessToken(data.body['access_token']);
+            getUser(done);
+          })
+          .catch(err => {
+            done(err);
+          });
+      } else {
+        done(err);
+      }
+    });
+  } else {
+    done(null, userId);
+  }
+}
+
+/**
+ * refreshSpotifyAuth
+ * Refresh spotify authentication. Called every 3s by
+ *
+ * @param {object} req node http request stream
+ */
+function refreshSpotifyAuth(req) {
+  if (
+    req.session.loggedIn &&
+    spotifyApi.getAccessToken() &&
+    spotifyApi.getRefreshToken()
+  ) {
+    spotifyApi.refreshAccessToken()
+      .then(data => {
+        spotifyApi.setAccessToken(data.body['access_token']);
+
+        // set it up to refresh again in another 3400 ms
+        refreshSpotifyAuthTimeout(req);
+      })
+      .catch(err => {
+        console.log('Couldn\'t refresh access token', err);
+      });
+  }
+}
+
+/**
+ * refreshSpotifyAuthTimeout
+ * Try to refresh spotify after 3000 ms. It expires every 3600
+ *
+ * @param {object} req node http request stream
+ */
+function refreshSpotifyAuthTimeout(req) {
+  setTimeout(() => { refreshSpotifyAuth(req) }, 3000);
+}
 
 /**
  * The /login endpoint
@@ -60,7 +355,6 @@ router.get('/auth/spotify', (_, res) => {
  * parameter. Then, if all is good, redirect the user to the user page. If all
  * is not good, redirect the user to an error page
  */
-
 router.get('/callback', (req, res) => {
   const {
     code,
@@ -70,7 +364,8 @@ router.get('/callback', (req, res) => {
   // first do state validation
   if (state === null || state !== storedState) {
     res.redirect('/#/error/state mismatch');
-    // if the state is valid, get the authorization code and pass it on to the client
+    // if the state is valid, get the authorization
+    // code and pass it on to the client
   } else {
     res.clearCookie(STATE_KEY);
     // Retrieve an access token and a refresh token
@@ -84,29 +379,32 @@ router.get('/callback', (req, res) => {
         // Set the access token on the API object to use it in later calls
         spotifyApi.setAccessToken(access_token);
         spotifyApi.setRefreshToken(refresh_token);
-        // use the access token to access the Spotify Web API
-        spotifyApi.getMe()
-          .then(({
-            body
-          }) => {
 
-            userController.findUser(body.id, (err, user) => {
+        // call refreshSpotifyAuthTimeout to set up to
+        // refresh token before it expires
+        refreshSpotifyAuthTimeout(req);
+
+        return spotifyApi.getMe();
+      })
+      .then(({ body }) => {
+        userController.findUser(body.id, (err, user) => {
+          if (err) {
+            return console.log(err);
+          }
+          if (!user) {
+            userController.createUser(body, err => {
               if (err) {
                 return console.log(err);
               }
-              if (!user) {
-                userController.createUser(body, err => {
-                  if (err) {
-                    return console.log(err);
-                  }
-                  console.log('User saved');
-                });
-              }
-
-              req.session.loggedIn = true;
-              res.redirect(`/#/user/${access_token}/${refresh_token}`);
+              console.log('User saved');
             });
-          });
+          }
+
+          req.session.loggedIn = true;
+          const accessToken = spotifyApi.getAccessToken();
+          const refreshToken = spotifyApi.getRefreshToken();
+          res.redirect(`/#/user/${accessToken}/${refreshToken}`);
+        });
       })
       .catch(err => {
         res.redirect('/#/error/invalid token');
@@ -114,126 +412,40 @@ router.get('/callback', (req, res) => {
   }
 });
 
-function youtubeSearch(query) {
-  if (query) {
-    const YOUTUBE_ROOT_URL = 'https://www.googleapis.com/youtube/v3/search';
-    const YOUTUBE_STATIC_OPTS = 'part=id&maxResults=1&order=relevance';
-    const youtubeOpts = `&q=${query}&key=${YOUTUBE_API_KEY}`;
 
-    return axios.get(`${YOUTUBE_ROOT_URL}?${YOUTUBE_STATIC_OPTS}${youtubeOpts}`);
-  }
-}
-
-function trackSearch(options, res) {
-  const TRACK_ROOT_URL = 'https://api.musixmatch.com/ws/1.1/track.search';
-  const TRACK_STATIC_OPTS = 'page_size=10&page=1&s_track_rating=desc&quorum_factor=0.9';
-  let trackOpts = `&apikey=${MUSIXMATCH_API_KEY}${options}`;
-  const trackUrl = `${TRACK_ROOT_URL}?${TRACK_STATIC_OPTS}${trackOpts}`;
-
-  let results = [];
-  let srYT = [];
-  let srSP = [];
-  let tracks = [];
-  let youtubeOpts = '';
-
-  axios.get(trackUrl)
-    .then(({ data }) => {
-      let searchResultsYT = [];
-      let searchResultsSP = [];
-
-      data.message.body.track_list.forEach((result) => {
-        searchResultsYT.push(`${result.track.artist_name} ${result.track.track_name}`);
-        searchResultsSP.push(`track:${result.track.track_name} artist:${result.track.artist_name}`);
-        tracks.push({ name: result.track.track_name, artist: result.track.artist_name });
-      });
-
-      // console.log('searchResultsYT:', searchResultsYT);
-      // console.log('searchResultsSP:', searchResultsSP);
-      // console.log('tracks:', tracks);
-
-      let uniqueResultsYT = [];
-      uniqueResultsYT.push(searchResultsYT[0]);
-      let uniqueResultsSP = [];
-      uniqueResultsSP.push(searchResultsSP[0]);
-
-      let otherResultsYT = searchResultsYT.slice(1);
-      let otherResultsSP = searchResultsSP.slice(1);
-
-      for (let i = 0; i < otherResultsYT.length; i++) {
-        let minSimilarity = 0;
-        for (let j = 0; j < uniqueResultsYT.length; j++) {
-          let similarity = stringSimilarity.compareTwoStrings(otherResultsYT[i], uniqueResultsYT[j]);
-          // console.log(`similarity between ${otherResultsYT[i]} and ${uniqueResultsYT[j]} is ${similarity}`);
-          if (similarity > minSimilarity ) {
-            minSimilarity = similarity;
-          }
-        }
-        // console.log('MIN SIMILARITY:', minSimilarity);
-        if (minSimilarity <= 0.3) { // its all good
-          uniqueResultsYT.push(otherResultsYT[i]);
-          uniqueResultsSP.push(otherResultsSP[i]);
-        }
-      }
-
-      srYT = uniqueResultsYT.slice(0,4);
-      srSP = uniqueResultsSP.slice(0,4);
-      // console.log('srSP', srSP);
-    })
-
-    .then(() => {
-      return youtubeSearch(srYT[0]);
-    })
-    .then((vid0) => { // guaranteed to get vid0, the primary search result
-      results.push({ vid: vid0.data, track: tracks[0] });
-      return youtubeSearch(srYT[1]);
-    })
-    .then((vid1) => {
-      if (vid1) results.push({ vid: vid1.data, track: tracks[1] });
-      return youtubeSearch(srYT[2]);
-    })
-    .then((vid2) => {
-      if (vid2) results.push({ vid: vid2.data, track: tracks[2] });
-      return youtubeSearch(srYT[3]);
-    })
-    .then((vid3) => {
-      if (vid3) results.push({ vid: vid3.data, track: tracks[3] });
-      return spotifyApi.searchTracks(srSP[0]); // there will always be one song
-    })
-    .then(data => {
-      results[0].details = data.body.tracks.items[0];
-      if (srSP[1]) return spotifyApi.searchTracks(srSP[1]);
-    })
-    .then(data => {
-      if (data) results[1].details = data.body.tracks.items[0];
-      if (srSP[2]) return spotifyApi.searchTracks(srSP[2]);
-    })
-    .then(data => {
-      if (data) results[2].details = data.body.tracks.items[0];
-      if (srSP[3]) return spotifyApi.searchTracks(srSP[3]);
-    })
-    .then(data => {
-      if (data) results[3].details = data.body.tracks.items[0];
-      res.json(results);
-    })
-    .catch(err => {
-      res.json({ failed: true });
-    });
-}
-
+/**
+ * /api/lyrics-search/:lyrics/:artist (artist optional)
+ * Search for songs by lyrics from musixmatch, and then take the
+ * most unique four songs and get the youtube and spotify data,
+ * collect it in an array and send it back to the user
+ */
 router.get('/api/lyrics-search/:lyrics/:artist', (req, res) => {
   const { lyrics, artist } = req.params;
   let lyricsOpts = `&q_lyrics=${lyrics}`;
   if (artist !== 'null') lyricsOpts += `&q_artist=${artist}`;
-  trackSearch(lyricsOpts, res);
+  getAllSongs(lyricsOpts, res);
 });
 
+/**
+ * /api/song-search/:song/:artist (artist optional)
+ * Search for songs by lyrics from musixmatch, and then take
+ * the most unique four songs and get the youtube and spotify
+ * data, collect it in an array and send it back to the user
+ */
 router.get('/api/song-search/:song/:artist', (req, res) => {
   const { song, artist } = req.params;
   let songOpts = `&q_track=${song}`;
   if (artist !== 'null') songOpts += `&q_artist=${artist}`;
-  trackSearch(songOpts, res);
+  getAllSongs(songOpts, res);
 });
 
+/**
+ * /logout
+ * Logs out user from spotify. Removes spotify oauth access token
+ * and refresh token, clears user object on userController,
+ * and redirects to spotify to logout only way to logout
+ * from spotify :( well... as far as we can tell at the moment
+ */
 router.get('/logout', (req, res) => {
   req.session.destroy();
   spotifyApi.resetAccessToken();
@@ -242,92 +454,109 @@ router.get('/logout', (req, res) => {
   res.redirect('https://spotify.com/logout');
 });
 
+/**
+ * /addToLibrary
+ * Add song to library. Create a song object, find the users's
+ * library. If one doesn't exist, create it. Add song
+ */
 router.post('/addToLibrary', (req, res) => {
-  console.log('ROUTE /ADDTOLIBRARY ()====={@)=========================================>');
-  let songData = req.body;
+  const songData = req.body;
   songController.createSong(songData, (err, song) => {
     if (err) {
-      return console.log(err);
+      console.error(err);
+      return res.json({ failed: true });
     }
-    console.log('ROUTE /ADDTOLIBRARY - song returned from SONGCONTROLLER:', song);
-    let userId = userController.getUserId();
+    getUser((err, userId) => {
+      if (err) {
+        console.error(err);
+        return res.json({ failed: true });
+      }
+
+      libraryController.findLibrary(userId, (err, library) => {
+        if (err) {
+          console.error(err);
+          return res.json({ failed: true });
+        }
+        if (!library) {
+          libraryController.createLibrary(userId, err => {
+            if (err) {
+              console.log(err);
+              return res.json({ failed: true });
+            }
+            addSong(song, res);
+          });
+        } else { // library already exists, just add the song
+          addSong(song, res);
+        }
+      });
+    });
+  });
+});
+
+/**
+ * /removeFromLibrary
+ * Remove song from user's library. Find library first, then
+ * try to remove only if it exists
+ */
+router.post('/removeFromLibrary', (req, res) => {
+  const song = req.body;
+
+  getUser((err, userId) => {
+    if (err) {
+      console.error(err);
+      return res.json({ failed: true });
+    }
 
     libraryController.findLibrary(userId, (err, library) => {
       if (err) {
-        return console.log(err);
+        console.log(err);
+        return res.json({ failed: true });
       }
+
       if (!library) {
-        libraryController.createLibrary(userId, err => {
+        res.json({ failed: true });
+      } else {
+        libraryController.removeSong(song, (err, deletedSong) => {
           if (err) {
-            return console.log(err);
+            console.error(err);
+            return res.json({ failed: true });
           }
-          console.log('ROUTE /ADDTOLIBRARY. no library for user', userId + '. new library created');
-          libraryController.addSong(song, (err, exists) => {
-            if (err) {
-              return console.log(err);
-            }
-            if (!exists) {
-              console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-              res.json(song);
-            } else {
-              console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
-              res.json(null);
-            }
-          });
-        });
-      } else { // library already exists, just add the song
-        console.log('ROUTE /ADDTOLIBRARY. library for user', userId, 'found');
-        libraryController.addSong(song, (err, exists) => {
-          if (err) {
-            return console.log(err);
-          }
-          if (!exists) {
-            console.log('ROUTE /ADDTOLIBRARY. returning song after adding it to library:', song);
-            res.json(song);
-          } else {
-            console.log('ROUTE /ADDTOLIBRARY. song already exists in the library:', song);
-            res.json(null);
-          }
+          res.json(deletedSong);
         });
       }
     });
   });
 });
 
-router.post('/removeFromLibrary', (req, res) => {
-  console.log('ROUTE /REMOVEFROMLIBRARY ()====={@)=========================================>');
-  let song = req.body;
-  console.log('ROUTE /REMOVEFROMLIBRARY - trying to remove song:', song);
-
-  libraryController.removeSong(song, (err, deletedSong) => {
+/**
+ * /fetchLibrary
+ * Fetch user's library. Get userid, if it's not in userController,
+ * find user (sets to userController.user) and then fetch library
+ */
+router.get('/fetchLibrary', (req, res) => {
+  getUser((err, userId) => {
     if (err) {
       console.error(err);
+      return res.json({ failed: true });
     }
-    console.log('ROUTE /REMOVEFROMLIBRARY. returning deleted song:', deletedSong);
-    res.json(deletedSong);
-  });
-});
 
-router.get('/fetchLibrary', (req, res) => {
-  console.log('ROUTE /fetchLibrary ()====={@)=========================================>');
-  let userId = userController.getUserId();
-  libraryController.findLibrary(userId, (err, library) => {
-    if (err) {
-      return console.error(err);
-    }
-    if (!library) {
-      console.log('ROUTE /fetchLibrary. library for user', userId, ' NOT found');
-      res.end();
-    } else {
-      console.log('ROUTE /fetchLibrary. library for user', userId, 'found');
-      libraryController.getAll(userId, (err, librarySongs) => {
-        if (err) {
-          return console.log(err);
-        }
-        console.log('ROUTE /fetchLibrary. returning songs from library:', librarySongs);
-        res.json(librarySongs);
-      });
-    }
+    libraryController.findLibrary(userId, (err, library) => {
+      if (err) {
+        console.error(err);
+        return res.json({ failed: true });
+      }
+      if (!library) {
+        res.end();
+      } else {
+        libraryController.getAll(userId, (err, librarySongs) => {
+          if (err) {
+            console.error(err);
+            return res.json({ failed: true });
+          }
+          res.json(librarySongs);
+        });
+      }
+    });
   });
 });
 

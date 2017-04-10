@@ -1,12 +1,4 @@
-import {
-  SPOTIFY_TOKENS_SUCCESS,
-  SPOTIFY_TOKENS_FAILURE,
-  SPOTIFY_ME_SUCCESS,
-  SPOTIFY_ME_FAILURE,
-  SPOTIFY_LOGOUT,
-  RESET_LOGGEDOUT,
-  CLEAR_STATE
-} from '../actions';
+import * as type from '../constants/types';
 
 /** The initial state; no tokens and no user info */
 const initialState = {
@@ -37,7 +29,7 @@ const initialState = {
 export default function reduce(state = initialState, action) {
   switch (action.type) {
     // when we get the tokens... set the tokens!
-    case SPOTIFY_TOKENS_SUCCESS:
+    case type.SPOTIFY_TOKENS_SUCCESS:
       const { accessToken, refreshToken } = action;
       return {
         ...state,
@@ -45,7 +37,7 @@ export default function reduce(state = initialState, action) {
         refreshToken
       };
 
-    case SPOTIFY_TOKENS_FAILURE:
+    case type.SPOTIFY_TOKENS_FAILURE:
       return {
         ...state,
         failed: true,
@@ -53,7 +45,7 @@ export default function reduce(state = initialState, action) {
       };
 
     // when we get the data merge it in
-    case SPOTIFY_ME_SUCCESS:
+    case type.SPOTIFY_ME_SUCCESS:
       return {
         ...state,
         user: {
@@ -65,27 +57,27 @@ export default function reduce(state = initialState, action) {
         loggedIn: true
       };
 
-    case SPOTIFY_ME_FAILURE:
+    case type.SPOTIFY_ME_FAILURE:
       return {
         ...state,
         failed: true,
         loggedIn: false
       };
 
-    case SPOTIFY_LOGOUT:
+    case type.SPOTIFY_LOGOUT:
       return {
         ...initialState,
         loggedOut: true,
         loggedIn: false
       };
 
-    case RESET_LOGGEDOUT:
+    case type.RESET_LOGGEDOUT:
       return {
         ...state,
         loggedOut: false
       };
 
-    case CLEAR_STATE:
+    case type.CLEAR_STATE:
       return initialState;
 
     default:

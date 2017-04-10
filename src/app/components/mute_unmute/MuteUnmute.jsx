@@ -18,7 +18,19 @@ class Scale extends Component {
 
 class MuteUnmute extends Component {
   _handleMuteUnmute = () => {
-    this.props.media.muteUnmute();
+    if (this.props.media) {
+      const {
+        muteSongState,
+        unmuteSongState,
+        media: { volume, muteUnmute }
+      } = this.props;
+      if (volume > 0) {
+        muteSongState();
+      } else {
+        unmuteSongState();
+      }
+      muteUnmute();
+    }
   }
 
   render() {
